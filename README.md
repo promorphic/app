@@ -4,7 +4,9 @@ The web app at [app.promorphic.xyz](https://app.promorphic.xyz): a static site s
 
 It is the "Promorphic Design (Frontend)" canvas turned into pages. Each screen was designed twice, dark and light, with the same markup and different colours; here every colour is a CSS variable from the Promorphic design system, and one switch in the header changes the theme (the visitor's choice is remembered, and a first visit follows the system setting).
 
-**Everything shown is placeholder data.** There is no sign-in, no backend and no wallet connection yet. Buttons that have nothing behind them say so.
+**Most of what is shown is placeholder data.** There is no sign-in and no wallet connection yet. Buttons that have nothing behind them say so.
+
+**What is live:** on the Assets page, the Robinhood Stock Tokens and their prices come from the Promorphic API (the private `promorphic/api` repo), which refreshes the list every 5 minutes and prices every 15 seconds. Prices are indicative. If the API cannot be reached, the page shows the snapshot in `data/assets.json` and a dash for each price. The API address is the `API` constant in `static/app.js`; on `localhost` it points to `http://localhost:8787`.
 
 ## Pages
 

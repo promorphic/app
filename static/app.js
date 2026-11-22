@@ -171,6 +171,60 @@
   }
   function fmtYield(y) { return y == null ? '—' : y.toFixed(2) + '%'; }
 
+  // ---- Live data: Stock Tokens and their prices come from the Promorphic API ----
+  // Prices are indicative. Without the API the list still shows the snapshot in /data/assets.json, with no prices.
+  var API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? 'http://localhost:8787' : 'https://promorphic-api-1017392197056.europe-west1.run.app';
+  var prices = {};
+  function isLive(a) { return a.kind === 'Stock Token'; }
+  function fmtPrice(a) {
+    var q = isLive(a) ? prices[a.ticker] : null;
+    if (!q || !q.tokenMid) return '—';
+    if (q.halted) return 'Halted';
+    return '$' + Number(q.tokenMid).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function priceTitle(a) {
+    var q = isLive(a) ? prices[a.ticker] : null;
+    if (!q || !q.tokenBid) return '';
+    return 'Indicative. Bid ' + Number(q.tokenBid).toFixed(2) + ', ask ' + Number(q.tokenAsk).toFixed(2) + ' per token, ' + new Date(q.at).toLocaleTimeString();
+  }
+  function paintPrices() {
+    $$('tr[data-ticker]', tbody).forEach(function (tr) {
+      var a = tr._asset, cell = $('[data-f="price"]', tr);
+      if (!a || !cell) return;
+      cell.textContent = fmtPrice(a);
+      cell.title = priceTitle(a);
+    });
+  }
+  function getApi(path) {
+    return fetch(API + path).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  function loadPrices() {
+    if (document.hidden) return;
+    getApi('/v1/robinhood/prices').then(function (d) {
+      prices = {};
+      (d.quotes || []).forEach(function (q) { prices[q.symbol] = q; });
+      paintPrices();
+    }).catch(function () {});
+  }
+  // The live registry replaces the snapshot's Stock Tokens; an asset's class is kept from the snapshot.
+  function loadLiveAssets() {
+    getApi('/v1/robinhood/assets').then(function (d) {
+      var known = {};
+      data.assets.forEach(function (a) { if (isLive(a)) known[a.ticker] = a; });
+      var live = (d.assets || []).filter(function (x) { return x.active; }).map(function (x) {
+        var old = known[x.symbol] || {};
+        return {
+          ticker: x.symbol, name: x.name, issuer: old.issuer || 'Robinhood', 'class': old['class'] || 'Equities', yield30d: null,
+          chains: ['robinhood'], settles: old.settles || ['USDG'], access: old.access || 'Retail, non-US',
+          kind: 'Stock Token', contract: x.contract, multiplier: x.multiplier
+        };
+      });
+      if (live.length < 50) return;
+      data.assets = data.assets.filter(function (a) { return !isLive(a); }).concat(live);
+      render();
+    }).catch(function () {});
+  }
+
   function matches(a) {
     for (var k in FILTERS) {
       var sel = state.sel[k];
@@ -225,6 +279,10 @@
       set('name', a.name);
       set('class', a.class);
       set('yield', fmtYield(a.yield30d));
+      set('price', fmtPrice(a));
+      $('[data-f="price"]', tr).title = priceTitle(a);
+      tr.setAttribute('data-ticker', a.ticker);
+      tr._asset = a;
       var cell = $('[data-f="chains"]', tr);
       cell.textContent = '';
       var marks = document.createElement('span');
@@ -235,7 +293,7 @@
     });
     if (!list.length) {
       var tr = document.createElement('tr'), td = document.createElement('td');
-      td.colSpan = 5;
+      td.colSpan = 6;
       td.setAttribute('style', 'padding: 0 16px; height: 96px; text-align: center; font-size: 15px; color: var(--ink-muted)');
       td.textContent = data.assets.length ? 'No assets match these filters.' : 'No assets listed yet.';
       tr.appendChild(td);
@@ -377,7 +435,13 @@
     return fetch(url, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
   };
   Promise.all([getJSON('/data/assets.json'), getJSON('/data/featured.json').catch(function () { return {}; })])
-    .then(function (r) { data = { chains: r[0].chains || {}, assets: r[0].assets || [], featured: r[1].issuers || {} }; render(); })
+    .then(function (r) { data = { chains: r[0].chains || {}, assets: r[0].assets || [], featured: r[1].issuers || {} };
+      render();
+      loadLiveAssets(); loadPrices();
+      setInterval(loadPrices, 15000);
+      setInterval(loadLiveAssets, 5 * 60000);
+      document.addEventListener('visibilitychange', loadPrices);
+    })
     .catch(function () {
       countEl.textContent = '';
       var s = document.createElement('strong');
