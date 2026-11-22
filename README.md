@@ -83,6 +83,14 @@ npm run dev
 
 Then open http://localhost:5210. `npm run build` type-checks and writes the site to `dist/`; `npm run preview` serves that build.
 
+## Sign-in
+
+The sign-in, sign-up and email-link screens are in `src/pages/` (`Login`, `Signup`, `Verify`) and what they share is in `src/auth/`. They talk to the API's `/v1/auth/*` endpoints (`backend/api/src/auth.js`): a link sent by email, or Google. The session is a token kept in the browser and sent as `Authorization: Bearer …`.
+
+The gate is a build setting. With `VITE_AUTH=on` every screen but the sign-in ones needs a session; without it the app is open and the sign-in screens only lead into it. The deployed build reads it from the repository variable `VITE_AUTH`.
+
+To try it locally, start `promorphic-api-auth` and `promorphic-app-auth` from `../.claude/launch.json` (or run the API with `AUTH_DEV_LINKS=1` and the app with `VITE_AUTH=on`). The API then prints each sign-in link to its console instead of emailing it.
+
 ## Deploying
 
 Push to `main`. The workflow in `.github/workflows/deploy.yml` builds the app and publishes `dist/` to GitHub Pages. Nothing built is committed.

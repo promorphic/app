@@ -1,106 +1,155 @@
-import { Link } from 'react-router';
-import { ThemeSwitch } from '../layout/ThemeSwitch';
+import { useState, type FormEvent } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { AuthLayout, Field, foot, ghost, Heading, inkLink, Or, primary, Problem } from '../auth/AuthLayout';
+import { CheckEmail } from '../auth/CheckEmail';
+import { googleAccessToken, PopupClosed } from '../auth/google';
+import { AUTH_ON, signedIn, takeReturn, useAuthConfig, type SignedIn } from '../auth/session';
 import { Segmented } from '../components/Segmented';
-import { useState } from 'react';
+import { MONO } from '../layout/styles';
+import { ApiError, getApi } from '../lib/api';
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const STEPS = [
+  ['Create your account', 'Sign up with Google or your work email.'],
+  ['Verify who you are', 'A one-time check, for you or your organization.'],
+  ['Your agent is set up', 'Every account gets its own agent. It keeps your context and memory, and learns how you work.'],
+  ['Connect a wallet', 'You keep custody. Promorphic never holds your keys.'],
+];
+type Problems = { name?: string; email?: string; organization?: string; agreed?: string; form?: string };
+// Which field each of the API's refusals belongs to.
+const FIELD: Record<string, keyof Problems> = { bad_email: 'email', name_required: 'name', organization_required: 'organization', terms_required: 'agreed' };
 
 export default function Signup() {
-  const [type, setType] = useState('Organization');
+  const navigate = useNavigate();
+  const config = useAuthConfig();
+  const carried = (useLocation().state as { email?: string } | null)?.email || '';
+  const [type, setType] = useState<'Organization' | 'Individual'>('Organization');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState(carried);
+  const [organization, setOrganization] = useState('');
+  const [agreed, setAgreed] = useState(false);
+  const [problems, setProblems] = useState<Problems>({});
+  const [busy, setBusy] = useState<'' | 'email' | 'google'>('');
+  const [sentTo, setSentTo] = useState('');
+
+  const isOrg = type === 'Organization';
+  const showGoogle = !AUTH_ON || !!config.data?.google;
+  const showEmail = !AUTH_ON || !config.data || config.data.email;
+  const clear = (k: keyof Problems) => { if (problems[k]) setProblems({ ...problems, [k]: undefined }); };
+  const form = () => ({ intent: 'signup', accountType: isOrg ? 'organization' : 'individual', name: name.trim(), organization: isOrg ? organization.trim() : '', agreed });
+  // What both ways of signing up need before anything is sent.
+  const shared = (): Problems => ({
+    organization: isOrg && !organization.trim() ? 'Enter the legal name of your organization.' : undefined,
+    agreed: agreed ? undefined : 'Agree to the Terms and Privacy Policy to continue.',
+  });
+  const any = (p: Problems) => Object.values(p).some(Boolean);
+  const fail = (e: unknown) => {
+    if (e instanceof PopupClosed) return;
+    const field = e instanceof ApiError ? FIELD[e.code] : undefined;
+    setProblems({ [field || 'form']: (e as Error).message });
+  };
+  const send = (to: string) => getApi('/v1/auth/email', { ...form(), email: to });
+
+  const withEmail = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!AUTH_ON) return navigate('/');
+    const to = email.trim();
+    const p: Problems = {
+      name: name.trim() ? undefined : 'Enter your full name.',
+      email: EMAIL.test(to) ? undefined : 'Enter your work email, like you@company.com.',
+      ...shared(),
+    };
+    setProblems(p);
+    if (any(p)) return;
+    setBusy('email');
+    try { await send(to); setSentTo(to); } catch (err) { fail(err); } finally { setBusy(''); }
+  };
+  const withGoogle = async () => {
+    if (!AUTH_ON) return navigate('/');
+    if (!config.data?.google) return;
+    const p = shared();
+    setProblems(p);
+    if (any(p)) return;
+    setBusy('google');
+    try {
+      const accessToken = await googleAccessToken(config.data.google.clientId);
+      signedIn(await getApi<SignedIn>('/v1/auth/google', { ...form(), accessToken }));
+      navigate(takeReturn(), { replace: true });
+    } catch (err) { fail(err); } finally { setBusy(''); }
+  };
+
   return (
-    <div className="app-root" style={{ boxSizing: "border-box", background: "var(--surface-0)", color: "var(--ink)", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", display: "flex", flexWrap: "wrap", alignItems: "stretch" }}>
-      <div className="auth-aside" style={{ flex: "1 1 480px", boxSizing: "border-box", borderRight: "1px solid var(--hairline)", padding: "32px 48px 40px", display: "flex", flexDirection: "column", gap: "48px" }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Link to="/" style={{ display: "flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 8px", textDecoration: "none", color: "var(--ink)" }}>
-            <svg width="26" height="26" viewBox="0 4 70.3125 70.3125" role="img" aria-label="Promorphic">
-              <rect x="0" y="4" width="39.5508" height="24.1699" style={{ fill: "var(--ink)" }} />
-              <rect x="0" y="32.5645" width="70.3125" height="13.1836" style={{ fill: "var(--brand)" }} />
-              <rect x="30.7617" y="50.1426" width="39.5508" height="24.1699" style={{ fill: "var(--ink)" }} />
-            </svg>
-            <span style={{ fontSize: "20px", fontWeight: "500", letterSpacing: "-0.01em", color: "var(--ink)" }}>Promorphic</span>
-          </Link>
-          <span style={{ marginLeft: "auto" }}>
-            <ThemeSwitch />
-          </span>
-        </div>
-        <div style={{ margin: "auto 0", display: "flex", flexDirection: "column", gap: "24px", maxWidth: "520px" }}>
-          <p className="auth-hero" style={{ margin: "0", fontSize: "44px", lineHeight: "1.08", fontWeight: "500", letterSpacing: "-0.025em", color: "var(--ink)" }}>Hold, trade and manage tokenized assets from one place.</p>
-          <ol className="auth-steps" style={{ listStyle: "none", margin: "0", padding: "0" }}>
-            <li style={{ display: "flex", gap: "16px", padding: "16px 0", borderTop: "1px solid var(--hairline)" }}>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", fontWeight: "500", letterSpacing: "0.14em", color: "var(--ink-muted)", paddingTop: "3px" }}>01</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "17px", fontWeight: "500", color: "var(--ink)" }}>Create your account</span>
-                <span style={{ fontSize: "15px", lineHeight: "1.5", color: "var(--ink-muted)" }}>Sign up with Google or your work email.</span>
-              </div>
-            </li>
-            <li style={{ display: "flex", gap: "16px", padding: "16px 0", borderTop: "1px solid var(--hairline)" }}>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", fontWeight: "500", letterSpacing: "0.14em", color: "var(--ink-muted)", paddingTop: "3px" }}>02</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "17px", fontWeight: "500", color: "var(--ink)" }}>Verify who you are</span>
-                <span style={{ fontSize: "15px", lineHeight: "1.5", color: "var(--ink-muted)" }}>A one-time check, for you or your organization.</span>
-              </div>
-            </li>
-            <li style={{ display: "flex", gap: "16px", padding: "16px 0", borderTop: "1px solid var(--hairline)" }}>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", fontWeight: "500", letterSpacing: "0.14em", color: "var(--ink-muted)", paddingTop: "3px" }}>03</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "17px", fontWeight: "500", color: "var(--ink)" }}>Your agent is set up</span>
-                <span style={{ fontSize: "15px", lineHeight: "1.5", color: "var(--ink-muted)" }}>Every account gets its own agent. It keeps your context and memory, and learns how you work.</span>
-              </div>
-            </li>
-            <li style={{ display: "flex", gap: "16px", padding: "16px 0", borderTop: "1px solid var(--hairline)" }}>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", fontWeight: "500", letterSpacing: "0.14em", color: "var(--ink-muted)", paddingTop: "3px" }}>04</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "17px", fontWeight: "500", color: "var(--ink)" }}>Connect a wallet</span>
-                <span style={{ fontSize: "15px", lineHeight: "1.5", color: "var(--ink-muted)" }}>You keep custody. Promorphic never holds your keys.</span>
-              </div>
-            </li>
-          </ol>
-        </div>
-        <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", letterSpacing: "0.02em", color: "var(--ink-faint)" }}>app.promorphic.xyz</div>
-      </div>
-      <main className="auth-main" style={{ flex: "1 1 480px", boxSizing: "border-box", padding: "48px 32px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", gap: "20px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <h1 style={{ margin: "0", fontSize: "32px", lineHeight: "1.1", fontWeight: "500", letterSpacing: "-0.02em", color: "var(--ink)" }}>Create your account</h1>
-            <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.5", color: "var(--ink-muted)" }}>It takes a minute. Verification comes next.</p>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>Account type</span>
+    <AuthLayout aside={
+      <ol className="auth-steps" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+        {STEPS.map(([title, body], i) => (
+          <li key={title} style={{ display: 'flex', gap: '16px', padding: '16px 0', borderTop: '1px solid var(--hairline)' }}>
+            <span style={{ fontFamily: MONO, fontSize: '12px', fontWeight: 500, letterSpacing: '0.14em', color: 'var(--ink-muted)', paddingTop: '3px' }}>{`0${i + 1}`}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{ fontSize: '17px', fontWeight: 500, color: 'var(--ink)' }}>{title}</span>
+              <span style={{ fontSize: '15px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>{body}</span>
+            </div>
+          </li>
+        ))}
+      </ol>
+    }>
+      {sentTo ? (
+        <CheckEmail email={sentTo} isNew resend={() => send(sentTo)} back={() => { setSentTo(''); setProblems({}); }} />
+      ) : (
+        <>
+          <Heading title="Create your account">It takes a minute. Verification comes next.</Heading>
+          {config.isError && <Problem>Sign-up is unavailable right now. Try again in a moment.</Problem>}
+          {AUTH_ON && config.data && !config.data.email && !config.data.google && <Problem>Sign-up is not switched on yet.</Problem>}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)' }}>Account type</span>
             <div>
-              <Segmented label="Account type" options={["Organization", "Individual"]} value={type} onChange={setType} />
+              <Segmented label="Account type" options={['Organization', 'Individual']} value={type} onChange={(t) => { setType(t); clear('organization'); }} />
             </div>
           </div>
-          <button className="btn btn-ghost" data-go="/" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap", width: "100%", minHeight: "48px", fontSize: "15px" }}>Sign up with Google</button>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <span aria-hidden="true" style={{ flex: "1 1 0", height: "1px", background: "var(--hairline)" }} />
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", color: "var(--ink-muted)" }}>or</span>
-            <span aria-hidden="true" style={{ flex: "1 1 0", height: "1px", background: "var(--hairline)" }} />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label htmlFor="su-name" style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>Full name</label>
-            <input id="su-name" type="text" placeholder="Your name" style={{ height: "48px", boxSizing: "border-box", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", color: "var(--ink)", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "15px", padding: "0 14px" }} />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label htmlFor="su-email" style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>Work email</label>
-            <input id="su-email" type="email" placeholder="you@company.com" style={{ height: "48px", boxSizing: "border-box", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", color: "var(--ink)", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "15px", padding: "0 14px" }} />
-          </div>
-          <div hidden={type === 'Individual'} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label htmlFor="su-org" style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>Organization</label>
-            <input id="su-org" type="text" placeholder="Legal name of your organization" style={{ height: "48px", boxSizing: "border-box", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", color: "var(--ink)", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "15px", padding: "0 14px" }} />
-          </div>
-          <label htmlFor="su-agree" style={{ display: "flex", alignItems: "flex-start", gap: "10px", minHeight: "44px", fontSize: "14px", lineHeight: "1.5", color: "var(--ink-muted)", cursor: "pointer" }}>
-            <input id="su-agree" type="checkbox" style={{ width: "18px", height: "18px", margin: "2px 0 0", accentColor: "var(--ink)" }} />
-            <span>
-              {"I agree to the "}
-              <a href="#" style={{ color: "var(--ink)", textUnderlineOffset: "3px" }}>Terms</a>
-              {" and "}
-              <a href="#" style={{ color: "var(--ink)", textUnderlineOffset: "3px" }}>Privacy Policy</a>.</span>
-          </label>
-          <button className="btn btn-primary" data-go="/" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontWeight: "500", color: "var(--on-brand)", background: "var(--brand)", border: "0", borderRadius: "2px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap", width: "100%", minHeight: "48px", fontSize: "15px" }}>Create account</button>
-          <p style={{ margin: "0", paddingTop: "12px", borderTop: "1px solid var(--hairline)", fontSize: "14px", color: "var(--ink-muted)" }}>
-            {"Already have an account? "}
-            <Link to="/login/" style={{ color: "var(--ink)", textUnderlineOffset: "3px" }}>Sign in</Link>
+          {showGoogle && (
+            <button className="btn btn-ghost" type="button" style={ghost} disabled={!!busy} onClick={withGoogle}>
+              {busy === 'google' ? 'Waiting for Google…' : 'Sign up with Google'}
+            </button>
+          )}
+          {showGoogle && showEmail && <Or />}
+          <form noValidate onSubmit={withEmail} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {showEmail && (
+              <>
+                <Field id="su-name" label="Full name" type="text" name="name" autoComplete="name" placeholder="Your name"
+                  value={name} onChange={(e) => { setName(e.target.value); clear('name'); }} error={problems.name} />
+                <Field id="su-email" label="Work email" type="email" name="email" autoComplete="email" placeholder="you@company.com"
+                  value={email} onChange={(e) => { setEmail(e.target.value); clear('email'); }} error={problems.email} />
+              </>
+            )}
+            {isOrg && (
+              <Field id="su-org" label="Organization" type="text" name="organization" autoComplete="organization" placeholder="Legal name of your organization"
+                value={organization} onChange={(e) => { setOrganization(e.target.value); clear('organization'); }} error={problems.organization} />
+            )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label htmlFor="su-agree" style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', minHeight: '44px', fontSize: '14px', lineHeight: 1.5, color: 'var(--ink-muted)', cursor: 'pointer' }}>
+                <input id="su-agree" type="checkbox" checked={agreed} aria-describedby={problems.agreed ? 'su-agree-problem' : undefined}
+                  onChange={(e) => { setAgreed(e.target.checked); clear('agreed'); }} style={{ width: '18px', height: '18px', margin: '2px 0 0', accentColor: 'var(--ink)' }} />
+                <span>
+                  {'I agree to the '}
+                  <a href="#" style={inkLink}>Terms</a>
+                  {' and '}
+                  <a href="#" style={inkLink}>Privacy Policy</a>.
+                </span>
+              </label>
+              <Problem id="su-agree-problem">{problems.agreed}</Problem>
+            </div>
+            {showEmail && (
+              <button className="btn btn-primary" type="submit" style={primary} disabled={!!busy}>
+                {busy === 'email' ? 'Sending…' : 'Create account'}
+              </button>
+            )}
+          </form>
+          <Problem>{problems.form}</Problem>
+          <p style={foot}>
+            {'Already have an account? '}
+            <Link to="/login/" style={inkLink}>Sign in</Link>
           </p>
-        </div>
-      </main>
-    </div>
+        </>
+      )}
+    </AuthLayout>
   );
 }

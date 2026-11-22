@@ -39,6 +39,9 @@ input[type="checkbox"] { flex: none; }
 .btn-ghost:hover, .btn-quiet:hover, .btn-chip:hover { background: var(--surface-2) !important; }
 .btn-ghost:hover { border-color: var(--ink-faint) !important; }
 .btn-solid:hover { opacity: .86; }
+.btn:disabled { opacity: .6; cursor: default !important; }
+.link-button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link-button:hover { color: var(--ink); }
 .btn-filter:hover { border-color: var(--ink-faint) !important; }
 .btn-filter[data-active] { background: var(--ink) !important; color: var(--surface-0) !important; border-color: var(--ink) !important; }
 .btn-filter[data-active] svg path { stroke: var(--surface-0) !important; }

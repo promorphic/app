@@ -1,5 +1,6 @@
 import { useState, type MouseEvent } from 'react';
 import { Link, NavLink } from 'react-router';
+import { AUTH_ON, signOut, useSession } from '../auth/session';
 import { Logo } from './Logo';
 import { MONO, eyebrow } from './styles';
 
@@ -10,6 +11,7 @@ const GROUPS = [
 
 export function Sidebar() {
   const [open, setOpen] = useState(false);
+  const session = useSession();
   // On a phone the menu closes once a screen is chosen, the current one included.
   const closeOnLink = (e: MouseEvent) => { if ((e.target as Element).closest('a')) setOpen(false); };
 
@@ -46,10 +48,21 @@ export function Sidebar() {
           <span style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-muted)' }}>Running · Copilot</span>
         </Link>
         <div style={{ borderTop: '1px solid var(--hairline)', padding: '16px 12px 0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)' }}>abhi@promorphic.xyz</div>
-          <div style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-faint)' }}>
-            Test account · <Link to="/login/" style={{ textUnderlineOffset: '3px' }}>Sign out</Link>
-          </div>
+          {AUTH_ON && session ? (
+            <>
+              <div title={session.user.email} style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session.user.email}</div>
+              <div style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-faint)' }}>
+                {session.user.accountType === 'organization' ? 'Organization' : 'Individual'} · <button type="button" className="link-button" onClick={signOut}>Sign out</button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)' }}>abhi@promorphic.xyz</div>
+              <div style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-faint)' }}>
+                Test account · <Link to="/login/" style={{ textUnderlineOffset: '3px' }}>Sign out</Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </nav>

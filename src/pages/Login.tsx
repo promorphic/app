@@ -1,58 +1,92 @@
-import { Link } from 'react-router';
-import { ThemeSwitch } from '../layout/ThemeSwitch';
+import { useState, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { AuthLayout, Field, foot, ghost, Heading, inkLink, note, Or, primary, Problem } from '../auth/AuthLayout';
+import { CheckEmail } from '../auth/CheckEmail';
+import { googleAccessToken, PopupClosed } from '../auth/google';
+import { AUTH_ON, signedIn, takeReturn, useAuthConfig, type SignedIn } from '../auth/session';
+import { ApiError, getApi } from '../lib/api';
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function Login() {
+  const navigate = useNavigate();
+  const config = useAuthConfig();
+  const [email, setEmail] = useState('');
+  const [problem, setProblem] = useState<{ field?: 'email'; text: string; signup?: boolean } | null>(null);
+  const [busy, setBusy] = useState<'' | 'email' | 'google'>('');
+  const [sentTo, setSentTo] = useState('');
+
+  const showGoogle = !AUTH_ON || !!config.data?.google;
+  const showEmail = !AUTH_ON || !config.data || config.data.email;
+  const fail = (e: unknown) => {
+    if (e instanceof PopupClosed) return;
+    const noAccount = e instanceof ApiError && e.code === 'no_account';
+    setProblem({ text: (e as Error).message, signup: noAccount, field: noAccount || (e instanceof ApiError && e.code === 'bad_email') ? 'email' : undefined });
+  };
+  const send = (to: string) => getApi('/v1/auth/email', { email: to, intent: 'signin' });
+
+  const withEmail = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!AUTH_ON) return navigate('/');
+    const to = email.trim();
+    if (!EMAIL.test(to)) return setProblem({ field: 'email', text: 'Enter your work email, like you@company.com.' });
+    setBusy('email'); setProblem(null);
+    try { await send(to); setSentTo(to); } catch (err) { fail(err); } finally { setBusy(''); }
+  };
+  const withGoogle = async () => {
+    if (!AUTH_ON) return navigate('/');
+    if (!config.data?.google) return;
+    setBusy('google'); setProblem(null);
+    try {
+      const accessToken = await googleAccessToken(config.data.google.clientId);
+      signedIn(await getApi<SignedIn>('/v1/auth/google', { accessToken, intent: 'signin' }));
+      navigate(takeReturn(), { replace: true });
+    } catch (err) { fail(err); } finally { setBusy(''); }
+  };
+
   return (
-    <div className="app-root" style={{ boxSizing: "border-box", background: "var(--surface-0)", color: "var(--ink)", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", display: "flex", flexWrap: "wrap", alignItems: "stretch" }}>
-      <div className="auth-aside" style={{ flex: "1 1 480px", boxSizing: "border-box", borderRight: "1px solid var(--hairline)", padding: "32px 48px 40px", display: "flex", flexDirection: "column", gap: "48px" }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Link to="/" style={{ display: "flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 8px", textDecoration: "none", color: "var(--ink)" }}>
-            <svg width="26" height="26" viewBox="0 4 70.3125 70.3125" role="img" aria-label="Promorphic">
-              <rect x="0" y="4" width="39.5508" height="24.1699" style={{ fill: "var(--ink)" }} />
-              <rect x="0" y="32.5645" width="70.3125" height="13.1836" style={{ fill: "var(--brand)" }} />
-              <rect x="30.7617" y="50.1426" width="39.5508" height="24.1699" style={{ fill: "var(--ink)" }} />
-            </svg>
-            <span style={{ fontSize: "20px", fontWeight: "500", letterSpacing: "-0.01em", color: "var(--ink)" }}>Promorphic</span>
-          </Link>
-          <span style={{ marginLeft: "auto" }}>
-            <ThemeSwitch />
-          </span>
-        </div>
-        <div style={{ margin: "auto 0", display: "flex", flexDirection: "column", gap: "24px", maxWidth: "520px" }}>
-          <p className="auth-hero" style={{ margin: "0", fontSize: "44px", lineHeight: "1.08", fontWeight: "500", letterSpacing: "-0.025em", color: "var(--ink)" }}>Hold, trade and manage tokenized assets from one place.</p>
-          <p style={{ margin: "0", fontSize: "18px", lineHeight: "1.5", color: "var(--ink-muted)" }}>Your own agent works inside the limits you set. You keep custody.</p>
-        </div>
-        <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", letterSpacing: "0.02em", color: "var(--ink-faint)" }}>app.promorphic.xyz</div>
-      </div>
-      <main className="auth-main" style={{ flex: "1 1 480px", boxSizing: "border-box", padding: "48px 32px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: "400px", display: "flex", flexDirection: "column", gap: "20px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <h1 style={{ margin: "0", fontSize: "32px", lineHeight: "1.1", fontWeight: "500", letterSpacing: "-0.02em", color: "var(--ink)" }}>Sign in</h1>
-            <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.5", color: "var(--ink-muted)" }}>Use the account you signed up with.</p>
-          </div>
-          <button className="btn btn-ghost" data-go="/" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap", width: "100%", minHeight: "48px", fontSize: "15px" }}>Continue with Google</button>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <span aria-hidden="true" style={{ flex: "1 1 0", height: "1px", background: "var(--hairline)" }} />
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "12px", color: "var(--ink-muted)" }}>or</span>
-            <span aria-hidden="true" style={{ flex: "1 1 0", height: "1px", background: "var(--hairline)" }} />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label htmlFor="login-email" style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>Work email</label>
-            <input id="login-email" type="email" placeholder="you@company.com" style={{ height: "48px", boxSizing: "border-box", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", color: "var(--ink)", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "15px", padding: "0 14px" }} />
-          </div>
-          <button className="btn btn-primary" data-go="/" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontWeight: "500", color: "var(--on-brand)", background: "var(--brand)", border: "0", borderRadius: "2px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap", width: "100%", minHeight: "48px", fontSize: "15px" }}>Continue with email</button>
-          <p style={{ margin: "0", fontSize: "13px", lineHeight: "1.5", color: "var(--ink-muted)" }}>We will email you a sign-in link. No password needed.</p>
-          <p style={{ margin: "0", paddingTop: "12px", borderTop: "1px solid var(--hairline)", fontSize: "14px", color: "var(--ink-muted)" }}>
-            {"New to Promorphic? "}
-            <Link to="/signup/" style={{ color: "var(--ink)", textUnderlineOffset: "3px" }}>Create an account</Link>
+    <AuthLayout aside={<p style={{ margin: 0, fontSize: '18px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>Your own agent works inside the limits you set. You keep custody.</p>}>
+      {sentTo ? (
+        <CheckEmail email={sentTo} isNew={false} resend={() => send(sentTo)} back={() => { setSentTo(''); setProblem(null); }} />
+      ) : (
+        <>
+          <Heading title="Sign in">Use the account you signed up with.</Heading>
+          {config.isError && <Problem>Sign-in is unavailable right now. Try again in a moment.</Problem>}
+          {AUTH_ON && config.data && !config.data.email && !config.data.google && <Problem>Sign-in is not switched on yet.</Problem>}
+          {showGoogle && (
+            <button className="btn btn-ghost" type="button" style={ghost} disabled={!!busy} onClick={withGoogle}>
+              {busy === 'google' ? 'Waiting for Google…' : 'Continue with Google'}
+            </button>
+          )}
+          {showGoogle && showEmail && <Or />}
+          {showEmail && (
+            <form noValidate onSubmit={withEmail} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <Field id="login-email" label="Work email" type="email" name="email" autoComplete="email" placeholder="you@company.com"
+                value={email} onChange={(e) => { setEmail(e.target.value); if (problem?.field) setProblem(null); }}
+                error={problem?.field === 'email' && !problem.signup ? problem.text : undefined} />
+              {problem?.signup && (
+                <Problem>
+                  {problem.text} <Link to="/signup/" state={{ email: email.trim() }} style={inkLink}>Create an account</Link>
+                </Problem>
+              )}
+              <button className="btn btn-primary" type="submit" style={primary} disabled={!!busy}>
+                {busy === 'email' ? 'Sending…' : 'Continue with email'}
+              </button>
+              <p style={note}>We will email you a sign-in link. No password needed.</p>
+            </form>
+          )}
+          {problem && !problem.field && <Problem>{problem.text}</Problem>}
+          <p style={foot}>
+            {'New to Promorphic? '}
+            <Link to="/signup/" style={inkLink}>Create an account</Link>
           </p>
-          <p style={{ margin: "0", fontSize: "13px", lineHeight: "1.5", color: "var(--ink-muted)" }}>
-            <a href="#" style={{ textUnderlineOffset: "3px" }}>Terms</a>
-            {" · "}
-            <a href="#" style={{ textUnderlineOffset: "3px" }}>Privacy</a>
+          <p style={note}>
+            <a href="#" style={{ textUnderlineOffset: '3px' }}>Terms</a>
+            {' · '}
+            <a href="#" style={{ textUnderlineOffset: '3px' }}>Privacy</a>
           </p>
-        </div>
-      </main>
-    </div>
+        </>
+      )}
+    </AuthLayout>
   );
 }

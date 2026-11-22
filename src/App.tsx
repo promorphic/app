@@ -1,5 +1,6 @@
 import { useEffect, type ReactElement } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
+import { RequireAuth, SignedOutOnly } from './auth/RequireAuth';
 import { AppShell } from './layout/AppShell';
 import { notYet, Toast } from './lib/toast';
 import Activity from './pages/Activity';
@@ -11,6 +12,7 @@ import NotFound from './pages/NotFound';
 import Orders from './pages/Orders';
 import Portfolio from './pages/Portfolio';
 import Signup from './pages/Signup';
+import Verify from './pages/Verify';
 import Wallets from './pages/Wallets';
 
 type Screen = { path: string; id: string; title: string; element: ReactElement };
@@ -28,12 +30,13 @@ const AUTH: Screen[] = [
   { path: '/login', id: 'login', title: 'Sign in', element: <Login /> },
   { path: '/signup', id: 'signup', title: 'Sign up', element: <Signup /> },
 ];
+const VERIFY: Screen = { path: '/auth/verify', id: 'verify', title: 'Signing in', element: <Verify /> };
 const clean = (path: string) => path.replace(/\/+$/, '') || '/';
 
 export function App() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const screen = [...APP, ...AUTH].find((s) => s.path === clean(pathname));
+  const screen = [...APP, ...AUTH, VERIFY].find((s) => s.path === clean(pathname));
 
   // Each screen starts at the top and names itself in the tab.
   useEffect(() => {
@@ -58,10 +61,15 @@ export function App() {
   return (
     <>
       <Routes>
-        <Route element={<AppShell page={screen?.id ?? ''} />}>
-          {APP.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+        <Route element={<RequireAuth />}>
+          <Route element={<AppShell page={screen?.id ?? ''} />}>
+            {APP.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+          </Route>
         </Route>
-        {AUTH.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+        <Route element={<SignedOutOnly />}>
+          {AUTH.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+        </Route>
+        <Route path={VERIFY.path} element={VERIFY.element} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toast />
