@@ -50,13 +50,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "WTTS:GBBV5CF7UPA2PYRPA632URLB55BWML7X4H33ZRCDWMTULOXDGPHJR5VI",
+        "code": "WTTS",
+        "kind": "classic",
+        "contract": "CBZ63YIHU3OOSP2JW3CHMXJ67T3Z3IU3NRSSJ4M53GFDIRR4YXKCEE36",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "SPXUX",
@@ -69,13 +82,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "SPXU:GDJBVX3QA5HJPBSAU5VIX2W6MC37NU4UFXPKEGK42SJCYN6AEQ4Z6COM",
+        "code": "SPXU",
+        "kind": "classic",
+        "contract": "CBVCBEMVSVH73W7HZZHEMFYSYNF2ALRUFNSATHF2WXENW33BGF5FSTFR",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "WTSTX",
@@ -88,13 +114,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "WTST:GDEBI5X7J4IDXCSVV3KPFZIHQRCBVF3DAZMS5H7KYOBK45T6XYGDE77P",
+        "code": "WTST",
+        "kind": "classic",
+        "contract": "CACJVBOTJ22N224NILIACP6FM75XE5JXIV2PGWYIXJ5R3GW3YD5VVFVS",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "WTPIX",
@@ -126,13 +165,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "FLTT:GBTZKH3RNKW46XEZNCGZEBAGJISKDZKQXKSQ2N5G5SFX36TLWKKR6QJ6",
+        "code": "FLTT",
+        "kind": "classic",
+        "contract": "CCZ6ZWEO3KEA6PHTK56C6MEOHPVPBWZ7C3YUXR6SMBROPIEVXWICRY2L",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "WTLGX",
@@ -145,13 +197,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "WTLG:GAK7PE7DD4ZRJQN3VBCQFBKFV53JGUM2SQATQAKLFK6MVONPGNYK34XH",
+        "code": "WTLG",
+        "kind": "classic",
+        "contract": "CAIDESHFY4QU4I7FNNROV2ADPFZCWMB3VDMLBT5DZYEKWGOLT4ODNS6I",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "CRDYX",
@@ -164,13 +229,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Accredited"
+      "access": "Accredited",
+      "stellar": {
+        "id": "CRDT:GBWMQUGPPLSC62YPGD5CEHATOQRQMNLNAV2TMEXJ4ZYOTY4TJD6J2P45",
+        "code": "CRDT",
+        "kind": "classic",
+        "contract": "CRDT:GBWMQUGPPLSC62YPGD5CEHATOQRQMNLNAV2TMEXJ4ZYOTY4TJD6J2P45",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "WTSIX",
@@ -183,13 +261,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "WTSI:GAD22PDBRFEMXAKPFDP4JGDFWKKD6VPXWUWEAXBS6ZYJYFFQDUN7HAFG",
+        "code": "WTSI",
+        "kind": "classic",
+        "contract": "WTSI:GAD22PDBRFEMXAKPFDP4JGDFWKKD6VPXWUWEAXBS6ZYJYFFQDUN7HAFG",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "WTSYX",
@@ -202,13 +293,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "WTSY:GB3ZUC7FGDEEBXY3BDEJWMPNGBFA66YRI4QQT6PBO3ZT6F33S7RL36VF",
+        "code": "WTSY",
+        "kind": "classic",
+        "contract": "CATVJYIVZMI3FFCFLNNBUSR7UGLIOCMJRZJ5YZU4LOVWKPTC4VSQ2IQG",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "EQTYX",
@@ -221,13 +325,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "EQTY:GAKODZFS4MV36JGDTULJACWJKBJCO33CJTVTWSQFSUV7XLZJNXTDH6D6",
+        "code": "EQTY",
+        "kind": "classic",
+        "contract": "EQTY:GAKODZFS4MV36JGDTULJACWJKBJCO33CJTVTWSQFSUV7XLZJNXTDH6D6",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "LNGVX",
@@ -240,13 +357,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "LNGV:GAHOGWBAWNIKESGNNW7Y7JU5KL54HIEHJGY6Y5QLY6YR3J7WZIDHLC6D",
+        "code": "LNGV",
+        "kind": "classic",
+        "contract": "LNGV:GAHOGWBAWNIKESGNNW7Y7JU5KL54HIEHJGY6Y5QLY6YR3J7WZIDHLC6D",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "MODRX",
@@ -259,13 +389,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "MODR:GANULT25TFO6V6BFWSEG4VSCR4QXBNHV5T344R2AFZEPE6B324LVLOOJ",
+        "code": "MODR",
+        "kind": "classic",
+        "contract": "MODR:GANULT25TFO6V6BFWSEG4VSCR4QXBNHV5T344R2AFZEPE6B324LVLOOJ",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "TECHX",
@@ -278,13 +421,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "TECH:GDSAW27GPR7EWKPTFDPGN2WWZYUHBFKVDBLOUUEKSNKHID4ZWUVOBF5R",
+        "code": "TECH",
+        "kind": "classic",
+        "contract": "CDBYSQCKN644WWEJBPYDDTF2V5BDSJKC2EXVIEKLGHQSMKILY4IO2NCD",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "TIPSX",
@@ -297,13 +453,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "TIPS:GAJ4KSYLVBJKQ4UBPKJJXPYWVIRZWVTIYRMHBXTHGCDS4XJXXYEUALVD",
+        "code": "TIPS",
+        "kind": "classic",
+        "contract": "CC5XKPSET6QVWPL7EFUA7KXO6XLWPWXJKAGJC24MXW7EYVXQLUBV4OM5",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "WTGXX",
@@ -316,13 +485,26 @@
         "arbitrum",
         "avalanche",
         "base",
-        "optimism"
+        "optimism",
+        "stellar"
       ],
       "settles": [
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "stellar": {
+        "id": "WTGX:GDMBNMFJ3TRFLASJ6UGETFME3PJPNKPU24C7KFDBEBPQFG2CI6UC3JG6",
+        "code": "WTGX",
+        "kind": "classic",
+        "contract": "CCDI4CNUSRI2UYQ2F44VVUB47WNYQL552SQLL5KT6JQHDTTOS4PAWQ5G",
+        "decimals": 7,
+        "domain": "stellar.wisdomtree.com",
+        "controls": [
+          "freeze",
+          "clawback"
+        ]
+      }
     },
     {
       "ticker": "AAOI",
@@ -5243,6 +5425,695 @@
       "multiplier": "1.000000000000000000",
       "logoUrl": "https://cdn.robinhood.com/ncw_assets/logos/0x7dc013eb55e436f30d7ed1afe4e36d6e45e3c3f7.png",
       "fractional": true
+    },
+    {
+      "ticker": "JAAA",
+      "name": "Janus Henderson Anemoy AAA CLO Fund",
+      "issuer": "Centrifuge",
+      "class": "Private credit",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CDV6U7OEVY6KUEJ4WNS63AYB6RFU3BAE7AZJOQ7LPH447C6NWUXEZZSO",
+      "contract": "CDV6U7OEVY6KUEJ4WNS63AYB6RFU3BAE7AZJOQ7LPH447C6NWUXEZZSO",
+      "decimals": 18,
+      "logoUrl": "https://centrifuge.mypinata.cloud/ipfs/bafkreifp5ww5lpbgrny36oxgzg2kjw2226lmj2vmekp4nqemm5ewhhtmwi",
+      "domain": "centrifuge.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 4860312.03,
+      "holders": null
+    },
+    {
+      "ticker": "JQQQ",
+      "name": "Janus Henderson NASDAQ-100 Index Fund",
+      "issuer": "Centrifuge",
+      "class": "Equities",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CAQYPRTX2E6H6BM57QRBYZWP667FPDYDUHMOQXGXM2HA64KO6AISRFEK",
+      "contract": "CAQYPRTX2E6H6BM57QRBYZWP667FPDYDUHMOQXGXM2HA64KO6AISRFEK",
+      "decimals": 18,
+      "logoUrl": "https://centrifuge-files.mypinata.cloud/ipfs/QmQcNLvyiGF1rN6VHFwJJDhfnmPjtCDFiTeHAWdyghv7yv",
+      "domain": "centrifuge.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 5000001.75,
+      "holders": null
+    },
+    {
+      "ticker": "JTRSY",
+      "name": "Janus Henderson Anemoy Treasury Fund",
+      "issuer": "Centrifuge",
+      "class": "Fixed income",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CBHOEKLWTB6HR2A3IXHIIMQG5FOXWXS6EG4Q5YJDRPMXPCX7M24CYR2O",
+      "contract": "CBHOEKLWTB6HR2A3IXHIIMQG5FOXWXS6EG4Q5YJDRPMXPCX7M24CYR2O",
+      "decimals": 18,
+      "logoUrl": "https://centrifuge.mypinata.cloud/ipfs/bafkreieracb5e57bhg7bphd7sp4hxf3yhbm3cxinst3o5mennfosagkxuu",
+      "domain": "centrifuge.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 4547091.59,
+      "holders": null
+    },
+    {
+      "ticker": "deJAAA",
+      "name": "Janus Henderson Anemoy AAA CLO Fund (deRWA)",
+      "issuer": "Centrifuge",
+      "class": "Private credit",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CC64WBDGS6QQP22QTTIACYIXT3WF7BBQEYOQPLTP7GTKYY7PZ74QYGSL",
+      "contract": "CC64WBDGS6QQP22QTTIACYIXT3WF7BBQEYOQPLTP7GTKYY7PZ74QYGSL",
+      "decimals": 18,
+      "logoUrl": "https://centrifuge.mypinata.cloud/ipfs/bafkreifp5ww5lpbgrny36oxgzg2kjw2226lmj2vmekp4nqemm5ewhhtmwi",
+      "domain": "centrifuge.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 12995707.29,
+      "holders": null
+    },
+    {
+      "ticker": "deJTRSY",
+      "name": "Janus Henderson Anemoy Treasury Fund (deRWA)",
+      "issuer": "Centrifuge",
+      "class": "Fixed income",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CBI7UCH5KGSVQRO5H4SUCZUTZABCITZLRHQQZTWL2TK4RZ72TAR6IHRV",
+      "contract": "CBI7UCH5KGSVQRO5H4SUCZUTZABCITZLRHQQZTWL2TK4RZ72TAR6IHRV",
+      "decimals": 18,
+      "logoUrl": "https://centrifuge.mypinata.cloud/ipfs/bafkreieracb5e57bhg7bphd7sp4hxf3yhbm3cxinst3o5mennfosagkxuu",
+      "domain": "centrifuge.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 13564534.21,
+      "holders": null
+    },
+    {
+      "ticker": "CETES",
+      "name": "Etherfuse CETES",
+      "issuer": "Etherfuse",
+      "class": "Fixed income",
+      "yield30d": 5.49,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "CETES:GCRYUGD5NVARGXT56XEZI5CIFCQETYHAPQQTHO2O3IQZTHDH4LATMYWC",
+      "contract": "CAL6ER2TI6CTRAY6BFXWNWA7WTYXUXTQCHUBCIBU5O6KM3HJFG6Z6VXV",
+      "decimals": 7,
+      "logoUrl": "https://stablebonds.s3.us-west-2.amazonaws.com/stablebond/spl-cetes.png",
+      "domain": "etherfuse.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 53440998.16,
+      "holders": 1428
+    },
+    {
+      "ticker": "EUROB",
+      "name": "Etherfuse EUROB",
+      "issuer": "Etherfuse",
+      "class": "Fixed income",
+      "yield30d": 2.12,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "EUROB:GCRYUGD5NVARGXT56XEZI5CIFCQETYHAPQQTHO2O3IQZTHDH4LATMYWC",
+      "contract": "CCHXOH2JGL6KBO5VOHR6WD4ZQXI6CFMJ5F65XVSZ6P47Y7KVZSQIPN6J",
+      "decimals": 7,
+      "logoUrl": "https://stablebonds.s3.us-west-2.amazonaws.com/stablebond/spl-eurob.png",
+      "domain": "etherfuse.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 151.5,
+      "holders": 37
+    },
+    {
+      "ticker": "GILTS",
+      "name": "Etherfuse GILTS",
+      "issuer": "Etherfuse",
+      "class": "Fixed income",
+      "yield30d": 3.69,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "GILTS:GCRYUGD5NVARGXT56XEZI5CIFCQETYHAPQQTHO2O3IQZTHDH4LATMYWC",
+      "contract": "CCQNEBGX5RJQGNLQ25C67DZLOSNM4NFQBANUS3ASALF2X552BSIQ6XCE",
+      "decimals": 7,
+      "logoUrl": "https://stablebonds.s3.us-west-2.amazonaws.com/stablebond/spl-gilts.png",
+      "domain": "etherfuse.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 151.03,
+      "holders": 22
+    },
+    {
+      "ticker": "KTB",
+      "name": "Etherfuse KTB",
+      "issuer": "Etherfuse",
+      "class": "Fixed income",
+      "yield30d": 2.75,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "KTB:GCRYUGD5NVARGXT56XEZI5CIFCQETYHAPQQTHO2O3IQZTHDH4LATMYWC",
+      "contract": "CBAECV6UVDS6ZKPMC63MUYY4V7Q3KTHR7NLUFGVVGK7K3AQT475QTETP",
+      "decimals": 7,
+      "logoUrl": "https://stablebonds.s3.us-west-2.amazonaws.com/stablebond/spl-ktb.png",
+      "domain": "etherfuse.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 101.0,
+      "holders": 53
+    },
+    {
+      "ticker": "TESOURO",
+      "name": "Etherfuse TESOURO",
+      "issuer": "Etherfuse",
+      "class": "Fixed income",
+      "yield30d": 11.99,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "TESOURO:GCRYUGD5NVARGXT56XEZI5CIFCQETYHAPQQTHO2O3IQZTHDH4LATMYWC",
+      "contract": "CD6M4R2322BYCY2LNWM74PEBQAQ63SA3DUJLI3L4225U4ZVCLMSCBCIS",
+      "decimals": 7,
+      "logoUrl": "https://stablebonds.s3.us-west-2.amazonaws.com/stablebond/spl-tesouro.png",
+      "domain": "etherfuse.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 850055.85,
+      "holders": 239
+    },
+    {
+      "ticker": "USTRY",
+      "name": "Etherfuse USTRY",
+      "issuer": "Etherfuse",
+      "class": "Fixed income",
+      "yield30d": 3.72,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "USTRY:GCRYUGD5NVARGXT56XEZI5CIFCQETYHAPQQTHO2O3IQZTHDH4LATMYWC",
+      "contract": "CBLV4ATSIWU67CFSQU2NVRKINQIKUZ2ODSZBUJTJ43VJVRSBTZYOPNUR",
+      "decimals": 7,
+      "logoUrl": "https://stablebonds.s3.us-west-2.amazonaws.com/stablebond/spl-ustry.png",
+      "domain": "etherfuse.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 11514042.82,
+      "holders": 1206
+    },
+    {
+      "ticker": "BENJI",
+      "name": "Franklin OnChain U.S. Government Money Fund",
+      "issuer": "Franklin Templeton",
+      "class": "Money market",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "BENJI:GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+      "contract": "CCDSDPD7FXB74PFB2SYCHGQRWLXQRYRTQSPCVSRJ7FAOLOUGWEYAXQ7A",
+      "decimals": 7,
+      "logoUrl": "https://www.franklintempleton.com/assets/images/brand/ft-global-logo-footer.png",
+      "domain": "www.franklintempleton.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 1303335761.68,
+      "holders": 1402
+    },
+    {
+      "ticker": "gBENJI",
+      "name": "Franklin OnChain U.S. Government Money Fund",
+      "issuer": "Franklin Templeton",
+      "class": "Money market",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "gBENJI:GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP",
+      "contract": "gBENJI:GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP",
+      "decimals": 7,
+      "logoUrl": "https://www.franklintempleton.com/assets/images/brand/ft-global-logo-footer.png",
+      "domain": "www.franklintempleton.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 51779126.58,
+      "holders": 15
+    },
+    {
+      "ticker": "grBENJI",
+      "name": "Franklin OnChain U.S. Government Money Fund AB (Ddis) USD",
+      "issuer": "Franklin Templeton",
+      "class": "Money market",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "grBENJI:GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ",
+      "contract": "CBEFW4IKKVB5KAX7QJAOHZUY77X5M6TRHE7ER6V75WESMAG7SSJBWP4R",
+      "decimals": 7,
+      "logoUrl": "https://www.franklintempleton.com/assets/images/brand/ft-global-logo-footer.png",
+      "domain": "www.franklintempleton.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 1791234.87,
+      "holders": 13
+    },
+    {
+      "ticker": "sgBENJI",
+      "name": "Franklin OnChain U.S. Dollar Short-Term Money Market Fund A(acc)USD",
+      "issuer": "Franklin Templeton",
+      "class": "Money market",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "sgBENJI:GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C",
+      "contract": "sgBENJI:GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C",
+      "decimals": 7,
+      "logoUrl": "https://www.franklintempleton.com/assets/images/brand/ft-global-logo-footer.png",
+      "domain": "www.franklintempleton.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 35948089.08,
+      "holders": 14
+    },
+    {
+      "ticker": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "issuer": "Ondo Finance",
+      "class": "Fixed income",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "USDY:GAJMPX5NBOG6TQFPQGRABJEEB2YE7RFRLUKJDZAZGAD5GFX4J7TADAZ6",
+      "contract": "CB3YA656OYIHU57657I5KGSBRHE5I3OZU4VFC22PYAOANFZHEWNYGAGP",
+      "decimals": 7,
+      "logoUrl": "https://cdn.ondo.finance/tokens/logos/usdy_160x160.png",
+      "domain": "ondo.finance",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 467473808.45,
+      "holders": 3416
+    },
+    {
+      "ticker": "EUTBL",
+      "name": "Spiko T-Bills Euro",
+      "issuer": "Spiko",
+      "class": "Money market",
+      "yield30d": 2.45,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "EUR"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CBGV2QFQBBGEQRUKUMCPO3SZOHDDYO6SCP5CH6TW7EALKVHCXTMWDDOF",
+      "contract": "CBGV2QFQBBGEQRUKUMCPO3SZOHDDYO6SCP5CH6TW7EALKVHCXTMWDDOF",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 198652902.15,
+      "holders": null
+    },
+    {
+      "ticker": "SAFO",
+      "name": "Spiko Dollar",
+      "issuer": "Spiko",
+      "class": "Money market",
+      "yield30d": 4.37,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CDGSC6BA4TCAOVSFQCUEHDMOIIHYYVNYBT6YEARS4MX3ITAHUINVGQHX",
+      "contract": "CDGSC6BA4TCAOVSFQCUEHDMOIIHYYVNYBT6YEARS4MX3ITAHUINVGQHX",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 124496792.15,
+      "holders": null
+    },
+    {
+      "ticker": "SPKCC",
+      "name": "Spiko Cash & Carry Dollar",
+      "issuer": "Spiko",
+      "class": "Alternative",
+      "yield30d": 1.99,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CDS2GCAQTNQINSCJUJIVBJXILKBWP5PU7LOBGHMP3X47QCQBFKPMTCNT",
+      "contract": "CDS2GCAQTNQINSCJUJIVBJXILKBWP5PU7LOBGHMP3X47QCQBFKPMTCNT",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 813126.76,
+      "holders": null
+    },
+    {
+      "ticker": "UKTBL",
+      "name": "Spiko T-Bills Pound",
+      "issuer": "Spiko",
+      "class": "Money market",
+      "yield30d": 3.57,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "GBP"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CDT3KU6TQZNOHKNOHNAFFDQZDURVC3MSTL4ML7TUTZGNOPBZCLABP4FR",
+      "contract": "CDT3KU6TQZNOHKNOHNAFFDQZDURVC3MSTL4ML7TUTZGNOPBZCLABP4FR",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 7089335.06,
+      "holders": null
+    },
+    {
+      "ticker": "USTBL",
+      "name": "Spiko T-Bills Dollar",
+      "issuer": "Spiko",
+      "class": "Money market",
+      "yield30d": 4.0,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CARUUX2FZNPH6DGJOEUFSIUQWYHNL5AVDV7PMVSHWL7OBYIBFC76F4TO",
+      "contract": "CARUUX2FZNPH6DGJOEUFSIUQWYHNL5AVDV7PMVSHWL7OBYIBFC76F4TO",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 34847642.28,
+      "holders": null
+    },
+    {
+      "ticker": "chfSAFO",
+      "name": "Spiko Swiss Franc",
+      "issuer": "Spiko",
+      "class": "Money market",
+      "yield30d": 0.24,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "CHF"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CAJD2IBSP7VO2VYJQUYJSOGPJINTUYV7MQITINXVPTIH3CCLCUENNMW4",
+      "contract": "CAJD2IBSP7VO2VYJQUYJSOGPJINTUYV7MQITINXVPTIH3CCLCUENNMW4",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 4503906.58,
+      "holders": null
+    },
+    {
+      "ticker": "eurSAFO",
+      "name": "Spiko Euro",
+      "issuer": "Spiko",
+      "class": "Money market",
+      "yield30d": 2.84,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "EUR"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CBOOCGZSVRSZFRE4U2NWR2B4RXYVJWRCBTGOUD2JPI2TDJPWMTJX7FZP",
+      "contract": "CBOOCGZSVRSZFRE4U2NWR2B4RXYVJWRCBTGOUD2JPI2TDJPWMTJX7FZP",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 1548919275.95,
+      "holders": null
+    },
+    {
+      "ticker": "eurSPKCC",
+      "name": "Spiko Cash & Carry Euro",
+      "issuer": "Spiko",
+      "class": "Alternative",
+      "yield30d": 0.3,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "EUR"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CDWOB6T7SVSMMQN5V3P2OPTBAXOP7DAZHGVW3PYTZIKHVFKN6TBSXR6A",
+      "contract": "CDWOB6T7SVSMMQN5V3P2OPTBAXOP7DAZHGVW3PYTZIKHVFKN6TBSXR6A",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 4636778.13,
+      "holders": null
+    },
+    {
+      "ticker": "gbpSAFO",
+      "name": "Spiko Pound",
+      "issuer": "Spiko",
+      "class": "Money market",
+      "yield30d": 4.44,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "GBP"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Soroban token",
+      "source": "stellar:list-assets",
+      "id": "CAGYRRKPFSWKM6SJOE4QAAVYMOSHMDS5WOQ4T5A2E6XNCU7LZZKUNQKP",
+      "contract": "CAGYRRKPFSWKM6SJOE4QAAVYMOSHMDS5WOQ4T5A2E6XNCU7LZZKUNQKP",
+      "decimals": 5,
+      "logoUrl": null,
+      "domain": "spiko.io",
+      "controls": [
+        "see contract"
+      ],
+      "supply": 41403242.72,
+      "holders": null
+    },
+    {
+      "ticker": "GOLD",
+      "name": "WisdomTree Gold Token",
+      "issuer": "WisdomTree",
+      "class": "Commodities",
+      "yield30d": null,
+      "chains": [
+        "stellar"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "Stellar asset",
+      "source": "stellar:list-assets",
+      "id": "GOLD:GCK75CK3VX5L4ZLSD7HHNVA4L3LKGIAYWLCZO2IBNGOFTBV3HJBE2MPJ",
+      "contract": "GOLD:GCK75CK3VX5L4ZLSD7HHNVA4L3LKGIAYWLCZO2IBNGOFTBV3HJBE2MPJ",
+      "decimals": 7,
+      "logoUrl": "https://stellar.wisdomtree.com/.well-known/wt.png",
+      "domain": "stellar.wisdomtree.com",
+      "controls": [
+        "freeze",
+        "clawback"
+      ],
+      "supply": 488.86,
+      "holders": 843
     }
   ]
 }
