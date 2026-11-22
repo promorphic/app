@@ -171,11 +171,16 @@
   }
   function fmtYield(y) { return y == null ? '—' : y.toFixed(2) + '%'; }
 
-  // ---- Live data: Stock Tokens and their prices come from the Promorphic API ----
+  // ---- Live data from the Promorphic API ----
   // Prices are indicative. Without the API the list still shows the snapshot in /data/assets.json, with no prices.
   var API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? 'http://localhost:8787' : 'https://promorphic-api-1017392197056.europe-west1.run.app';
-  var prices = {};
-  function isLive(a) { return a.kind === 'Stock Token'; }
+  // A chain's own script (static/<chain>/) plugs in through window.PM: it adds a price source,
+  // a function that returns { text, title } for an asset it prices, and can replace its rows in the list.
+  var priceSources = [], listReady;
+  function chainPrice(a) {
+    for (var i = 0; i < priceSources.length; i++) { var r = priceSources[i](a); if (r) return r; }
+    return null;
+  }
   // Stellar: issuer NAV where one is published, else the mid of the built-in exchange's USDC book.
   var stellarQuotes = {};
   var CCY = { USD: '$', EUR: '€', GBP: '£', CHF: 'CHF ' };
@@ -192,17 +197,14 @@
   function fmtPrice(a) {
     var sq = stellarQuote(a);
     if (sq && sq.price) return fmtStellarPrice(sq);
-    var q = isLive(a) ? prices[a.ticker] : null;
-    if (!q || !q.tokenMid) return '—';
-    if (q.halted) return 'Halted';
-    return '$' + Number(q.tokenMid).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    var p = chainPrice(a);
+    return p ? p.text : '—';
   }
   function priceTitle(a) {
     var sq = stellarQuote(a);
     if (sq && sq.price) return stellarTitle(sq);
-    var q = isLive(a) ? prices[a.ticker] : null;
-    if (!q || !q.tokenBid) return '';
-    return 'Indicative. Bid ' + Number(q.tokenBid).toFixed(2) + ', ask ' + Number(q.tokenAsk).toFixed(2) + ' per token, ' + new Date(q.at).toLocaleTimeString();
+    var p = chainPrice(a);
+    return p ? p.title || '' : '';
   }
   function paintPrices() {
     $$('tr[data-ticker]', tbody).forEach(function (tr) {
@@ -217,14 +219,14 @@
   function getApi(path) {
     return fetch(API + path).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
   }
-  function loadPrices() {
-    if (document.hidden) return;
-    getApi('/v1/robinhood/prices').then(function (d) {
-      prices = {};
-      (d.quotes || []).forEach(function (q) { prices[q.symbol] = q; });
-      paintPrices();
-    }).catch(function () {});
-  }
+  window.PM = {
+    api: getApi,
+    addPriceSource: function (fn) { priceSources.push(fn); },
+    repaint: function () { paintPrices(); },
+    assets: function () { return data.assets; },
+    setAssets: function (list) { data.assets = list; render(); },
+    ready: new Promise(function (resolve) { listReady = resolve; }) // resolves once the list has first been drawn
+  };
   function loadStellar() {
     if (document.hidden) return;
     getApi('/v1/stellar/prices').then(function (d) {
@@ -266,24 +268,6 @@
       });
       data.assets = rows;
       applyStellarYields();
-      render();
-    }).catch(function () {});
-  }
-  // The live registry replaces the snapshot's Stock Tokens; an asset's class is kept from the snapshot.
-  function loadLiveAssets() {
-    getApi('/v1/robinhood/assets').then(function (d) {
-      var known = {};
-      data.assets.forEach(function (a) { if (isLive(a)) known[a.ticker] = a; });
-      var live = (d.assets || []).filter(function (x) { return x.active; }).map(function (x) {
-        var old = known[x.symbol] || {};
-        return {
-          ticker: x.symbol, name: x.name, issuer: old.issuer || 'Robinhood', 'class': old['class'] || 'Equities', yield30d: null,
-          chains: ['robinhood'], settles: old.settles || ['USDG'], access: old.access || 'Retail, non-US',
-          kind: 'Stock Token', contract: x.contract, multiplier: x.multiplier
-        };
-      });
-      if (live.length < 50) return;
-      data.assets = data.assets.filter(function (a) { return !isLive(a); }).concat(live);
       render();
     }).catch(function () {});
   }
@@ -500,12 +484,11 @@
   Promise.all([getJSON('/data/assets.json'), getJSON('/data/featured.json').catch(function () { return {}; })])
     .then(function (r) { data = { chains: r[0].chains || {}, assets: r[0].assets || [], featured: r[1].issuers || {} };
       render();
-      loadLiveAssets(); loadPrices(); loadLiveStellar(); loadStellar();
-      setInterval(loadPrices, 15000);
+      listReady();
+      loadLiveStellar(); loadStellar();
       setInterval(loadStellar, 60000);
       setInterval(loadLiveStellar, 10 * 60000);
-      setInterval(loadLiveAssets, 5 * 60000);
-      document.addEventListener('visibilitychange', function () { loadPrices(); loadStellar(); });
+      document.addEventListener('visibilitychange', loadStellar);
     })
     .catch(function () {
       countEl.textContent = '';
