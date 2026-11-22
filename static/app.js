@@ -152,6 +152,23 @@
 
   function chainCode(id) { return (data.chains[id] && data.chains[id].code) || String(id).toUpperCase(); }
   function chainName(id) { return (data.chains[id] && data.chains[id].name) || id; }
+  // A chain is shown by its mark, in the variant for the current theme; without one, by its short code.
+  function chainMark(id) {
+    var c = data.chains[id] || {}, el = document.createElement('span');
+    el.className = 'chain';
+    el.title = chainName(id);
+    if (!c.logo) { el.textContent = chainCode(id); return el; }
+    ['on-dark', 'on-light'].forEach(function (v) {
+      var img = document.createElement('img');
+      img.className = v;
+      img.src = '/static/chains/' + c.logo + '-' + v + '.svg';
+      img.width = 20; img.height = 20;
+      img.alt = v === 'on-dark' ? chainName(id) : '';
+      img.onerror = function () { el.textContent = chainCode(id); };
+      el.appendChild(img);
+    });
+    return el;
+  }
   function fmtYield(y) { return y == null ? '—' : y.toFixed(2) + '%'; }
 
   function matches(a) {
@@ -182,7 +199,12 @@
       set('name', a.name);
       set('class', a.class);
       set('yield', fmtYield(a.yield30d));
-      set('chains', (a.chains || []).map(chainCode).join(' · '));
+      var cell = $('[data-f="chains"]', tr);
+      cell.textContent = '';
+      var marks = document.createElement('span');
+      marks.className = 'chains';
+      (a.chains || []).forEach(function (id) { marks.appendChild(chainMark(id)); });
+      cell.appendChild(marks);
       tbody.appendChild(tr);
     });
     if (!list.length) {

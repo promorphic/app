@@ -4,31 +4,38 @@
   "chains": {
     "ethereum": {
       "code": "ETH",
-      "name": "Ethereum"
+      "name": "Ethereum",
+      "logo": "ethereum"
     },
     "arbitrum": {
       "code": "ARB",
-      "name": "Arbitrum"
+      "name": "Arbitrum",
+      "logo": "arbitrum"
     },
     "avalanche": {
       "code": "AVAX",
-      "name": "Avalanche"
+      "name": "Avalanche",
+      "logo": "avalanche"
     },
     "base": {
       "code": "BASE",
-      "name": "Base"
+      "name": "Base",
+      "logo": "base"
     },
     "optimism": {
       "code": "OP",
-      "name": "Optimism"
+      "name": "Optimism",
+      "logo": "optimism"
     },
     "stellar": {
       "code": "XLM",
-      "name": "Stellar"
+      "name": "Stellar",
+      "logo": "stellar"
     },
     "robinhood": {
       "code": "HOOD",
-      "name": "Robinhood Chain"
+      "name": "Robinhood Chain",
+      "logo": "robinhood"
     }
   },
   "assets": [

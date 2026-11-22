@@ -39,7 +39,7 @@ The Assets list, its count, its search and all six filters are drawn from [`data
 ```
 
 - `yield30d` is a number in percent, or `null` when there is none (shown as a dash).
-- `chains` are keys of the top-level `chains` map, which gives each chain its short code and its name: `"stellar": { "code": "XLM", "name": "Stellar" }`. Add a chain there before using it. Stellar and Robinhood Chain are already defined.
+- `chains` are keys of the top-level `chains` map, which gives each chain its short code, its name and its logo: `"stellar": { "code": "XLM", "name": "Stellar", "logo": "stellar" }`. The list shows each chain by its mark from `static/chains/` (see the note there). Add a chain there before using it. Stellar and Robinhood Chain are already defined.
 - A new issuer, class, settlement currency or access level appears in its filter as soon as one asset uses it.
 
 ## Run it locally

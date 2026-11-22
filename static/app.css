@@ -123,7 +123,7 @@ input[type="checkbox"] { flex: none; }
 [data-page="orders"] .app-main th, [data-page="orders"] .app-main td { padding-left: 12px !important; padding-right: 12px !important; }
 
 /* Wrapped text in a row keeps clear of the rules, and an asset's name keeps a readable measure */
-.app-main td { padding-top: 10px !important; padding-bottom: 10px !important; }
+.app-main td { box-sizing: border-box; padding-top: 10px !important; padding-bottom: 10px !important; }
 .app-main td:first-child > div > span:last-child { min-width: 200px; }
 
 /* Smallest phones: long values and suggestion chips wrap instead of spilling */
@@ -131,3 +131,11 @@ input[type="checkbox"] { flex: none; }
 @media (max-width: 420px) {
   section[aria-label="Ask your agent"] button { white-space: normal !important; text-align: left; padding-top: 8px !important; padding-bottom: 8px !important; }
 }
+
+/* Chain marks: one size, the light-ground variant in the light version and the dark-ground one otherwise */
+.chains { display: inline-flex; align-items: center; gap: 10px; vertical-align: middle; }
+.chain { display: inline-flex; align-items: center; height: 20px; }
+.chain img { display: block; width: 20px; height: 20px; }
+.chain .on-light { display: none; }
+[data-theme="light"] .chain .on-light { display: block; }
+[data-theme="light"] .chain .on-dark { display: none; }
