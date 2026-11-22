@@ -4,6 +4,7 @@ import { Dialog } from '../../components/Dialog';
 import { getApi } from '../../lib/api';
 import type { Asset } from '../../assets/types';
 import { Eligibility } from './Eligibility';
+import { Trade } from './Trade';
 import { qty, time, usd } from './wallet';
 
 type Side = 'buy' | 'sell';
@@ -17,11 +18,12 @@ interface QuoteResult {
 }
 
 // Assets screen: an indicative quote for a Stock Token, comparing LiFi and 0x, and whether the visitor
-// may trade Stock Tokens at all. Nothing is traded.
+// may trade Stock Tokens at all. An eligible wallet can then trade the quoted amount (Trade.tsx).
 export function QuoteDialog({ asset, onClose }: { asset: Asset; onClose: () => void }) {
   const [side, setSide] = useState<Side>('buy');
   const [amount, setAmount] = useState('100');
   const [invalid, setInvalid] = useState(false);
+  const [trading, setTrading] = useState(false);
   const quote = useMutation({
     mutationFn: (v: { side: Side; amount: string }) =>
       getApi<QuoteResult>(`/v1/robinhood/quote?side=${v.side}&symbol=${encodeURIComponent(asset.ticker)}&amount=${encodeURIComponent(v.amount)}`),
@@ -52,15 +54,15 @@ export function QuoteDialog({ asset, onClose }: { asset: Asset; onClose: () => v
         <p>{asset.name}. A Stock Token on Robinhood Chain, traded against USDG.</p>
         <div className="live-row">
           <div className="live-seg" role="group" aria-label="Side">
-            <button className="live-btn" type="button" aria-pressed={side === 'buy'} onClick={() => choose('buy')}>Buy</button>
-            <button className="live-btn" type="button" aria-pressed={side === 'sell'} onClick={() => choose('sell')}>Sell</button>
+            <button className="live-btn" type="button" aria-pressed={side === 'buy'} disabled={trading} onClick={() => choose('buy')}>Buy</button>
+            <button className="live-btn" type="button" aria-pressed={side === 'sell'} disabled={trading} onClick={() => choose('sell')}>Sell</button>
           </div>
           <label>
             {side === 'buy' ? 'Amount to spend, in USDG' : `Amount to sell, in ${asset.ticker} tokens`}
             <input className="live-input" type="text" inputMode="decimal" autoComplete="off" autoFocus value={amount}
               onChange={(e) => setAmount(e.target.value)} onFocus={(e) => e.target.select()} />
           </label>
-          <button className="live-btn solid" type="submit" disabled={quote.isPending}>Get quote</button>
+          <button className="live-btn solid" type="submit" disabled={quote.isPending || trading}>Get quote</button>
         </div>
         <div className="live-quotes" aria-live="polite">
           {invalid && <p className="live-error">Enter an amount greater than zero.</p>}
@@ -97,6 +99,7 @@ export function QuoteDialog({ asset, onClose }: { asset: Asset; onClose: () => v
           )}
         </div>
         <p>Quotes are indicative and compare LiFi and 0x.</p>
+        {q?.tradable && quote.variables && <Trade symbol={asset.ticker} side={quote.variables.side} amount={quote.variables.amount} onBusy={setTrading} />}
         <Eligibility />
         <div className="live-foot">
           <button className="live-btn" type="button" onClick={onClose}>Close</button>

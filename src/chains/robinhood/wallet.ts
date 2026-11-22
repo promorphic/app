@@ -1,4 +1,5 @@
-// The wallet whose Robinhood Chain balances the app reads. Read-only: an address, kept in this browser.
+// The wallet whose Robinhood Chain balances the app reads: an address, kept in this browser.
+// Reading needs no signature. Trading (Trade.tsx) asks the browser wallet holding it to sign.
 import { useQuery } from '@tanstack/react-query';
 import { getApi } from '../../lib/api';
 import { createStore } from '../../lib/store';

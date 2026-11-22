@@ -5,6 +5,7 @@ import { getApi } from '../../lib/api';
 import { short, useWallet } from './wallet';
 
 interface Status {
+  eligible: boolean;
   region: { status: string };
   reasons: { message: string }[];
   declared: boolean | null;
@@ -13,13 +14,18 @@ interface Status {
   attribution?: { text: string; url: string };
 }
 
+const eligibilityKey = (wallet: string | null) => ['robinhood', 'eligibility', wallet];
+export function useEligibility(wallet: string | null) {
+  return useQuery({ queryKey: eligibilityKey(wallet), queryFn: () => getApi<Status>('/v1/robinhood/eligibility' + (wallet ? '?address=' + wallet : '')), staleTime: 60_000 });
+}
+
 // Who may trade Stock Tokens: the API checks the visitor's country and whether the wallet has declared.
 export function Eligibility() {
   const wallet = useWallet();
   const client = useQueryClient();
-  const key = ['robinhood', 'eligibility', wallet];
+  const key = eligibilityKey(wallet);
   const [agreed, setAgreed] = useState(false);
-  const status = useQuery({ queryKey: key, queryFn: () => getApi<Status>('/v1/robinhood/eligibility' + (wallet ? '?address=' + wallet : '')), staleTime: 60_000 });
+  const status = useEligibility(wallet);
   const declare = useMutation({
     mutationFn: (s: Status) => getApi<Status>('/v1/robinhood/eligibility/declaration', { address: wallet, version: s.declaration.version, accepted: true }),
     onSuccess: (next) => client.setQueryData(key, next),
@@ -42,7 +48,7 @@ export function Eligibility() {
     body = (
       <>
         <h3>Eligibility confirmed</h3>
-        <p>Wallet {short(wallet)} confirmed on {new Date(s.declaredAt ?? Date.now()).toLocaleDateString()}. Trading itself is not available in the sandbox yet.</p>
+        <p>Wallet {short(wallet)} confirmed on {new Date(s.declaredAt ?? Date.now()).toLocaleDateString()}. Get a quote above to trade.</p>
       </>
     );
   } else {

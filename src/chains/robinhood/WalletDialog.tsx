@@ -27,7 +27,7 @@ export function WalletDialog({ onClose }: { onClose: () => void }) {
     <Dialog onClose={onClose}>
       <form method="dialog" onSubmit={save}>
         <h2>Robinhood Chain wallet</h2>
-        <p>Paste a wallet address to see its live holdings on Robinhood Chain. This is read-only: Promorphic reads balances and never asks you to sign anything here.</p>
+        <p>Paste a wallet address to see its live holdings on Robinhood Chain. Setting it is read-only: Promorphic reads balances and nothing is signed. A trade asks your browser wallet to confirm each step.</p>
         <label>
           Wallet address
           <input className="live-input" type="text" placeholder="0x…" autoComplete="off" spellCheck={false} autoFocus value={value} onChange={(e) => setValue(e.target.value)} />
