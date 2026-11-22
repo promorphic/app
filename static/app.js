@@ -176,13 +176,30 @@
   var API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? 'http://localhost:8787' : 'https://promorphic-api-1017392197056.europe-west1.run.app';
   var prices = {};
   function isLive(a) { return a.kind === 'Stock Token'; }
+  // Stellar: issuer NAV where one is published, else the mid of the built-in exchange's USDC book.
+  var stellarQuotes = {};
+  var CCY = { USD: '$', EUR: '€', GBP: '£', CHF: 'CHF ' };
+  function stellarQuote(a) { return a.source === 'stellar:list-assets' ? stellarQuotes[a.ticker] : null; }
+  function fmtStellarPrice(q) {
+    var dp = q.price < 0.01 ? 6 : 4;
+    return (CCY[q.currency] || '') + Number(q.price).toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function stellarTitle(q) {
+    var t = q.priceKind === 'nav' ? 'Net asset value from ' + q.source + (q.navAt ? ', ' + new Date(q.navAt).toLocaleDateString() : '') : 'Indicative. Mid of the Stellar exchange order book against USDC';
+    if (q.marketBid) t += '. Market bid ' + q.marketBid.toFixed(4) + ', ask ' + q.marketAsk.toFixed(4);
+    return t;
+  }
   function fmtPrice(a) {
+    var sq = stellarQuote(a);
+    if (sq && sq.price) return fmtStellarPrice(sq);
     var q = isLive(a) ? prices[a.ticker] : null;
     if (!q || !q.tokenMid) return '—';
     if (q.halted) return 'Halted';
     return '$' + Number(q.tokenMid).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function priceTitle(a) {
+    var sq = stellarQuote(a);
+    if (sq && sq.price) return stellarTitle(sq);
     var q = isLive(a) ? prices[a.ticker] : null;
     if (!q || !q.tokenBid) return '';
     return 'Indicative. Bid ' + Number(q.tokenBid).toFixed(2) + ', ask ' + Number(q.tokenAsk).toFixed(2) + ' per token, ' + new Date(q.at).toLocaleTimeString();
@@ -193,6 +210,8 @@
       if (!a || !cell) return;
       cell.textContent = fmtPrice(a);
       cell.title = priceTitle(a);
+      var y = $('[data-f="yield"]', tr);
+      if (y) y.textContent = fmtYield(a.yield30d);
     });
   }
   function getApi(path) {
@@ -203,6 +222,15 @@
     getApi('/v1/robinhood/prices').then(function (d) {
       prices = {};
       (d.quotes || []).forEach(function (q) { prices[q.symbol] = q; });
+      paintPrices();
+    }).catch(function () {});
+  }
+  function loadStellar() {
+    if (document.hidden) return;
+    getApi('/v1/stellar/prices').then(function (d) {
+      stellarQuotes = {};
+      (d.quotes || []).forEach(function (q) { stellarQuotes[q.symbol] = q; });
+      data.assets.forEach(function (a) { var q = stellarQuote(a); if (q && q.yield30d != null) a.yield30d = q.yield30d; });
       paintPrices();
     }).catch(function () {});
   }
@@ -437,10 +465,11 @@
   Promise.all([getJSON('/data/assets.json'), getJSON('/data/featured.json').catch(function () { return {}; })])
     .then(function (r) { data = { chains: r[0].chains || {}, assets: r[0].assets || [], featured: r[1].issuers || {} };
       render();
-      loadLiveAssets(); loadPrices();
+      loadLiveAssets(); loadPrices(); loadStellar();
       setInterval(loadPrices, 15000);
+      setInterval(loadStellar, 60000);
       setInterval(loadLiveAssets, 5 * 60000);
-      document.addEventListener('visibilitychange', loadPrices);
+      document.addEventListener('visibilitychange', function () { loadPrices(); loadStellar(); });
     })
     .catch(function () {
       countEl.textContent = '';
