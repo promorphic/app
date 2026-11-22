@@ -50,6 +50,7 @@ export function mergeStellar(snapshot: Asset[], live: LiveAsset[] | undefined, q
     });
     const hosts = new Map(others.map((a, i) => [a.issuer + '|' + a.ticker, i]));
     const added: Asset[] = [];
+    const listed = new Set<string>();
     live.forEach((x) => {
       const host = x.fundTicker ? hosts.get(x.issuer + '|' + x.fundTicker) : undefined;
       if (host !== undefined) {
@@ -73,8 +74,15 @@ export function mergeStellar(snapshot: Asset[], live: LiveAsset[] | undefined, q
       };
       elsewhere.forEach((c) => { if (was[c]) row[c] = was[c]; });
       added.push(row);
+      listed.add(x.symbol);
     });
-    rows = [...others, ...added];
+    // A snapshot row the registry no longer lists goes, unless the fund is also on another chain:
+    // then the row stays for that chain, without Stellar and without the Stellar token's own details.
+    const kept = Object.values(old).filter((a) => !listed.has(a.ticker) && a.chains.some((c) => c !== 'stellar')).map((a) => {
+      const { source: _s, kind: _k, id: _i, contract: _c, decimals: _d, domain: _m, controls: _o, logoUrl: _l, supply: _u, holders: _h, ...rest } = a;
+      return { ...rest, chains: a.chains.filter((c) => c !== 'stellar') } as Asset;
+    });
+    rows = [...others, ...kept, ...added];
   }
   if (!quotes) return rows;
   return rows.map((a) => {
