@@ -258,13 +258,17 @@
         var host = x.fundTicker && others[x.issuer + '|' + x.fundTicker];
         if (host) { host.stellar = chainInfo; if (host.chains.indexOf('stellar') === -1) host.chains.push('stellar'); return; }
         var was = old[x.symbol] || {};
-        rows.push({
+        // The fund may also be on other chains (BENJI and JAAA are on Avalanche): keep those chains and their blocks.
+        var elsewhere = (was.chains || []).filter(function (c) { return c !== 'stellar'; });
+        var row = {
           ticker: x.symbol, name: x.name, issuer: x.issuer, 'class': x['class'], yield30d: was.yield30d == null ? null : was.yield30d,
-          chains: ['stellar'], settles: x.settles || was.settles || ['USD'], access: x.access,
+          chains: ['stellar'].concat(elsewhere), settles: x.settles || was.settles || ['USD'], access: x.access,
           kind: x.kind === 'soroban' ? 'Soroban token' : 'Stellar asset', source: 'stellar:list-assets',
           id: x.id, contract: x.contract || x.id, decimals: x.decimals, logoUrl: x.logo, domain: x.domain,
           controls: x.controls, supply: x.supply, holders: x.holders
-        });
+        };
+        elsewhere.forEach(function (c) { if (was[c]) row[c] = was[c]; });
+        rows.push(row);
       });
       data.assets = rows;
       applyStellarYields();

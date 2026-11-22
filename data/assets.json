@@ -69,6 +69,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x401e7e6558507764805a545f61c049361aa7a7cb",
+        "symbol": "WTTSX",
+        "kind": "erc20",
+        "contract": "0x401e7E6558507764805a545f61C049361aA7a7cb",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -101,6 +114,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x1a149e21bd3e74b7018db79c988b4ba3bbc1873d",
+        "symbol": "SPXUX",
+        "kind": "erc20",
+        "contract": "0x1A149E21bd3E74b7018Db79C988B4Ba3bbC1873d",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -133,6 +159,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x15f0fb408097ce442482a127edc23371b0201964",
+        "symbol": "WTSTX",
+        "kind": "erc20",
+        "contract": "0x15f0FB408097Ce442482A127Edc23371b0201964",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -152,7 +191,20 @@
         "USD",
         "USDC"
       ],
-      "access": "Retail"
+      "access": "Retail",
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x7b778ec13ce5e3dbd62b9921bd7449a1f988627b",
+        "symbol": "EPXC",
+        "kind": "erc20",
+        "contract": "0x7b778EC13cE5E3dbd62b9921bD7449a1F988627B",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
+      }
     },
     {
       "ticker": "FLTTX",
@@ -184,6 +236,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xdc8e5a4954b1b4245e910fc17c9b4e4aa407595d",
+        "symbol": "FLTTX",
+        "kind": "erc20",
+        "contract": "0xDC8E5A4954B1B4245E910Fc17C9B4E4aa407595D",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "restricted",
+        "supply": 25.93357073384745,
+        "holders": 1
       }
     },
     {
@@ -216,6 +281,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x449331e1f93b0dbe0d54a7ce8bb3a5585f27848a",
+        "symbol": "WTLGX",
+        "kind": "erc20",
+        "contract": "0x449331E1f93b0dBe0d54A7cE8BB3a5585F27848a",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -248,6 +326,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xc6e95b2a2215d496e20d5a97312b2db9abfe20b6",
+        "symbol": "CRDT",
+        "kind": "erc20",
+        "contract": "0xC6e95B2A2215D496E20d5A97312b2DB9AbFe20B6",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -280,6 +371,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x69690e156ab458901a4b71c3fc5f5b8a598b931d",
+        "symbol": "WTSIX",
+        "kind": "erc20",
+        "contract": "0x69690e156Ab458901a4B71C3Fc5f5b8A598B931d",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -312,6 +416,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xbe310315ef22d0eb8a91c211a7286b10d21be7fc",
+        "symbol": "WTSYX",
+        "kind": "erc20",
+        "contract": "0xBE310315Ef22D0EB8a91c211a7286b10d21Be7fC",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -344,6 +461,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x8ac0d6b94ae23ad40407bc4dc16d74f09131eb48",
+        "symbol": "EQTYX",
+        "kind": "erc20",
+        "contract": "0x8ac0d6B94AE23ad40407BC4DC16D74F09131EB48",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -376,6 +506,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xf5fe77f469e598ecd2c08e5f874c206f8cfee807",
+        "symbol": "LNGVX",
+        "kind": "erc20",
+        "contract": "0xf5FE77F469e598ECD2c08E5f874c206f8CFEe807",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -408,6 +551,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x06ee92531ff2c8fdb5348b31b41df0f9a3a1ca97",
+        "symbol": "MODRX",
+        "kind": "erc20",
+        "contract": "0x06EE92531ff2C8fDB5348b31B41DF0F9a3a1CA97",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -440,6 +596,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x7f259541089253a037e1367ac09beed98f1a7974",
+        "symbol": "TECHX",
+        "kind": "erc20",
+        "contract": "0x7f259541089253a037E1367Ac09Beed98F1A7974",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -472,6 +641,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xbe0917f9d9d8a97e5ee0796831e0b05a1edc8437",
+        "symbol": "TIPSX",
+        "kind": "erc20",
+        "contract": "0xbe0917F9D9d8a97E5ee0796831e0b05a1eDc8437",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null
       }
     },
     {
@@ -504,6 +686,19 @@
           "freeze",
           "clawback"
         ]
+      },
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x870fd36b3bf7f5abeeea2c8d4abdf1dc4e33109d",
+        "symbol": "WTGXX",
+        "kind": "erc20",
+        "contract": "0x870FD36B3bf7f5abeEEa2C8D4abdF1dc4E33109d",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://www.wisdomtree.com/onchain/tokenized-funds/{ticker} (the contract address table on each fund's page)",
+        "access": "allowlist",
+        "supply": 967463.0064305079,
+        "holders": 6
       }
     },
     {
@@ -5433,7 +5628,8 @@
       "class": "Private credit",
       "yield30d": null,
       "chains": [
-        "stellar"
+        "stellar",
+        "avalanche"
       ],
       "settles": [
         "USDC"
@@ -5450,7 +5646,24 @@
         "see contract"
       ],
       "supply": 4860312.03,
-      "holders": null
+      "holders": null,
+      "avalanche": {
+        "id": "eip155:43114/erc20:0x58f93d6b1ef2f44ec379cb975657c132cbed3b6b",
+        "symbol": "JAAA",
+        "kind": "erc20",
+        "contract": "0x58f93d6b1ef2f44ec379cb975657c132cbed3b6b",
+        "chainId": 43114,
+        "decimals": 6,
+        "addressSource": "issuer",
+        "publishedAt": "https://api.centrifuge.io/ (tokenInstances where centrifugeId is 5, Avalanche)",
+        "access": "allowlist",
+        "supply": 250000001.0,
+        "holders": 3,
+        "nav": 1.0573529948992713,
+        "navCurrency": "USD",
+        "navKind": "nav",
+        "navSource": "Centrifuge API tokenPrice"
+      }
     },
     {
       "ticker": "JQQQ",
@@ -5485,7 +5698,8 @@
       "class": "Fixed income",
       "yield30d": null,
       "chains": [
-        "stellar"
+        "stellar",
+        "avalanche"
       ],
       "settles": [
         "USDC"
@@ -5502,7 +5716,24 @@
         "see contract"
       ],
       "supply": 4547091.59,
-      "holders": null
+      "holders": null,
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xa5d465251fbcc907f5dd6bb2145488dfc6a2627b",
+        "symbol": "JTRSY",
+        "kind": "erc20",
+        "contract": "0xa5d465251fbcc907f5dd6bb2145488dfc6a2627b",
+        "chainId": 43114,
+        "decimals": 6,
+        "addressSource": "issuer",
+        "publishedAt": "https://api.centrifuge.io/ (tokenInstances where centrifugeId is 5, Avalanche)",
+        "access": "allowlist",
+        "supply": 1.0,
+        "holders": 2,
+        "nav": 1.1228805225194105,
+        "navCurrency": "USD",
+        "navKind": "nav",
+        "navSource": "Centrifuge API tokenPrice"
+      }
     },
     {
       "ticker": "deJAAA",
@@ -5511,7 +5742,8 @@
       "class": "Private credit",
       "yield30d": null,
       "chains": [
-        "stellar"
+        "stellar",
+        "avalanche"
       ],
       "settles": [
         "USDC"
@@ -5528,7 +5760,24 @@
         "see contract"
       ],
       "supply": 12995707.29,
-      "holders": null
+      "holders": null,
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xaaa0008c8cf3a7dca931adaf04336a5d808c82cc",
+        "symbol": "deJAAA",
+        "kind": "erc20",
+        "contract": "0xaaa0008c8cf3a7dca931adaf04336a5d808c82cc",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://api.centrifuge.io/ (tokenInstances where centrifugeId is 5, Avalanche)",
+        "access": "allowlist",
+        "supply": 9.68521945721e-07,
+        "holders": 1,
+        "nav": 1.0558099337140414,
+        "navCurrency": "USD",
+        "navKind": "nav",
+        "navSource": "Centrifuge API tokenPrice"
+      }
     },
     {
       "ticker": "deJTRSY",
@@ -5537,7 +5786,8 @@
       "class": "Fixed income",
       "yield30d": null,
       "chains": [
-        "stellar"
+        "stellar",
+        "avalanche"
       ],
       "settles": [
         "USDC"
@@ -5554,7 +5804,24 @@
         "see contract"
       ],
       "supply": 13564534.21,
-      "holders": null
+      "holders": null,
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xa6233014b9b7aaa74f38fa1977ffc7a89642dc72",
+        "symbol": "deJTRSY",
+        "kind": "erc20",
+        "contract": "0xa6233014b9b7aaa74f38fa1977ffc7a89642dc72",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://api.centrifuge.io/ (tokenInstances where centrifugeId is 5, Avalanche)",
+        "access": "unknown",
+        "supply": 0.0,
+        "holders": null,
+        "nav": 1.043189798618201,
+        "navCurrency": "USD",
+        "navKind": "nav",
+        "navSource": "Centrifuge API tokenPrice"
+      }
     },
     {
       "ticker": "CETES",
@@ -5725,7 +5992,8 @@
       "class": "Money market",
       "yield30d": null,
       "chains": [
-        "stellar"
+        "stellar",
+        "avalanche"
       ],
       "settles": [
         "USD"
@@ -5743,7 +6011,20 @@
         "clawback"
       ],
       "supply": 1303335761.68,
-      "holders": 1402
+      "holders": 1402,
+      "avalanche": {
+        "id": "eip155:43114/erc20:0xe08b4c1005603427420e64252a8b120cace4d122",
+        "symbol": "BENJI",
+        "kind": "erc20",
+        "contract": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+        "chainId": 43114,
+        "decimals": 18,
+        "addressSource": "issuer",
+        "publishedAt": "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+        "access": "allowlist",
+        "supply": 2120940.578521759,
+        "holders": 4
+      }
     },
     {
       "ticker": "gBENJI",
@@ -6114,6 +6395,285 @@
       ],
       "supply": 488.86,
       "holders": 843
+    },
+    {
+      "ticker": "ACRED",
+      "name": "Apollo Diversified Credit Securitize Fund",
+      "issuer": "Apollo",
+      "class": "Private credit",
+      "yield30d": null,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x7c64925002bfa705834b118a923e9911bee32875",
+      "contract": "0x7C64925002BFA705834B118a923E9911BeE32875",
+      "chainId": 43114,
+      "decimals": 6,
+      "platform": "Securitize",
+      "addressSource": "deployer",
+      "publishedAt": "Not published by Securitize. Same deployer account as BUIDL; fund page https://securitize.io/primary-market/apollo-diversified-credit-securitize-fund",
+      "supply": 3390.451304,
+      "holders": 4,
+      "nav": 1111.48325,
+      "navCurrency": "USD",
+      "navKind": "nav",
+      "navSource": "RedStone feed 0x4BAD96DD1C7D541270a0C92e1D4e5f12EEEA7a57",
+      "navUpdated": "2026-11-21T21:41:23+00:00",
+      "navFeed": {
+        "address": "0x4BAD96DD1C7D541270a0C92e1D4e5f12EEEA7a57",
+        "decimals": 8,
+        "provider": "RedStone"
+      }
+    },
+    {
+      "ticker": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "issuer": "BlackRock",
+      "class": "Money market",
+      "yield30d": 3.78,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x53fc82f14f009009b440a706e31c9021e1196a2f",
+      "contract": "0x53FC82f14F009009b440a706e31c9021E1196A2F",
+      "chainId": 43114,
+      "decimals": 6,
+      "platform": "Securitize",
+      "addressSource": "issuer",
+      "publishedAt": "BlackRock and Securitize press release, 13 Nov 2024, \"BlackRock Launches New BUIDL Share Classes Across Multiple Blockchains\" (PR Newswire 302304035)",
+      "supply": 356728578.62,
+      "holders": 6,
+      "yieldSource": "mean daily accrual per $1, sampled every third day over 30 days, times 365 (RedStone feed 0xB89Cc2Ce1CaD0d26Fed6794C1f4cF4b28684624A)",
+      "nav": 1.0,
+      "navCurrency": "USD",
+      "navKind": "nav",
+      "navSource": "RedStone feed 0xebE443E20ADf302B59419648c4dbA0c7299cf1A2",
+      "navUpdated": "2026-11-21T16:59:52+00:00",
+      "navFeed": {
+        "address": "0xebE443E20ADf302B59419648c4dbA0c7299cf1A2",
+        "decimals": 8,
+        "provider": "RedStone"
+      }
+    },
+    {
+      "ticker": "REN",
+      "name": "Re Member Fund LP, Class N",
+      "issuer": "Re",
+      "class": "Alternative",
+      "yield30d": null,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0xbc370355963281b150307717520294effe2d9c50",
+      "contract": "0xBc370355963281B150307717520294Effe2D9C50",
+      "chainId": 43114,
+      "decimals": 8,
+      "platform": "Securitize",
+      "addressSource": "deployer",
+      "publishedAt": "Not published by Securitize. Same deployer account as BUIDL",
+      "supply": 12500.0,
+      "holders": 1
+    },
+    {
+      "ticker": "REU",
+      "name": "Re Member Fund LP, Class U",
+      "issuer": "Re",
+      "class": "Alternative",
+      "yield30d": null,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x8c21c5f64e17f77a6af671b6f51c2dd14ea6cf4a",
+      "contract": "0x8C21c5f64E17F77a6Af671b6f51c2DD14Ea6cf4A",
+      "chainId": 43114,
+      "decimals": 8,
+      "platform": "Securitize",
+      "addressSource": "deployer",
+      "publishedAt": "Not published by Securitize. Same deployer account as BUIDL",
+      "supply": 430.938577,
+      "holders": 1
+    },
+    {
+      "ticker": "reUSD",
+      "name": "Re Protocol Deposit Token (reinsurance)",
+      "issuer": "Re",
+      "class": "Alternative",
+      "yield30d": 6.92,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USDC"
+      ],
+      "access": "Open",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x180af87b47bf272b2df59dccf2d76a6eafa625bf",
+      "contract": "0x180aF87b47Bf272B2df59dccf2D76a6eaFa625Bf",
+      "chainId": 43114,
+      "decimals": 18,
+      "addressSource": "issuer",
+      "publishedAt": "https://docs.re.xyz/products/smart-contracts",
+      "supply": 394244.2491856906,
+      "holders": 599,
+      "yieldSource": "30-day change in NAV per token, annualized (Re feed 0x900E666ef07e97ce9Cada498dFB62114C8C56B66)",
+      "nav": 1.11514767,
+      "navCurrency": "USD",
+      "navKind": "nav",
+      "navSource": "Re feed 0x900E666ef07e97ce9Cada498dFB62114C8C56B66",
+      "navUpdated": "2026-11-21T23:46:03+00:00",
+      "navFeed": {
+        "address": "0x900E666ef07e97ce9Cada498dFB62114C8C56B66",
+        "decimals": 8,
+        "provider": "Re"
+      }
+    },
+    {
+      "ticker": "PARAVII",
+      "name": "Securitize Capital ParaFi Venture II Tokenized Fund",
+      "issuer": "Securitize",
+      "class": "Alternative",
+      "yield30d": null,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x3a206f8f7cec45f1bd48ee5f370d04f609504d56",
+      "contract": "0x3A206F8f7cEc45F1BD48Ee5F370D04f609504D56",
+      "chainId": 43114,
+      "decimals": 6,
+      "platform": "Securitize",
+      "addressSource": "deployer",
+      "publishedAt": "Not published by Securitize. Same deployer account as BUIDL",
+      "supply": 2265.0,
+      "holders": 1
+    },
+    {
+      "ticker": "SKHC",
+      "name": "Securitize KKR Health Care Growth II Tokenized Fund",
+      "issuer": "Securitize",
+      "class": "Alternative",
+      "yield30d": null,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USD"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x0b84f124596dac26010a9f79b7d8feade4ebbdbf",
+      "contract": "0x0B84f124596dAC26010a9f79B7D8Feade4EbbDBF",
+      "chainId": 43114,
+      "decimals": 0,
+      "platform": "Securitize",
+      "addressSource": "deployer",
+      "publishedAt": "Not published by Securitize. Same deployer account as BUIDL",
+      "supply": 8331.0,
+      "holders": 1
+    },
+    {
+      "ticker": "XAUt0",
+      "name": "Tether Gold",
+      "issuer": "Tether",
+      "class": "Commodities",
+      "yield30d": null,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USDT"
+      ],
+      "access": "Open",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x2775d5105276781b4b85ba6ea6a6653beed1dd32",
+      "contract": "0x2775d5105276781B4b85bA6eA6a6653bEeD1dd32",
+      "chainId": 43114,
+      "decimals": 6,
+      "addressSource": "issuer",
+      "publishedAt": "https://docs.usdt0.to/api/deployments",
+      "supply": 387.278718,
+      "holders": 1329,
+      "nav": 3575.3099815,
+      "navCurrency": "USD",
+      "navKind": "reference",
+      "navSource": "Gold spot, Chainlink XAU/USD; one token is one troy ounce",
+      "navUpdated": "2026-11-22T03:03:54+00:00",
+      "navFeed": {
+        "address": "0x1F41EF93dece881Ad0b98082B2d44D3f6F0C515B",
+        "decimals": 8,
+        "provider": "Chainlink"
+      }
+    },
+    {
+      "ticker": "VBILL",
+      "name": "VanEck Treasury Fund",
+      "issuer": "VanEck",
+      "class": "Money market",
+      "yield30d": 3.81,
+      "chains": [
+        "avalanche"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Issuer allowlist",
+      "kind": "ERC-20",
+      "source": "avalanche:list-assets",
+      "id": "eip155:43114/erc20:0x7f4546ef315efc65336187fe3765ea779ac90183",
+      "contract": "0x7F4546eF315Efc65336187Fe3765ea779Ac90183",
+      "chainId": 43114,
+      "decimals": 6,
+      "platform": "Securitize",
+      "addressSource": "deployer",
+      "publishedAt": "Not published by Securitize. Same deployer account as BUIDL; fund page https://securitize.io/primary-market/vaneck-vbill",
+      "supply": 709439.31,
+      "holders": 1,
+      "yieldSource": "mean daily accrual per $1, sampled every third day over 30 days, times 365 (RedStone feed 0x4f67Fd74cff274Ef2942223c0f3166b856410AdD)",
+      "nav": 1.0,
+      "navCurrency": "USD",
+      "navKind": "nav",
+      "navSource": "RedStone feed 0x53E57c2acBa2f9919ff545aa595Ff691B90d36a8",
+      "navUpdated": "2026-11-21T16:59:52+00:00",
+      "navFeed": {
+        "address": "0x53E57c2acBa2f9919ff545aa595Ff691B90d36a8",
+        "decimals": 8,
+        "provider": "RedStone"
+      }
     }
   ]
 }

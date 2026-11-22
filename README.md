@@ -10,6 +10,8 @@ It is the "Promorphic Design (Frontend)" canvas turned into pages. Each screen w
 
 **Also live, for Robinhood Chain** (`static/robinhood/`: `prices.js` for the Assets list and prices, `live.js` and `live.css` for the rest; each chain keeps its own code in a folder under `static/`): a read-only wallet address on the Wallets page (pasted or read from a browser wallet, kept in the browser, never used to sign), that wallet's live holdings on the Portfolio page, and an indicative LiFi and 0x quote from a Stock Token's Actions button on the Assets page. Trading itself is not wired.
 
+**Also live, for Avalanche C-Chain** (`static/avalanche/prices.js`): 29 assets carry a verified C-Chain contract, each traced to its issuer and checked on chain by the lister in the backend repo (`integrations/avalanche/`), which also writes them into `data/assets.json`. For the funds that publish one, the price column shows net asset value per token, read by the browser itself from the public C-Chain RPC (RedStone, Chainlink and issuer feeds) and from Centrifuge's API, with no key and no backend, and refreshed every five minutes; Tether Gold shows gold spot as a reference price. It is a NAV, not a quote. If those calls fail, the page shows the value in the snapshot. Yields for these rows come from the snapshot.
+
 ## Pages
 
 | Path | Screen |
@@ -43,7 +45,7 @@ The Assets list, its count, its search and all six filters are drawn from [`data
 ```
 
 - `yield30d` is a number in percent, or `null` when there is none (shown as a dash).
-- `chains` are keys of the top-level `chains` map, which gives each chain its short code, its name and its logo: `"stellar": { "code": "XLM", "name": "Stellar", "logo": "stellar" }`. The list shows each chain by its mark from `static/chains/` (see the note there). Add a chain there before using it. Stellar and Robinhood Chain are already defined.
+- `chains` are keys of the top-level `chains` map, which gives each chain its short code, its name and its logo: `"stellar": { "code": "XLM", "name": "Stellar", "logo": "stellar" }`. The list shows each chain by its mark from `static/chains/` (see the note there). Add a chain there before using it. Stellar, Robinhood Chain and Avalanche are already defined.
 - A new issuer, class, settlement currency or access level appears in its filter as soon as one asset uses it.
 
 ## The opening view

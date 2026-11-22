@@ -3,10 +3,16 @@
   "issuers": {
     "WisdomTree": ["WTGXX", "WTSYX", "SPXUX", "FLTTX", "CRDYX"],
     "Robinhood": ["NVDA", "AAPL", "TSLA", "MSFT", "AMZN"],
+    "BlackRock": ["BUIDL"],
     "Franklin Templeton": ["BENJI", "gBENJI", "sgBENJI", "grBENJI"],
+    "Apollo": ["ACRED"],
+    "VanEck": ["VBILL"],
     "Ondo Finance": ["USDY"],
     "Centrifuge": ["JTRSY", "JAAA", "JQQQ", "deJTRSY", "deJAAA"],
     "Spiko": ["USTBL", "EUTBL", "UKTBL", "SAFO", "SPKCC"],
-    "Etherfuse": ["CETES", "USTRY", "TESOURO", "EUROB", "GILTS"]
+    "Etherfuse": ["CETES", "USTRY", "TESOURO", "EUROB", "GILTS"],
+    "Re": ["reUSD", "REN", "REU"],
+    "Tether": ["XAUt0"],
+    "Securitize": ["SKHC", "PARAVII"]
   }
 }
