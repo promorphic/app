@@ -1,9 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import { getApi } from '../../lib/api';
 import { useEligibility } from './Eligibility';
-import { allowance, approve, balanceOf, browserWallet, confirmed, connect, send, txUrl, walletMessage } from './evm';
+import { allowance, approve, balanceOf, canSign, confirmed, connect, send, txUrl, walletMessage } from './evm';
 import { qty, short, usd, useWallet } from './wallet';
+import { onPhone, useViaWalletConnect, wcConfigured, wcLink } from './walletconnect';
 
 type Side = 'buy' | 'sell';
 interface FirmVenue {
@@ -19,7 +21,7 @@ interface FirmQuote {
 interface Review { quote: FirmQuote; venue: FirmVenue; needsApproval: boolean; at: number; note?: string }
 type Step =
   | { at: 'idle' }
-  | { at: 'working'; text: string; hash?: string }
+  | { at: 'working'; text: string; hash?: string; sign?: boolean }
   | { at: 'review'; review: Review }
   | { at: 'done'; review: Review; hash: string }
   | { at: 'failed'; text: string; hash?: string };
@@ -29,9 +31,10 @@ const FRESH_MS = 25_000;   // a firm quote is good for 30 seconds
 const MAX_SLIP = 995n;     // a refreshed quote may be at most 0.5% below the one reviewed
 
 // Assets screen, inside the quote dialog: trade the quoted amount at the best venue.
-// The API only gives a firm quote to an eligible visitor; the browser wallet signs each step.
+// The API only gives a firm quote to an eligible visitor; the wallet signs each step.
 export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: Side; amount: string; onBusy: (busy: boolean) => void }) {
   const wallet = useWallet();
+  const paired = useViaWalletConnect();
   const eligibility = useEligibility(wallet);
   const client = useQueryClient();
   const [step, setStep] = useState<Step>({ at: 'idle' });
@@ -42,9 +45,19 @@ export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: 
   useEffect(() => { onBusy(busy); }, [busy, onBusy]);
 
   if (!wallet || !eligibility.data?.eligible) return null;
-  if (!browserWallet()) {
-    return <div className="live-trade"><h3>Trade</h3><p>To trade, open this page in a browser with a wallet extension that holds {short(wallet)}.</p></div>;
+  if (!canSign()) {
+    return (
+      <div className="live-trade">
+        <h3>Trade</h3>
+        <p>
+          To trade, open this page in a browser with a wallet extension that holds {short(wallet)}
+          {wcConfigured ? <>, or <Link to="/wallets/">connect it from your phone with WalletConnect on the Wallets page</Link>.</> : '.'}
+        </p>
+      </div>
+    );
   }
+  // On a phone the wallet is another app: a link to it, for when it does not open by itself.
+  const app = paired && onPhone() ? wcLink() : null;
 
   const firm = async (): Promise<Review> => {
     const provider = await connect(wallet); // first, so a wrong account or chain costs no quote
@@ -74,7 +87,7 @@ export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: 
       const provider = await connect(wallet);
       const floor = BigInt(reviewed.venue.minBuyAmountRaw) * MAX_SLIP / 1000n;
       if (r.needsApproval) {
-        setStep({ at: 'working', text: `Step 1 of 2. Confirm in your wallet: allow ${venueName(r.venue.venue)} to spend exactly ${qty(r.quote.sell.amount)} ${r.quote.sell.symbol}.` });
+        setStep({ at: 'working', text: `Step 1 of 2. Confirm in your wallet: allow ${venueName(r.venue.venue)} to spend exactly ${qty(r.quote.sell.amount)} ${r.quote.sell.symbol}.`, sign: true });
         hashSeen = await approve(provider, wallet, r.quote.sell.address, r.venue.spender!, BigInt(r.quote.sell.amountRaw));
         if (!live()) return;
         setStep({ at: 'working', text: 'Step 1 of 2. Waiting for the approval to confirm…', hash: hashSeen });
@@ -94,7 +107,7 @@ export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: 
       }
       if (!live()) return;
       const n = reviewed.needsApproval ? 'Step 2 of 2. ' : '';
-      setStep({ at: 'working', text: `${n}Confirm the ${side} in your wallet.` });
+      setStep({ at: 'working', text: `${n}Confirm the ${side} in your wallet.`, sign: true });
       hashSeen = await send(provider, { from: wallet, ...r.venue.transaction! });
       if (live()) setStep({ at: 'working', text: `${n}Waiting for the trade to confirm…`, hash: hashSeen });
       await confirmed(provider, hashSeen);
@@ -115,7 +128,7 @@ export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: 
           <button className="live-btn solid" type="button" onClick={review}>Review trade</button>
         </>
       )}
-      {step.at === 'working' && <p>{step.text} {link(step.hash)}</p>}
+      {step.at === 'working' && <p>{step.text} {link(step.hash)}{step.sign && app && <a href={app.href} target="_blank" rel="noopener">Open {app.name}</a>}</p>}
       {step.at === 'failed' && (
         <>
           <p className="live-error">{step.text} {link(step.hash)}</p>

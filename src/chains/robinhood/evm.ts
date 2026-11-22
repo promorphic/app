@@ -1,6 +1,10 @@
-// The browser wallet, for trading on Robinhood Chain. Plain EIP-1193 calls, no library.
+// The wallet that signs, for trading on Robinhood Chain: the browser's own, or one on a phone paired
+// through WalletConnect (walletconnect.ts). Plain EIP-1193 calls either way.
 // Everything here either reads through the wallet or asks it to sign; nothing is signed without the
 // wallet's own confirmation window.
+
+import { walletVia } from './wallet';
+import { wcConfigured, wcWallet } from './walletconnect';
 
 export const CHAIN_ID = 4663;
 const CHAIN_HEX = '0x' + CHAIN_ID.toString(16);
@@ -15,6 +19,8 @@ export const txUrl = (hash: string) => `${CHAIN.blockExplorerUrls[0]}/tx/${hash}
 
 interface Provider { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> }
 export const browserWallet = () => (window as { ethereum?: Provider }).ethereum?.request ? (window as { ethereum?: Provider }).ethereum! : null;
+// Whether anything here could sign for the wallet set in the app.
+export const canSign = () => (walletVia() === 'walletconnect' ? wcConfigured : !!browserWallet());
 
 // A wallet's own errors carry a code; 4001 is the person saying no.
 export function walletMessage(e: unknown): string {
@@ -25,12 +31,16 @@ export function walletMessage(e: unknown): string {
 
 // The wallet must be on the address set in the app and on Robinhood Chain before anything is signed.
 export async function connect(expected: string): Promise<Provider> {
-  const wallet = browserWallet();
-  if (!wallet) throw new Error('No browser wallet was found. Open this page in a browser with a wallet extension.');
+  const paired = walletVia() === 'walletconnect';
+  const wallet = paired ? await wcWallet() : browserWallet();
+  if (!wallet) {
+    throw new Error(paired ? 'The WalletConnect session has ended. Connect the wallet again on the Wallets page.'
+      : 'No browser wallet was found. Open this page in a browser with a wallet extension' + (wcConfigured ? ', or connect a phone wallet on the Wallets page.' : '.'));
+  }
   const accounts = (await wallet.request({ method: 'eth_requestAccounts' })) as string[];
   const account = accounts?.[0] || '';
   if (account.toLowerCase() !== expected.toLowerCase()) {
-    throw new Error(`Your browser wallet is on ${account ? account.slice(0, 6) + '…' + account.slice(-4) : 'no account'}, not the wallet set here. Switch account in the wallet, or change the wallet on the Wallets page.`);
+    throw new Error(`Your ${paired ? 'connected' : 'browser'} wallet is on ${account ? account.slice(0, 6) + '…' + account.slice(-4) : 'no account'}, not the wallet set here. ${paired ? 'Connect that wallet again' : 'Switch account in the wallet, or change the wallet'} on the Wallets page.`);
   }
   if (((await wallet.request({ method: 'eth_chainId' })) as string).toLowerCase() !== CHAIN_HEX) {
     try {

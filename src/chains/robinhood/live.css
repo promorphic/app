@@ -66,3 +66,14 @@
 .live-trade dt { color: var(--ink-muted); }
 .live-trade dd { margin: 0; text-align: right; color: var(--ink); }
 .live-trade a { color: var(--ink); }
+
+/* WalletConnect pairing, inside the wallet dialog. */
+.live-dialog .live-note { color: var(--ink); }
+.live-wc-code { align-self: center; box-sizing: border-box; width: min(280px, 100%); aspect-ratio: 1; background: #fff; border: 1px solid var(--hairline); border-radius: 2px; }
+.live-wc-code svg { display: block; width: 100%; height: 100%; fill: #14130f; }
+.live-wc-links { display: flex; flex-wrap: wrap; gap: 12px; }
+.live-wc-links .live-btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; flex: 1 1 140px; box-sizing: border-box; }
+.live-wc-links .live-btn.solid { flex-basis: 100%; }
+.live-wc-more { font-size: 14px; color: var(--ink-muted); }
+.live-wc-more summary { padding: 12px 0; cursor: pointer; color: var(--ink); }
+.live-wc-more .live-wc-code { margin: 4px auto 0; }

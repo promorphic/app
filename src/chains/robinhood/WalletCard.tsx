@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router';
 import { qty, usd, usePositions, useWallet } from './wallet';
+import { useViaWalletConnect } from './walletconnect';
 
 // Wallets screen: the wallet set for Robinhood Chain and what it holds, read from the chain.
 export function WalletCard({ onEdit }: { onEdit: () => void }) {
   const wallet = useWallet();
+  const paired = useViaWalletConnect();
   const navigate = useNavigate();
   const { data: p, error } = usePositions(wallet);
   const figures: [string, string][] = p ? [
@@ -23,6 +25,7 @@ export function WalletCard({ onEdit }: { onEdit: () => void }) {
         <div className="grow">
           {!wallet && <div className="live-meta">No wallet set. Add an address to see its live balances here and on the Portfolio page.</div>}
           {wallet && <div className="addr live-mono">{wallet}</div>}
+          {wallet && paired && <div className="live-meta">Connected with WalletConnect. Trades are confirmed in the wallet on your phone.</div>}
           {wallet && (
             <div className="figs live-meta">
               {p ? figures.map(([value, label]) => (

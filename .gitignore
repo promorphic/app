@@ -2,3 +2,6 @@
 .claude/
 node_modules/
 dist/
+
+# Local settings, such as .env.local
+*.local

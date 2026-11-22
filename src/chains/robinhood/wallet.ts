@@ -1,20 +1,40 @@
 // The wallet whose Robinhood Chain balances the app reads: an address, kept in this browser.
-// Reading needs no signature. Trading (Trade.tsx) asks the browser wallet holding it to sign.
+// Reading needs no signature. Trading (Trade.tsx) asks the wallet holding it to sign: the browser's
+// own wallet, or one on a phone paired through WalletConnect.
 import { useQuery } from '@tanstack/react-query';
 import { getApi } from '../../lib/api';
 import { createStore } from '../../lib/store';
 
 const KEY = 'pm-rh-wallet';
+const VIA_KEY = 'pm-rh-wallet-via';
 export const isAddress = (s: string | null | undefined): s is string => /^0x[0-9a-fA-F]{40}$/.test(s || '');
+
+// How the wallet signs: null is the browser's own wallet (or nothing, for an address only pasted in),
+// 'walletconnect' is a wallet on a phone paired through WalletConnect (walletconnect.ts).
+export type Via = 'walletconnect' | null;
 
 function saved() {
   try { const w = localStorage.getItem(KEY); return isAddress(w) ? w : null; } catch { return null; }
 }
+function savedVia(): Via {
+  try { return saved() && localStorage.getItem(VIA_KEY) === 'walletconnect' ? 'walletconnect' : null; } catch { return null; }
+}
+let via = savedVia();
 const store = createStore<string | null>(saved());
-export const useWallet = store.use;
-export function setWallet(address: string | null) {
-  try { if (address) localStorage.setItem(KEY, address); else localStorage.removeItem(KEY); } catch { /* private window */ }
+// Both are set together, and the address is compared by value, so one render sees both changes.
+const changed = createStore(0);
+export const useWallet = () => { changed.use(); return store.use(); };
+export const currentWallet = store.get;
+export const walletVia = () => via;
+export function setWallet(address: string | null, by: Via = null) {
+  const next = address ? by : null;
+  try {
+    if (address) localStorage.setItem(KEY, address); else localStorage.removeItem(KEY);
+    if (next) localStorage.setItem(VIA_KEY, next); else localStorage.removeItem(VIA_KEY);
+  } catch { /* private window */ }
+  via = next;
   store.set(address);
+  changed.set(changed.get() + 1);
 }
 
 export interface Positions {

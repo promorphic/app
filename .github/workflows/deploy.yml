@@ -29,6 +29,8 @@ jobs:
         env:
           # "on" puts the app behind sign-in. Set it as a repository variable once the API's sign-in is switched on.
           VITE_AUTH: ${{ vars.VITE_AUTH }}
+          # The Reown (WalletConnect) project ID. Public by design, it ships in the page. Empty hides WalletConnect.
+          VITE_WALLETCONNECT_PROJECT_ID: ${{ vars.VITE_WALLETCONNECT_PROJECT_ID }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
