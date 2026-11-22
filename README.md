@@ -42,6 +42,10 @@ The Assets list, its count, its search and all six filters are drawn from [`data
 - `chains` are keys of the top-level `chains` map, which gives each chain its short code, its name and its logo: `"stellar": { "code": "XLM", "name": "Stellar", "logo": "stellar" }`. The list shows each chain by its mark from `static/chains/` (see the note there). Add a chain there before using it. Stellar and Robinhood Chain are already defined.
 - A new issuer, class, settlement currency or access level appears in its filter as soon as one asset uses it.
 
+## The opening view
+
+With no filter and no search, the list opens on each issuer's flagship assets rather than the alphabet, so one large issuer cannot fill the first screen. [`data/featured.json`](data/featured.json) names up to five tickers per issuer, best first; the list takes every issuer's first, then every issuer's second, and so on, and puts all other assets after them in A to Z order. An issuer missing from that file contributes its five largest assets by `supply`, or its first five in `assets.json`. As soon as a filter or a search is on, the list is plain A to Z.
+
 ## Run it locally
 
 ```bash

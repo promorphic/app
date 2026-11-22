@@ -1,0 +1,12 @@
+{
+  "note": "The flagship assets of each issuer, best first. With no filter and no search, the Assets list opens on these: the first of every issuer, then the second of every issuer, and so on, five deep, with every other asset after them in A to Z order. Issuers appear in the order they are written here. An issuer missing from this file contributes its five largest assets by supply, or its first five in assets.json.",
+  "issuers": {
+    "WisdomTree": ["WTGXX", "WTSYX", "SPXUX", "FLTTX", "CRDYX"],
+    "Robinhood": ["NVDA", "AAPL", "TSLA", "MSFT", "AMZN"],
+    "Franklin Templeton": ["BENJI", "gBENJI", "sgBENJI", "grBENJI"],
+    "Ondo Finance": ["USDY"],
+    "Centrifuge": ["JTRSY", "JAAA", "JQQQ", "deJTRSY", "deJAAA"],
+    "Spiko": ["USTBL", "EUTBL", "UKTBL", "SAFO", "SPKCC"],
+    "Etherfuse": ["CETES", "USTRY", "TESOURO", "EUROB", "GILTS"]
+  }
+}

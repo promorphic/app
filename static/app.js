@@ -130,9 +130,9 @@
   // ---- Assets: the list is drawn from /data/assets.json ----
   if (page !== 'assets') return;
 
-  var PAGE_SIZE = 5, MORE = 10;
+  var PAGE_SIZE = 10, MORE = 10, PER_ISSUER = 5;
   var tbody = $('#asset-rows'), tpl = $('#asset-row'), countEl = $('#asset-count');
-  var moreWrap = $('#asset-more'), clearLink = $('#clear-filters');
+  var moreWrap = $('#asset-more'), clearLink = $('#clear-filters'), sortEl = $('#asset-sort');
   var YIELD = [
     { id: 'lt2', label: 'Under 2%', test: function (y) { return y != null && y < 2; } },
     { id: '2to4', label: '2% to 4%', test: function (y) { return y != null && y >= 2 && y < 4; } },
@@ -146,7 +146,7 @@
     'settles in': { name: 'Settles in', get: function (a) { return a.settles || []; } },
     'access': { name: 'Access', get: function (a) { return [a.access]; } }
   };
-  var data = { chains: {}, assets: [] };
+  var data = { chains: {}, assets: [], featured: {} };
   var state = { q: '', shown: PAGE_SIZE, sel: {} };
   Object.keys(FILTERS).forEach(function (k) { state.sel[k] = []; });
 
@@ -189,8 +189,34 @@
     return true;
   }
 
+  var byName = function (a, b) { return a.name.localeCompare(b.name, 'en'); };
+
+  // The opening order: each issuer's flagship assets taken in turn (every issuer's first, then every
+  // issuer's second, five deep), so the top of the list is a spread of issuers; then everything else A to Z.
+  function featuredFirst(all) {
+    var groups = {}, order = Object.keys(data.featured);
+    all.forEach(function (a) { (groups[a.issuer] = groups[a.issuer] || []).push(a); });
+    Object.keys(groups).sort().forEach(function (i) { if (order.indexOf(i) === -1) order.push(i); });
+    var picks = order.filter(function (i) { return groups[i]; }).map(function (i) {
+      var want = data.featured[i], g = groups[i];
+      if (want) {
+        return want.map(function (t) { return g.filter(function (a) { return a.ticker === t; })[0]; }).filter(Boolean).slice(0, PER_ISSUER);
+      }
+      var bySupply = g.some(function (a) { return typeof a.supply === 'number'; });
+      return (bySupply ? g.slice().sort(function (a, b) { return (b.supply || 0) - (a.supply || 0); }) : g).slice(0, PER_ISSUER);
+    });
+    var out = [], seen = [];
+    for (var n = 0; n < PER_ISSUER; n++) picks.forEach(function (p) { if (p[n]) { out.push(p[n]); seen.push(p[n]); } });
+    return out.concat(all.filter(function (a) { return seen.indexOf(a) === -1; }).sort(byName));
+  }
+  function filtering() {
+    return !!state.q || Object.keys(state.sel).some(function (k) { return state.sel[k].length; });
+  }
+
   function render() {
-    var list = data.assets.filter(matches).sort(function (a, b) { return a.name.localeCompare(b.name, 'en'); });
+    var plain = !filtering();
+    var list = plain ? featuredFirst(data.assets) : data.assets.filter(matches).sort(byName);
+    if (sortEl) sortEl.textContent = plain ? 'Sort: Featured' : 'Sort: Name A–Z';
     tbody.textContent = '';
     list.slice(0, state.shown).forEach(function (a) {
       var tr = tpl.content.firstElementChild.cloneNode(true);
@@ -347,9 +373,11 @@
     search.addEventListener('input', function () { state.q = search.value.trim(); state.shown = PAGE_SIZE; render(); });
   }
 
-  fetch('/data/assets.json', { cache: 'no-cache' })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (d) { data = { chains: d.chains || {}, assets: d.assets || [] }; render(); })
+  var getJSON = function (url) {
+    return fetch(url, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  };
+  Promise.all([getJSON('/data/assets.json'), getJSON('/data/featured.json').catch(function () { return {}; })])
+    .then(function (r) { data = { chains: r[0].chains || {}, assets: r[0].assets || [], featured: r[1].issuers || {} }; render(); })
     .catch(function () {
       countEl.textContent = '';
       var s = document.createElement('strong');
