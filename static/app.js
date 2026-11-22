@@ -230,8 +230,43 @@
     getApi('/v1/stellar/prices').then(function (d) {
       stellarQuotes = {};
       (d.quotes || []).forEach(function (q) { stellarQuotes[q.symbol] = q; });
-      data.assets.forEach(function (a) { var q = stellarQuote(a); if (q && q.yield30d != null) a.yield30d = q.yield30d; });
+      applyStellarYields();
       paintPrices();
+    }).catch(function () {});
+  }
+  // The live Stellar registry replaces the snapshot's Stellar rows. Each asset was verified by the API
+  // against its issuer's domain. A fund the list already has from other chains (matched by fund ticker,
+  // same issuer) keeps its row and gains or loses the Stellar chain; everything else is its own row.
+  function applyStellarYields() {
+    data.assets.forEach(function (a) { var q = stellarQuote(a); if (q && q.yield30d != null) a.yield30d = q.yield30d; });
+  }
+  function loadLiveStellar() {
+    getApi('/v1/stellar/assets').then(function (d) {
+      var live = (d.assets || []).filter(function (x) { return x.active !== false; });
+      if (live.length < 20) return;
+      var isOurs = function (a) { return a.source === 'stellar:list-assets'; };
+      var old = {}, others = {};
+      data.assets.forEach(function (a) { if (isOurs(a)) old[a.ticker] = a; else others[a.issuer + '|' + a.ticker] = a; });
+      var rows = data.assets.filter(function (a) { return !isOurs(a); });
+      rows.forEach(function (a) {
+        if (a.stellar) { delete a.stellar; a.chains = (a.chains || []).filter(function (c) { return c !== 'stellar'; }); }
+      });
+      live.forEach(function (x) {
+        var chainInfo = { id: x.id, code: x.symbol, kind: x.kind, contract: x.contract || x.id, decimals: x.decimals, domain: x.domain, controls: x.controls };
+        var host = x.fundTicker && others[x.issuer + '|' + x.fundTicker];
+        if (host) { host.stellar = chainInfo; if (host.chains.indexOf('stellar') === -1) host.chains.push('stellar'); return; }
+        var was = old[x.symbol] || {};
+        rows.push({
+          ticker: x.symbol, name: x.name, issuer: x.issuer, 'class': x['class'], yield30d: was.yield30d == null ? null : was.yield30d,
+          chains: ['stellar'], settles: x.settles || was.settles || ['USD'], access: x.access,
+          kind: x.kind === 'soroban' ? 'Soroban token' : 'Stellar asset', source: 'stellar:list-assets',
+          id: x.id, contract: x.contract || x.id, decimals: x.decimals, logoUrl: x.logo, domain: x.domain,
+          controls: x.controls, supply: x.supply, holders: x.holders
+        });
+      });
+      data.assets = rows;
+      applyStellarYields();
+      render();
     }).catch(function () {});
   }
   // The live registry replaces the snapshot's Stock Tokens; an asset's class is kept from the snapshot.
@@ -465,9 +500,10 @@
   Promise.all([getJSON('/data/assets.json'), getJSON('/data/featured.json').catch(function () { return {}; })])
     .then(function (r) { data = { chains: r[0].chains || {}, assets: r[0].assets || [], featured: r[1].issuers || {} };
       render();
-      loadLiveAssets(); loadPrices(); loadStellar();
+      loadLiveAssets(); loadPrices(); loadLiveStellar(); loadStellar();
       setInterval(loadPrices, 15000);
       setInterval(loadStellar, 60000);
+      setInterval(loadLiveStellar, 10 * 60000);
       setInterval(loadLiveAssets, 5 * 60000);
       document.addEventListener('visibilitychange', function () { loadPrices(); loadStellar(); });
     })
