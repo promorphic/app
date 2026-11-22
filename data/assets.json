@@ -1,0 +1,321 @@
+{
+  "note": "PLACEHOLDER DATA for the sandbox. Tickers, yields, chains, settlement and access are illustrative and not verified against any issuer. Replace with live data before this leaves sandbox.",
+  "updated": "2026-11-22",
+  "chains": {
+    "ethereum": {
+      "code": "ETH",
+      "name": "Ethereum"
+    },
+    "arbitrum": {
+      "code": "ARB",
+      "name": "Arbitrum"
+    },
+    "avalanche": {
+      "code": "AVAX",
+      "name": "Avalanche"
+    },
+    "base": {
+      "code": "BASE",
+      "name": "Base"
+    },
+    "optimism": {
+      "code": "OP",
+      "name": "Optimism"
+    },
+    "stellar": {
+      "code": "XLM",
+      "name": "Stellar"
+    },
+    "robinhood": {
+      "code": "HOOD",
+      "name": "Robinhood Chain"
+    }
+  },
+  "assets": [
+    {
+      "ticker": "WTTSX",
+      "name": "WisdomTree 3-7 Year Treasury Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 4.81,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "SPXUX",
+      "name": "WisdomTree 500 Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Equities",
+      "yield30d": 1.05,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "WTSTX",
+      "name": "WisdomTree 7-10 Year Treasury Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 4.94,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "WTPIX",
+      "name": "WisdomTree Equity Premium Income Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Alternative",
+      "yield30d": 3.71,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "FLTTX",
+      "name": "WisdomTree Floating Rate Treasury Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 4.04,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "WTLGX",
+      "name": "WisdomTree Long-Term Treasury Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 5.02,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "CRDYX",
+      "name": "WisdomTree Private Credit and Alternative Income Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 15.11,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Accredited"
+    },
+    {
+      "ticker": "WTSIX",
+      "name": "WisdomTree Short-Duration Income Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 4.72,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "WTSYX",
+      "name": "WisdomTree Short-Term Treasury Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 4.65,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "EQTYX",
+      "name": "WisdomTree Siegel Global Equity Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Equities",
+      "yield30d": 1.62,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "LNGVX",
+      "name": "WisdomTree Siegel Longevity Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Multi-asset",
+      "yield30d": 2.48,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "MODRX",
+      "name": "WisdomTree Siegel Moderate Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Multi-asset",
+      "yield30d": 2.91,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "TECHX",
+      "name": "WisdomTree Technology and Innovation 100 Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Equities",
+      "yield30d": 0.54,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "TIPSX",
+      "name": "WisdomTree TIPS Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Fixed income",
+      "yield30d": 4.37,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    },
+    {
+      "ticker": "WTGXX",
+      "name": "WisdomTree Treasury Money Market Digital Fund",
+      "issuer": "WisdomTree",
+      "class": "Money market",
+      "yield30d": 3.67,
+      "chains": [
+        "ethereum",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "optimism"
+      ],
+      "settles": [
+        "USD",
+        "USDC"
+      ],
+      "access": "Retail"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · Promorphic</title>
+<meta name="description" content="Hold, trade and manage tokenized assets from one place.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0c0e">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
+<script>
+// The visitor's saved choice, else their system setting. Set before first paint.
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('pm-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body data-page="login">
+<div class="app-root" style="box-sizing: border-box; background: var(--surface-0); color: var(--ink); font-family: 'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; display: flex; flex-wrap: wrap; align-items: stretch">
+<div class="auth-aside" style="flex: 1 1 480px; box-sizing: border-box; border-right: 1px solid var(--hairline); padding: 32px 48px 40px; display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; align-items: center"><a href="/" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 8px; text-decoration: none; color: var(--ink)"><svg width="26" height="26" viewBox="0 4 70.3125 70.3125" role="img" aria-label="Promorphic"><rect x="0" y="4" width="39.5508" height="24.1699" style="fill: var(--ink)"/><rect x="0" y="32.5645" width="70.3125" height="13.1836" style="fill: var(--brand)"/><rect x="30.7617" y="50.1426" width="39.5508" height="24.1699" style="fill: var(--ink)"/></svg><span style="font-size: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink)">Promorphic</span></a><span style="margin-left: auto"><button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark version"><span class="theme-switch-knob" aria-hidden="true"><svg class="icon-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.75"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1.05 1.05M11.55 11.55l1.05 1.05M3.4 12.6l1.05-1.05M11.55 4.45l1.05-1.05"/></svg><svg class="icon-moon" viewBox="0 0 16 16"><path d="M13.25 9.6A5.6 5.6 0 0 1 6.4 2.75a5.6 5.6 0 1 0 6.85 6.85z"/></svg></span></button></span></div>
+<div style="margin: auto 0; display: flex; flex-direction: column; gap: 24px; max-width: 520px">
+<p class="auth-hero" style="margin: 0; font-size: 44px; line-height: 1.08; font-weight: 500; letter-spacing: -0.025em; color: var(--ink)">Hold, trade and manage tokenized assets from one place.</p><p style="margin: 0; font-size: 18px; line-height: 1.5; color: var(--ink-muted)">Your own agent works inside the limits you set. You keep custody.</p></div>
+<div style="font-family: 'Geist Mono','SF Mono',Menlo,Consolas,monospace; font-size: 12px; letter-spacing: 0.02em; color: var(--ink-faint)">app.promorphic.xyz</div>
+</div>
+<main class="auth-main" style="flex: 1 1 480px; box-sizing: border-box; padding: 48px 32px; display: flex; align-items: center; justify-content: center">
+<div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 8px"><h1 style="margin: 0; font-size: 32px; line-height: 1.1; font-weight: 500; letter-spacing: -0.02em; color: var(--ink)">Sign in</h1><p style="margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-muted)">Use the account you signed up with.</p></div><button class="btn btn-ghost" data-go="/" type="button" style="font-family: 'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 500; color: var(--ink); background: transparent; border: 1px solid var(--hairline); border-radius: 2px; min-height: 44px; padding: 0 16px; cursor: pointer; white-space: nowrap; width: 100%; min-height: 48px; font-size: 15px">Continue with Google</button><div style="display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="flex: 1 1 0; height: 1px; background: var(--hairline)"></span><span style="font-family: 'Geist Mono','SF Mono',Menlo,Consolas,monospace; font-size: 12px; color: var(--ink-muted)">or</span><span aria-hidden="true" style="flex: 1 1 0; height: 1px; background: var(--hairline)"></span></div><div style="display: flex; flex-direction: column; gap: 8px"><label for="login-email" style="font-size: 14px; font-weight: 500; color: var(--ink)">Work email</label><input id="login-email" type="email" placeholder="you@company.com" style="height: 48px; box-sizing: border-box; background: var(--surface-1); border: 1px solid var(--hairline); border-radius: 2px; color: var(--ink); font-family: 'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; font-size: 15px; padding: 0 14px"></div><button class="btn btn-primary" data-go="/" type="button" style="font-family: 'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 500; color: var(--on-brand); background: var(--brand); border: 0; border-radius: 2px; min-height: 44px; padding: 0 16px; cursor: pointer; white-space: nowrap; width: 100%; min-height: 48px; font-size: 15px">Continue with email</button><p style="margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-muted)">We will email you a sign-in link. No password needed.</p><p style="margin: 0; padding-top: 12px; border-top: 1px solid var(--hairline); font-size: 14px; color: var(--ink-muted)">New to Promorphic? <a href="/signup/" style="color: var(--ink); text-underline-offset: 3px">Create an account</a></p><p style="margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-muted)"><a href="#" style="text-underline-offset: 3px">Terms</a> · <a href="#" style="text-underline-offset: 3px">Privacy</a></p></div>
+</main>
+</div>
+<script src="/static/app.js" defer></script>
+</body>
+</html>

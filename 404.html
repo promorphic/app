@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · Promorphic</title>
+<meta name="description" content="Hold, trade and manage tokenized assets from one place.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0c0e">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
+<script>
+// The visitor's saved choice, else their system setting. Set before first paint.
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('pm-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body data-page="404">
+<div class="app-root" style="box-sizing: border-box; display: flex; flex-direction: column; padding: 32px 24px">
+<div style="display: flex; align-items: center"><a href="/" style="display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: var(--ink)"><svg width="26" height="26" viewBox="0 4 70.3125 70.3125" role="img" aria-label="Promorphic"><rect x="0" y="4" width="39.5508" height="24.1699" style="fill: var(--ink)"/><rect x="0" y="32.5645" width="70.3125" height="13.1836" style="fill: var(--brand)"/><rect x="30.7617" y="50.1426" width="39.5508" height="24.1699" style="fill: var(--ink)"/></svg><span style="font-size: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink)">Promorphic</span></a></div>
+<main style="margin: auto 0; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; max-width: 520px">
+<div style="font-family: 'Geist Mono','SF Mono',Menlo,Consolas,monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted)">404</div>
+<h1 style="margin: 0; font-size: 36px; line-height: 1.1; font-weight: 500; letter-spacing: -0.025em; color: var(--ink)">This page does not exist.</h1>
+<p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink-muted)">The link may be old, or the address may be mistyped.</p>
+<a href="/" class="btn btn-primary" style="display: inline-flex; align-items: center; font-size: 15px; font-weight: 500; color: var(--on-brand); background: var(--brand); border-radius: 2px; height: 44px; padding: 0 18px; text-decoration: none">Go to assets</a>
+</main>
+</div>
+<script src="/static/app.js" defer></script>
+</body>
+</html>
