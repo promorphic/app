@@ -19,9 +19,10 @@ const onChain = (a: Asset): ChainBlock | null => (a.source === 'avalanche:list-a
 const key = (c: ChainBlock) => String(c.contract).toLowerCase();
 
 // One batched call for every feed. A feed answers latestRoundData(): the value is the second word, the time the fourth.
-async function loadFeeds(assets: ChainBlock[], live: LiveNav) {
+async function loadFeeds(assets: ChainBlock[]): Promise<LiveNav> {
+  const live: LiveNav = {};
   const fed = assets.filter((c) => c.navFeed && c.navFeed.address);
-  if (!fed.length) return;
+  if (!fed.length) return live;
   const out = await postJSON<{ id: number; result?: string }[]>(RPC, fed.map((c, i) => (
     { jsonrpc: '2.0', id: i, method: 'eth_call', params: [{ to: c.navFeed!.address, data: LATEST_ROUND_DATA }, 'latest'] }
   )));
@@ -31,35 +32,32 @@ async function loadFeeds(assets: ChainBlock[], live: LiveNav) {
     const value = parseInt(hex.slice(64, 128), 16) / Math.pow(10, c.navFeed!.decimals);
     if (value > 0) live[key(c)] = { nav: value, at: parseInt(hex.slice(192, 256), 16) * 1000 };
   });
+  return live;
 }
 
 // Centrifuge publishes each fund's price per token through its API. Avalanche is network 5 there.
-async function loadCentrifuge(assets: ChainBlock[], live: LiveNav) {
+async function loadCentrifuge(assets: ChainBlock[]): Promise<LiveNav> {
+  const live: LiveNav = {};
   const ours = new Set(assets.filter((c) => /centrifuge/i.test(c.navSource || '')).map(key));
-  if (!ours.size) return;
+  if (!ours.size) return live;
   const d = await postJSON<{ data?: { tokenInstances?: { items?: { address: string; tokenPrice: string }[] } } }>(
     CENTRIFUGE, { query: '{ tokenInstances(where:{centrifugeId:"5"}, limit:100){ items { address tokenPrice } } }' });
   (d?.data?.tokenInstances?.items ?? []).forEach((t) => {
     const k = String(t.address).toLowerCase(), value = Number(t.tokenPrice) / 1e18;
     if (ours.has(k) && value > 0) live[k] = { nav: value, at: Date.now() };
   });
+  return live;
 }
 
-export function useAvalancheNav(assets: Asset[]) {
+// The two sources are read apart: each shows as soon as it answers, and when a refresh of one fails
+// its rows keep the last value read rather than falling back to the snapshot.
+export function useAvalancheNav(assets: Asset[]): LiveNav | undefined {
   const blocks = useMemo(() => assets.map(onChain).filter((c): c is ChainBlock => !!c && !!c.contract), [assets]);
   const contracts = useMemo(() => blocks.map(key).sort().join(','), [blocks]);
-  return useQuery({
-    queryKey: ['avalanche', 'nav', contracts],
-    queryFn: async () => {
-      const live: LiveNav = {};
-      await Promise.allSettled([loadFeeds(blocks, live), loadCentrifuge(blocks, live)]);
-      return live;
-    },
-    enabled: blocks.length > 0,
-    placeholderData: keepPreviousData,
-    staleTime: 5 * 60_000,
-    refetchInterval: 5 * 60_000, // the feeds move once a day; gold moves through the day
-  }).data;
+  const every5 = { enabled: blocks.length > 0, placeholderData: keepPreviousData, staleTime: 5 * 60_000, refetchInterval: 5 * 60_000 }; // the feeds move once a day; gold moves through the day
+  const feeds = useQuery({ queryKey: ['avalanche', 'feeds', contracts], queryFn: () => loadFeeds(blocks), ...every5 }).data;
+  const centrifuge = useQuery({ queryKey: ['avalanche', 'centrifuge', contracts], queryFn: () => loadCentrifuge(blocks), ...every5 }).data;
+  return useMemo(() => (feeds || centrifuge ? { ...feeds, ...centrifuge } : undefined), [feeds, centrifuge]);
 }
 
 export function avalanchePrice(a: Asset, live: LiveNav | undefined): Price | null {
