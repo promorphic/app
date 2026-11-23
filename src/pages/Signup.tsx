@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { AuthLayout, Field, foot, ghost, Heading, inkLink, Or, primary, Problem } from '../auth/AuthLayout';
 import { CheckEmail } from '../auth/CheckEmail';
@@ -15,7 +15,16 @@ const FIELD: Record<string, keyof Problems> = { bad_email: 'email', name_require
 export default function Signup() {
   const navigate = useNavigate();
   const config = useAuthConfig();
-  const carried = (useLocation().state as { email?: string } | null)?.email || '';
+  const arrived = useLocation().state as { email?: string; googleToken?: string } | null;
+  const carried = arrived?.email || '';
+  // Set when the person has already said yes to Google on the sign-in screen and only the account's details are missing.
+  const [googleToken, setGoogleToken] = useState(arrived?.googleToken || '');
+  const [googleEmail, setGoogleEmail] = useState('');
+  useEffect(() => {
+    if (!googleToken) return;
+    fetch('https://openidconnect.googleapis.com/v1/userinfo', { headers: { authorization: `Bearer ${googleToken}` } })
+      .then((r) => (r.ok ? r.json() : null)).then((u) => { if (u?.email) setGoogleEmail(String(u.email)); }).catch(() => { /* the address is only shown, not needed */ });
+  }, [googleToken]);
   const [type, setType] = useState<'Organization' | 'Individual'>('Organization');
   const [name, setName] = useState('');
   const [email, setEmail] = useState(carried);
@@ -26,8 +35,8 @@ export default function Signup() {
   const [sentTo, setSentTo] = useState('');
 
   const isOrg = type === 'Organization';
-  const showGoogle = !AUTH_ON || !!config.data?.google;
-  const showEmail = !AUTH_ON || !config.data || config.data.email;
+  const showGoogle = !googleToken && (!AUTH_ON || !!config.data?.google);
+  const showEmail = !googleToken && (!AUTH_ON || !config.data || config.data.email);
   const clear = (k: keyof Problems) => { if (problems[k]) setProblems({ ...problems, [k]: undefined }); };
   const form = () => ({ intent: 'signup', accountType: isOrg ? 'organization' : 'individual', name: name.trim(), organization: isOrg ? organization.trim() : '', agreed });
   // What both ways of signing up need before anything is sent.
@@ -65,10 +74,14 @@ export default function Signup() {
     if (any(p)) return;
     setBusy('google');
     try {
-      const accessToken = await googleAccessToken(config.data.google.clientId);
+      const accessToken = googleToken || await googleAccessToken(config.data.google.clientId);
       signedIn(await getApi<SignedIn>('/v1/auth/google', { ...form(), accessToken }));
       navigate(takeReturn(), { replace: true });
-    } catch (err) { fail(err); } finally { setBusy(''); }
+    } catch (err) {
+      // Google's yes from the sign-in screen has lapsed: back to the ordinary form, where it can be asked again.
+      if (googleToken && err instanceof ApiError && err.code === 'google_refused') { setGoogleToken(''); setProblems({ form: 'That took a while, so Google needs to confirm again. Choose Sign up with Google.' }); }
+      else fail(err);
+    } finally { setBusy(''); }
   };
 
   return (
@@ -77,7 +90,9 @@ export default function Signup() {
         <CheckEmail email={sentTo} isNew resend={() => send(sentTo)} back={() => { setSentTo(''); setProblems({}); }} />
       ) : (
         <>
-          <Heading title="Create your account">It takes a minute. Verification comes next.</Heading>
+          {googleToken
+            ? <Heading title="One more step">{googleEmail ? <>Google confirmed <strong style={{ fontWeight: 500, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{googleEmail}</strong>. </> : 'Google confirmed who you are. '}There is no Promorphic account for it yet, so tell us who the account is for.</Heading>
+            : <Heading title="Create your account">It takes a minute. Verification comes next.</Heading>}
           {config.isError && <Problem>Sign-up is unavailable right now. Try again in a moment.</Problem>}
           {AUTH_ON && config.data && !config.data.email && !config.data.google && <Problem>Sign-up is not switched on yet.</Problem>}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -121,6 +136,11 @@ export default function Signup() {
             {showEmail && (
               <button className="btn btn-primary" type="submit" style={primary} disabled={!!busy}>
                 {busy === 'email' ? 'Sending…' : 'Create account'}
+              </button>
+            )}
+            {googleToken && (
+              <button className="btn btn-primary" type="button" style={primary} disabled={!!busy} onClick={withGoogle}>
+                {busy === 'google' ? 'Creating…' : 'Create account'}
               </button>
             )}
           </form>

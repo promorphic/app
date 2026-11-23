@@ -37,11 +37,16 @@ export default function Login() {
     if (!AUTH_ON) return navigate('/');
     if (!config.data?.google) return;
     setBusy('google'); setProblem(null);
+    let accessToken = '';
     try {
-      const accessToken = await googleAccessToken(config.data.google.clientId);
+      accessToken = await googleAccessToken(config.data.google.clientId);
       signedIn(await getApi<SignedIn>('/v1/auth/google', { accessToken, intent: 'signin' }));
       navigate(takeReturn(), { replace: true });
-    } catch (err) { fail(err); } finally { setBusy(''); }
+    } catch (err) {
+      // Google said yes but there is no account yet: go straight on to finish creating one, without asking Google twice.
+      if (err instanceof ApiError && err.code === 'no_account' && accessToken) navigate('/signup/', { state: { googleToken: accessToken } });
+      else fail(err);
+    } finally { setBusy(''); }
   };
 
   return (
