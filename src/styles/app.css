@@ -105,6 +105,9 @@ input[type="checkbox"] { flex: none; }
 
 /* Sign in and sign up: the Financial District at dusk across the whole page, in full colour, drifting slowly.
    The page is dark in both themes, so the photograph is never altered; the card in the middle follows the theme. */
+/* These screens are set in Geist, with light headlines; the rest of the app is still Schibsted Grotesk. */
+.auth-page { font-family: 'Geist','Helvetica Neue',Arial,sans-serif; }
+.auth-page button, .auth-page input { font-family: inherit !important; }
 .auth-page { position: relative; isolation: isolate; box-sizing: border-box; display: flex; flex-direction: column; background: var(--surface-0); color: var(--ink); overflow: hidden; }
 .auth-page > :not(.auth-skyline) { position: relative; z-index: 1; }
 .auth-skyline { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
@@ -114,7 +117,7 @@ input[type="checkbox"] { flex: none; }
 .auth-top { display: flex; align-items: center; padding: 24px 32px 0; }
 .auth-body { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 32px 24px 40px; }
 .auth-header { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; max-width: 760px; }
-.auth-hero { margin: 0; font-size: 40px; line-height: 1.1; font-weight: 500; letter-spacing: -0.025em; color: var(--ink); text-wrap: balance; }
+.auth-hero { margin: 0; font-size: 44px; line-height: 1.1; font-weight: 300; letter-spacing: -0.03em; color: var(--ink); text-wrap: balance; }
 .auth-card { box-sizing: border-box; width: 100%; max-width: 464px; display: flex; flex-direction: column; gap: 20px; padding: 32px; background: var(--surface-0); color: var(--ink); border: 1px solid var(--hairline); border-radius: 2px; }
 .auth-foot { padding: 0 40px 24px; font-size: 12px; letter-spacing: 0.02em; color: var(--ink-muted); text-align: center; }
 @keyframes auth-skyline-in { from { opacity: 0; } to { opacity: 1; } }

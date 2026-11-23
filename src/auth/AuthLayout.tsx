@@ -10,7 +10,7 @@ import { useTheme } from '../lib/theme';
 export function AuthLayout({ children }: { children: ReactNode }) {
   const theme = useTheme();
   return (
-    <div className="app-root auth-page" data-theme="dark" style={{ fontFamily: SANS }}>
+    <div className="app-root auth-page" data-theme="dark">
       <div className="auth-skyline" aria-hidden="true">
         {/* Lower Manhattan's Financial District at dusk. Photo by Zoshua Colah on Unsplash (unsplash.com/photos/y1SqWgcU8g0), Unsplash licence. */}
         <img src="/financial-district-2400.jpg" srcSet="/financial-district-1200.jpg 1200w, /financial-district-2400.jpg 2400w" sizes="(max-width: 700px) 250vw, 110vw" width={2400} height={1351} alt="" decoding="async" />
@@ -42,7 +42,7 @@ export const inkLink: CSSProperties = { color: 'var(--ink)', textUnderlineOffset
 export function Heading({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <h1 style={{ margin: 0, fontSize: '32px', lineHeight: 1.1, fontWeight: 500, letterSpacing: '-0.02em', color: 'var(--ink)' }}>{title}</h1>
+      <h1 style={{ margin: 0, fontSize: '32px', lineHeight: 1.1, fontWeight: 300, letterSpacing: '-0.02em', color: 'var(--ink)' }}>{title}</h1>
       <p style={{ margin: 0, fontSize: '15px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>{children}</p>
     </div>
   );
