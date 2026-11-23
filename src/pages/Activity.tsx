@@ -10,28 +10,28 @@ export default function Activity() {
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: "16px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Activity</div>
-          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "500", letterSpacing: "-0.025em", color: "var(--ink)" }}>Activity</h1>
+          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "300", letterSpacing: "-0.025em", color: "var(--ink)" }}>Activity</h1>
           <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.5", color: "var(--ink-muted)", maxWidth: "640px" }}>A record of everything on this account: what you did, what your agent did, and what settled.</p>
         </div>
         <div style={{ marginLeft: "auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
-          <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Export</button>
+          <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Export</button>
         </div>
       </div>
       <div role="group" aria-label="Filters" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px" }}>
         <Segmented label="Actor" options={["Everyone", "You", "Agent", "System"]} value={actor} onChange={setActor} />
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
+        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
           {"Type"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
           </svg>
         </button>
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
+        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
           {"Asset"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
           </svg>
         </button>
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
+        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
           {"Date: last 7 days"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
@@ -149,7 +149,7 @@ export default function Activity() {
           </div>
         </div>
         <div style={{ borderTop: "1px solid var(--hairline)", display: "flex", justifyContent: "center", padding: "8px" }}>
-          <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap", borderColor: "transparent" }}>Show more</button>
+          <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap", borderColor: "transparent" }}>Show more</button>
         </div>
       </section>
     </main>

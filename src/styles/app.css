@@ -20,7 +20,7 @@
 }
 
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--surface-0); color: var(--ink); font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: var(--surface-0); color: var(--ink); font-family: 'Geist', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: var(--ink-muted); }
 a:hover { color: var(--ink); }
 [hidden] { display: none !important; }
@@ -105,9 +105,7 @@ input[type="checkbox"] { flex: none; }
 
 /* Sign in and sign up: the Financial District at dusk across the whole page, in full colour, drifting slowly.
    The page is dark in both themes, so the photograph is never altered; the card in the middle follows the theme. */
-/* These screens are set in Geist, with light headlines; the rest of the app is still Schibsted Grotesk. */
 .auth-page { font-family: 'Geist','Helvetica Neue',Arial,sans-serif; }
-.auth-page button, .auth-page input { font-family: inherit !important; }
 .auth-page { position: relative; isolation: isolate; box-sizing: border-box; display: flex; flex-direction: column; background: var(--surface-0); color: var(--ink); overflow: hidden; }
 .auth-page > :not(.auth-skyline) { position: relative; z-index: 1; }
 .auth-skyline { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }

@@ -8,11 +8,11 @@ export default function Wallets() {
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: "16px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Wallets</div>
-          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "500", letterSpacing: "-0.025em", color: "var(--ink)" }}>Wallets</h1>
+          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "300", letterSpacing: "-0.025em", color: "var(--ink)" }}>Wallets</h1>
           <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.5", color: "var(--ink-muted)", maxWidth: "640px" }}>Your assets stay in your own wallets. Promorphic never holds your assets or your keys.</p>
         </div>
         <div style={{ marginLeft: "auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
-          <button className="btn btn-ghost" onClick={() => setEditing(true)} type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Connect wallet</button>
+          <button className="btn btn-ghost" onClick={() => setEditing(true)} type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Connect wallet</button>
         </div>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
@@ -55,7 +55,7 @@ export default function Wallets() {
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Prepares orders, you sign</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$375,000.00</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr>
@@ -66,7 +66,7 @@ export default function Wallets() {
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Prepares orders, you sign</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$150,000.00</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr>
@@ -77,7 +77,7 @@ export default function Wallets() {
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Prepares orders, you sign</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$100,000.00</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr>
@@ -88,7 +88,7 @@ export default function Wallets() {
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Prepares orders, you sign</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$25,000.00</td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
             </tbody>

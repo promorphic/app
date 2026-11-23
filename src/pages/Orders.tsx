@@ -7,31 +7,31 @@ export default function Orders() {
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: "16px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Orders</div>
-          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "500", letterSpacing: "-0.025em", color: "var(--ink)" }}>Orders</h1>
+          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "300", letterSpacing: "-0.025em", color: "var(--ink)" }}>Orders</h1>
           <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.5", color: "var(--ink-muted)", maxWidth: "640px" }}>Orders you placed and orders your agent proposed. In Copilot, nothing is submitted until you approve it.</p>
         </div>
       </div>
       <div role="group" aria-label="Filters" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px" }}>
         <Segmented label="Status" options={[{ value: "All", label: "All 9" }, { value: "Open", label: "Open 2" }, { value: "Settled", label: "Settled 6" }, { value: "Declined", label: "Declined 1" }]} value={status} onChange={setStatus} />
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
+        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
           {"Placed by"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
           </svg>
         </button>
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
+        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
           {"Asset"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
           </svg>
         </button>
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
+        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
           {"Chain"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
           </svg>
         </button>
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
+        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
           {"Date"}
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
@@ -76,7 +76,7 @@ export default function Orders() {
                     <span aria-hidden="true" style={{ display: "block", width: "8px", height: "8px", background: "var(--ink)" }} />Awaiting your approval</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-solid" data-go="/orders/" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--surface-0)", background: "var(--ink)", border: "1px solid var(--ink)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Review</button>
+                  <button className="btn btn-solid" data-go="/orders/" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--surface-0)", background: "var(--ink)", border: "1px solid var(--ink)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Review</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Open"}>
@@ -97,7 +97,7 @@ export default function Orders() {
                     <span aria-hidden="true" style={{ display: "block", width: "6px", height: "6px", border: "1px solid var(--ink)" }} />Submitted</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Settled"}>
@@ -117,7 +117,7 @@ export default function Orders() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "14px", whiteSpace: "nowrap", color: "var(--ink-muted)" }}>Settled</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Settled"}>
@@ -137,7 +137,7 @@ export default function Orders() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "14px", whiteSpace: "nowrap", color: "var(--ink-muted)" }}>Settled</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Declined"}>
@@ -157,7 +157,7 @@ export default function Orders() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "14px", whiteSpace: "nowrap", color: "var(--ink-muted)" }}>Declined</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Settled"}>
@@ -177,7 +177,7 @@ export default function Orders() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "14px", whiteSpace: "nowrap", color: "var(--ink-muted)" }}>Settled</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Settled"}>
@@ -197,7 +197,7 @@ export default function Orders() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "14px", whiteSpace: "nowrap", color: "var(--ink-muted)" }}>Settled</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Settled"}>
@@ -217,7 +217,7 @@ export default function Orders() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "14px", whiteSpace: "nowrap", color: "var(--ink-muted)" }}>Settled</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
               <tr hidden={status !== "All" && status !== "Settled"}>
@@ -237,7 +237,7 @@ export default function Orders() {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "14px", whiteSpace: "nowrap", color: "var(--ink-muted)" }}>Settled</span>
                 </td>
                 <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
+                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
                 </td>
               </tr>
             </tbody>

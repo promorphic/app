@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 
-export const SANS = "'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif";
+export const SANS = "'Geist','Helvetica Neue',Arial,sans-serif";
 export const MONO = "'Geist Mono','SF Mono',Menlo,Consolas,monospace";
 
 // The small capital label above a group or a heading.

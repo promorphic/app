@@ -117,7 +117,7 @@ function LegalPage({ title, lead, sections, other }: { title: string; lead: stri
       </div>
       <main className="legal" style={{ boxSizing: 'border-box', maxWidth: '720px', margin: '0 auto', padding: '56px 24px 96px' }}>
         <div style={eyebrow}>Legal</div>
-        <h1 style={{ margin: '12px 0 0', fontSize: '40px', lineHeight: 1.1, fontWeight: 500, letterSpacing: '-0.025em' }}>{title}</h1>
+        <h1 style={{ margin: '12px 0 0', fontSize: '40px', lineHeight: 1.1, fontWeight: 300, letterSpacing: '-0.025em' }}>{title}</h1>
         <p style={{ margin: '12px 0 0', fontFamily: MONO, fontSize: '12px', letterSpacing: '0.02em', color: 'var(--ink-muted)' }}>Last updated {UPDATED}</p>
         <p style={{ margin: '24px 0 0', padding: '14px 16px', border: '1px solid var(--hairline)', borderRadius: '2px', background: 'var(--surface-1)', fontSize: '14px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>
           This is an interim version while the service is in early access. It will be replaced by a version reviewed by our counsel.

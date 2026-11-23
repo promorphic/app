@@ -43,7 +43,7 @@ export default function Assets() {
     <main className="app-main" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div style={eyebrow}>Assets</div>
-        <h1 style={{ margin: 0, fontSize: '36px', lineHeight: 1.1, fontWeight: 500, letterSpacing: '-0.025em', color: 'var(--ink)' }}>Tokenized assets</h1>
+        <h1 style={{ margin: 0, fontSize: '36px', lineHeight: 1.1, fontWeight: 300, letterSpacing: '-0.025em', color: 'var(--ink)' }}>Tokenized assets</h1>
         <p style={{ margin: 0, fontSize: '16px', lineHeight: 1.5, color: 'var(--ink-muted)', maxWidth: '640px' }}>Every asset on the layer, in one list. Filter by issuer, chain, asset class and yield.</p>
       </div>
 

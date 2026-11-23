@@ -26,7 +26,7 @@
 .live-card .figs { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .live-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
-.live-btn { font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 14px; font-weight: 500; color: var(--ink); background: transparent; border: 1px solid var(--hairline); border-radius: 2px; min-height: 44px; padding: 0 16px; cursor: pointer; white-space: nowrap; transition: background-color 120ms ease, border-color 120ms ease, opacity 120ms ease; }
+.live-btn { font-family: 'Geist', 'Helvetica Neue', Arial, sans-serif; font-size: 14px; font-weight: 500; color: var(--ink); background: transparent; border: 1px solid var(--hairline); border-radius: 2px; min-height: 44px; padding: 0 16px; cursor: pointer; white-space: nowrap; transition: background-color 120ms ease, border-color 120ms ease, opacity 120ms ease; }
 .live-btn:hover { background: var(--surface-2); border-color: var(--ink-faint); }
 .live-btn.solid { color: var(--surface-0); background: var(--ink); border-color: var(--ink); }
 .live-btn.solid:hover { background: var(--ink); opacity: .86; }
