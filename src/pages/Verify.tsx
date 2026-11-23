@@ -33,7 +33,7 @@ export default function Verify() {
   // An old link opened by someone who is signed in anyway: nothing to fix, so on to the app.
   if (problem && session) return <Navigate to="/" replace />;
   return (
-    <AuthLayout aside={<p style={{ margin: 0, fontSize: '18px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>Your own agent works inside the limits you set. You keep custody.</p>}>
+    <AuthLayout>
       {problem ? (
         <>
           <Heading title="That link did not work">{problem}</Heading>

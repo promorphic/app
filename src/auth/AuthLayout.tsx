@@ -1,18 +1,24 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { Logo } from '../layout/Logo';
 import { ThemeSwitch } from '../layout/ThemeSwitch';
-import { MONO, SANS } from '../layout/styles';
+import { eyebrow, MONO, SANS } from '../layout/styles';
 
-// The frame the sign-in screens share: what Promorphic is on the left, the form on the right.
-export function AuthLayout({ aside, children }: { aside: ReactNode; children: ReactNode }) {
+// The frame the sign-in screens share: what Promorphic is on the left, over the Lower Manhattan skyline,
+// and the form on the right. `quiet` holds the photograph back when there is a list to read on top of it.
+export function AuthLayout({ aside, quiet, children }: { aside?: ReactNode; quiet?: boolean; children: ReactNode }) {
   return (
     <div className="app-root" style={{ boxSizing: 'border-box', background: 'var(--surface-0)', color: 'var(--ink)', fontFamily: SANS, display: 'flex', flexWrap: 'wrap', alignItems: 'stretch' }}>
-      <div className="auth-aside" style={{ flex: '1 1 480px', boxSizing: 'border-box', borderRight: '1px solid var(--hairline)', padding: '32px 48px 40px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      <div className="auth-aside" data-quiet={quiet ? '' : undefined} style={{ flex: '1 1 480px', boxSizing: 'border-box', borderRight: '1px solid var(--hairline)', padding: '32px 48px 40px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+        <div className="auth-skyline" aria-hidden="true">
+          {/* Lower Manhattan at night. Photo by Mike Chavarri on Unsplash (unsplash.com/photos/y5zF0NwnJ7M), Unsplash licence. */}
+          <img src="/skyline-2400.jpg" srcSet="/skyline-1200.jpg 1200w, /skyline-2400.jpg 2400w" sizes="(max-width: 959px) 100vw, 50vw" width={2400} height={1600} alt="" decoding="async" />
+        </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Logo style={{ padding: '0 8px' }} />
           <span style={{ marginLeft: 'auto' }}><ThemeSwitch /></span>
         </div>
-        <div style={{ margin: 'auto 0', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '520px' }}>
+        <div className="auth-pitch" style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '520px' }}>
+          <div style={eyebrow}>Institutional access</div>
           <p className="auth-hero" style={{ margin: 0, fontSize: '44px', lineHeight: 1.08, fontWeight: 500, letterSpacing: '-0.025em', color: 'var(--ink)' }}>Hold, trade and manage tokenized assets from one place.</p>
           {aside}
         </div>

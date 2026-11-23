@@ -79,7 +79,7 @@ export default function Signup() {
   };
 
   return (
-    <AuthLayout aside={
+    <AuthLayout quiet aside={
       <ol className="auth-steps" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {STEPS.map(([title, body], i) => (
           <li key={title} style={{ display: 'flex', gap: '16px', padding: '16px 0', borderTop: '1px solid var(--hairline)' }}>

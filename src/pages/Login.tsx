@@ -45,12 +45,12 @@ export default function Login() {
   };
 
   return (
-    <AuthLayout aside={<p style={{ margin: 0, fontSize: '18px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>Your own agent works inside the limits you set. You keep custody.</p>}>
+    <AuthLayout>
       {sentTo ? (
         <CheckEmail email={sentTo} isNew={false} resend={() => send(sentTo)} back={() => { setSentTo(''); setProblem(null); }} />
       ) : (
         <>
-          <Heading title="Sign in">Use the account you signed up with.</Heading>
+          <Heading title="Sign in">Use your organization's work email.</Heading>
           {config.isError && <Problem>Sign-in is unavailable right now. Try again in a moment.</Problem>}
           {AUTH_ON && config.data && !config.data.email && !config.data.google && <Problem>Sign-in is not switched on yet.</Problem>}
           {showGoogle && (
