@@ -3,15 +3,15 @@ import { Logo } from '../layout/Logo';
 import { ThemeSwitch } from '../layout/ThemeSwitch';
 import { eyebrow, MONO, SANS } from '../layout/styles';
 
-// The frame the sign-in screens share: what Promorphic is on the left, over the Lower Manhattan skyline,
+// The frame the sign-in screens share: what Promorphic is on the left, over the Financial District at dusk,
 // and the form on the right. `quiet` holds the photograph back when there is a list to read on top of it.
 export function AuthLayout({ aside, quiet, children }: { aside?: ReactNode; quiet?: boolean; children: ReactNode }) {
   return (
     <div className="app-root" style={{ boxSizing: 'border-box', background: 'var(--surface-0)', color: 'var(--ink)', fontFamily: SANS, display: 'flex', flexWrap: 'wrap', alignItems: 'stretch' }}>
-      <div className="auth-aside" data-quiet={quiet ? '' : undefined} style={{ flex: '1 1 480px', boxSizing: 'border-box', borderRight: '1px solid var(--hairline)', padding: '32px 48px 40px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      <div className="auth-aside" data-theme="dark" data-quiet={quiet ? '' : undefined} style={{ flex: '1 1 480px', boxSizing: 'border-box', borderRight: '1px solid var(--hairline)', padding: '32px 48px 40px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
         <div className="auth-skyline" aria-hidden="true">
-          {/* Lower Manhattan at night. Photo by Mike Chavarri on Unsplash (unsplash.com/photos/y5zF0NwnJ7M), Unsplash licence. */}
-          <img src="/skyline-2400.jpg" srcSet="/skyline-1200.jpg 1200w, /skyline-2400.jpg 2400w" sizes="(max-width: 959px) 100vw, 50vw" width={2400} height={1600} alt="" decoding="async" />
+          {/* Lower Manhattan's Financial District at dusk. Photo by Zoshua Colah on Unsplash (unsplash.com/photos/y1SqWgcU8g0), Unsplash licence. */}
+          <img src="/financial-district-2400.jpg" srcSet="/financial-district-1200.jpg 1200w, /financial-district-2400.jpg 2400w" sizes="(max-width: 959px) 180vw, 130vw" width={2400} height={1351} alt="" decoding="async" />
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Logo style={{ padding: '0 8px' }} />

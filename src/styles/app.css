@@ -103,20 +103,19 @@ input[type="checkbox"] { flex: none; }
   .app-main h1 { font-size: 30px !important; }
 }
 
-/* Sign in and sign up: the skyline behind the left panel, drifting slowly and fading into the page */
-.auth-aside { position: relative; overflow: hidden; isolation: isolate; }
+/* Sign in and sign up: the Financial District at dusk behind the left panel, in full colour, drifting slowly.
+   The panel is dark in both themes, so the photograph is never altered and the words on it stay light. */
+.auth-aside { position: relative; overflow: hidden; isolation: isolate; background: var(--surface-0); color: var(--ink); }
 .auth-aside > :not(.auth-skyline) { position: relative; z-index: 1; }
-.auth-pitch { margin: 6vh 0 auto; }
+.auth-pitch { margin: 5vh 0 auto; }
 .auth-aside[data-quiet] .auth-pitch { margin: auto 0; }
 .auth-skyline { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.auth-skyline img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 128%; object-fit: cover; object-position: 62% 0; filter: grayscale(1) brightness(1.05); transform-origin: 50% 70%; animation: auth-skyline-in 2.4s ease both, auth-skyline-drift 28s ease-in-out infinite alternate; }
-[data-theme="light"] .auth-skyline img { filter: grayscale(1) invert(1) brightness(1.04) contrast(.8); }
-@media (prefers-color-scheme: light) { :root:not([data-theme]) .auth-skyline img { filter: grayscale(1) invert(1) brightness(1.04) contrast(.8); } }
-/* the page ground comes back over the sky, where the words are, and at the foot, so the photo has no hard edge */
-.auth-skyline::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--surface-0) 72%, transparent) 0%, color-mix(in srgb, var(--surface-0) 45%, transparent) 34%, transparent 52%, transparent 78%, var(--surface-0) 100%); }
-.auth-aside[data-quiet] .auth-skyline::after { background: linear-gradient(to bottom, color-mix(in srgb, var(--surface-0) 82%, transparent) 0%, color-mix(in srgb, var(--surface-0) 74%, transparent) 72%, var(--surface-0) 100%); }
+.auth-skyline img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 124%; object-fit: cover; object-position: 47% 0; transform-origin: 50% 70%; animation: auth-skyline-in 1.6s ease both, auth-skyline-drift 30s ease-in-out infinite alternate; }
+/* the ground comes back over the sky, where the words are; the city and the water are left alone */
+.auth-skyline::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--surface-0) 62%, transparent) 0%, color-mix(in srgb, var(--surface-0) 30%, transparent) 30%, transparent 46%, transparent 86%, color-mix(in srgb, var(--surface-0) 55%, transparent) 100%); }
+.auth-aside[data-quiet] .auth-skyline::after { background: color-mix(in srgb, var(--surface-0) 84%, transparent); }
 @keyframes auth-skyline-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes auth-skyline-drift { from { transform: scale(1.03) translate(1.5%, 0); } to { transform: scale(1.12) translate(-1.5%, -1.5%); } }
+@keyframes auth-skyline-drift { from { transform: scale(1.02) translate(1.5%, 0); } to { transform: scale(1.1) translate(-1.5%, -1%); } }
 @media (prefers-reduced-motion: reduce) { .auth-skyline img { animation: none; } }
 
 /* Sign in and sign up: the two panels stack */
@@ -125,11 +124,16 @@ input[type="checkbox"] { flex: none; }
   .auth-aside > :last-child, .auth-steps { display: none !important; }
   .auth-hero { font-size: 30px !important; }
   .auth-pitch, .auth-aside[data-quiet] .auth-pitch { margin: 0; }
-  .auth-aside { min-height: 340px; }
+  .auth-aside { min-height: 440px; }
   .auth-aside[data-quiet] { min-height: 0; }
-  .auth-skyline img { top: 28%; height: 130%; object-position: 62% 0; }
-  .auth-skyline::after, .auth-aside[data-quiet] .auth-skyline::after { background: linear-gradient(to bottom, var(--surface-0) 0%, color-mix(in srgb, var(--surface-0) 70%, transparent) 40%, transparent 68%, transparent 82%, var(--surface-0) 100%); }
+  .auth-skyline img { top: 0; height: 122%; object-position: 50% 0; }
+  .auth-skyline::after { background: linear-gradient(to bottom, var(--surface-0) 0%, color-mix(in srgb, var(--surface-0) 45%, transparent) 34%, transparent 50%, transparent 88%, color-mix(in srgb, var(--surface-0) 50%, transparent) 100%); }
   .auth-main { flex-basis: 100% !important; padding: 32px 16px 48px !important; align-items: flex-start !important; }
+}
+@media (max-width: 599px) {
+  .auth-aside { min-height: 370px; }
+  .auth-skyline img { top: 30%; height: 100%; object-position: 55% 0; }
+  .auth-skyline::after { background: linear-gradient(to bottom, var(--surface-0) 0%, var(--surface-0) 31%, color-mix(in srgb, var(--surface-0) 55%, transparent) 46%, transparent 62%, transparent 90%, color-mix(in srgb, var(--surface-0) 50%, transparent) 100%); }
 }
 
 /* Wide tables scroll inside their own box; the box also contains their visually hidden labels */
