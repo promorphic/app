@@ -6,6 +6,7 @@ import { notYet, Toast } from './lib/toast';
 import Activity from './pages/Activity';
 import Agent from './pages/Agent';
 import Assets from './pages/Assets';
+import { Privacy, Terms } from './pages/Legal';
 import Login from './pages/Login';
 import Mandates from './pages/Mandates';
 import NotFound from './pages/NotFound';
@@ -30,13 +31,18 @@ const AUTH: Screen[] = [
   { path: '/login', id: 'login', title: 'Sign in', element: <Login /> },
   { path: '/signup', id: 'signup', title: 'Sign up', element: <Signup /> },
 ];
+// Open to everyone, signed in or not.
+const OPEN: Screen[] = [
+  { path: '/terms', id: 'terms', title: 'Terms of Use', element: <Terms /> },
+  { path: '/privacy', id: 'privacy', title: 'Privacy Policy', element: <Privacy /> },
+];
 const VERIFY: Screen = { path: '/auth/verify', id: 'verify', title: 'Signing in', element: <Verify /> };
 const clean = (path: string) => path.replace(/\/+$/, '') || '/';
 
 export function App() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const screen = [...APP, ...AUTH, VERIFY].find((s) => s.path === clean(pathname));
+  const screen = [...APP, ...AUTH, ...OPEN, VERIFY].find((s) => s.path === clean(pathname));
 
   // Each screen starts at the top and names itself in the tab.
   useEffect(() => {
@@ -70,6 +76,7 @@ export function App() {
           {AUTH.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
         </Route>
         <Route path={VERIFY.path} element={VERIFY.element} />
+        {OPEN.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toast />

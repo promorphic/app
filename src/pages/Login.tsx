@@ -86,9 +86,9 @@ export default function Login() {
             <Link to="/signup/" style={inkLink}>Create an account</Link>
           </p>
           <p style={note}>
-            <a href="#" style={{ textUnderlineOffset: '3px' }}>Terms</a>
+            <Link to="/terms/" style={{ textUnderlineOffset: '3px' }}>Terms</Link>
             {' · '}
-            <a href="#" style={{ textUnderlineOffset: '3px' }}>Privacy</a>
+            <Link to="/privacy/" style={{ textUnderlineOffset: '3px' }}>Privacy</Link>
           </p>
         </>
       )}

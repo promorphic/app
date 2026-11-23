@@ -126,9 +126,9 @@ export default function Signup() {
                   onChange={(e) => { setAgreed(e.target.checked); clear('agreed'); }} style={{ width: '18px', height: '18px', margin: '2px 0 0', accentColor: 'var(--ink)' }} />
                 <span>
                   {'I agree to the '}
-                  <a href="#" style={inkLink}>Terms</a>
+                  <a href="/terms/" target="_blank" rel="noopener" style={inkLink}>Terms</a>
                   {' and '}
-                  <a href="#" style={inkLink}>Privacy Policy</a>.
+                  <a href="/privacy/" target="_blank" rel="noopener" style={inkLink}>Privacy Policy</a>.
                 </span>
               </label>
               <Problem id="su-agree-problem">{problems.agreed}</Problem>
