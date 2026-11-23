@@ -2,31 +2,31 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Logo } from '../layout/Logo';
 import { ThemeSwitch } from '../layout/ThemeSwitch';
 import { eyebrow, MONO, SANS } from '../layout/styles';
+import { useTheme } from '../lib/theme';
 
-// The frame the sign-in screens share: what Promorphic is on the left, over the Financial District at dusk,
-// and the form on the right. `quiet` holds the photograph back when there is a list to read on top of it.
-export function AuthLayout({ aside, quiet, children }: { aside?: ReactNode; quiet?: boolean; children: ReactNode }) {
+// The frame the sign-in screens share: the Financial District at dusk across the whole page, what
+// Promorphic does as the header, and the form in a card in the middle. The page around the card is
+// dark in both themes, so the photograph is shown as it was taken; the card follows the chosen theme.
+export function AuthLayout({ children }: { children: ReactNode }) {
+  const theme = useTheme();
   return (
-    <div className="app-root" style={{ boxSizing: 'border-box', background: 'var(--surface-0)', color: 'var(--ink)', fontFamily: SANS, display: 'flex', flexWrap: 'wrap', alignItems: 'stretch' }}>
-      <div className="auth-aside" data-theme="dark" data-quiet={quiet ? '' : undefined} style={{ flex: '1 1 480px', boxSizing: 'border-box', borderRight: '1px solid var(--hairline)', padding: '32px 48px 40px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
-        <div className="auth-skyline" aria-hidden="true">
-          {/* Lower Manhattan's Financial District at dusk. Photo by Zoshua Colah on Unsplash (unsplash.com/photos/y1SqWgcU8g0), Unsplash licence. */}
-          <img src="/financial-district-2400.jpg" srcSet="/financial-district-1200.jpg 1200w, /financial-district-2400.jpg 2400w" sizes="(max-width: 959px) 180vw, 130vw" width={2400} height={1351} alt="" decoding="async" />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Logo style={{ padding: '0 8px' }} />
-          <span style={{ marginLeft: 'auto' }}><ThemeSwitch /></span>
-        </div>
-        <div className="auth-pitch" style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '520px' }}>
-          <div style={eyebrow}>Institutional access</div>
-          <p className="auth-hero" style={{ margin: 0, fontSize: '44px', lineHeight: 1.08, fontWeight: 500, letterSpacing: '-0.025em', color: 'var(--ink)' }}>Hold, trade and manage tokenized assets from one place.</p>
-          {aside}
-        </div>
-        <div style={{ fontFamily: MONO, fontSize: '12px', letterSpacing: '0.02em', color: 'var(--ink-faint)' }}>app.promorphic.xyz</div>
+    <div className="app-root auth-page" data-theme="dark" style={{ fontFamily: SANS }}>
+      <div className="auth-skyline" aria-hidden="true">
+        {/* Lower Manhattan's Financial District at dusk. Photo by Zoshua Colah on Unsplash (unsplash.com/photos/y1SqWgcU8g0), Unsplash licence. */}
+        <img src="/financial-district-2400.jpg" srcSet="/financial-district-1200.jpg 1200w, /financial-district-2400.jpg 2400w" sizes="(max-width: 700px) 250vw, 110vw" width={2400} height={1351} alt="" decoding="async" />
       </div>
-      <main className="auth-main" style={{ flex: '1 1 480px', boxSizing: 'border-box', padding: '48px 32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ width: '100%', maxWidth: '400px', display: 'flex', flexDirection: 'column', gap: '20px' }}>{children}</div>
-      </main>
+      <div className="auth-top">
+        <Logo style={{ padding: '0 8px' }} />
+        <span style={{ marginLeft: 'auto' }}><ThemeSwitch /></span>
+      </div>
+      <div className="auth-body">
+        <header className="auth-header">
+          <div style={eyebrow}>Institutional access</div>
+          <p className="auth-hero">Hold, trade and manage tokenized assets from one place.</p>
+        </header>
+        <main className="auth-card" data-theme={theme}>{children}</main>
+      </div>
+      <div className="auth-foot" style={{ fontFamily: MONO }}>app.promorphic.xyz</div>
     </div>
   );
 }

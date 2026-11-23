@@ -5,16 +5,9 @@ import { CheckEmail } from '../auth/CheckEmail';
 import { googleAccessToken, PopupClosed } from '../auth/google';
 import { AUTH_ON, signedIn, takeReturn, useAuthConfig, type SignedIn } from '../auth/session';
 import { Segmented } from '../components/Segmented';
-import { MONO } from '../layout/styles';
 import { ApiError, getApi } from '../lib/api';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const STEPS = [
-  ['Create your account', 'Sign up with Google or your work email.'],
-  ['Verify who you are', 'A one-time check, for you or your organization.'],
-  ['Your agent is set up', 'Every account gets its own agent. It keeps your context and memory, and learns how you work.'],
-  ['Connect a wallet', 'You keep custody. Promorphic never holds your keys.'],
-];
 type Problems = { name?: string; email?: string; organization?: string; agreed?: string; form?: string };
 // Which field each of the API's refusals belongs to.
 const FIELD: Record<string, keyof Problems> = { bad_email: 'email', name_required: 'name', organization_required: 'organization', terms_required: 'agreed' };
@@ -79,19 +72,7 @@ export default function Signup() {
   };
 
   return (
-    <AuthLayout quiet aside={
-      <ol className="auth-steps" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-        {STEPS.map(([title, body], i) => (
-          <li key={title} style={{ display: 'flex', gap: '16px', padding: '16px 0', borderTop: '1px solid var(--hairline)' }}>
-            <span style={{ fontFamily: MONO, fontSize: '12px', fontWeight: 500, letterSpacing: '0.14em', color: 'var(--ink-muted)', paddingTop: '3px' }}>{`0${i + 1}`}</span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <span style={{ fontSize: '17px', fontWeight: 500, color: 'var(--ink)' }}>{title}</span>
-              <span style={{ fontSize: '15px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>{body}</span>
-            </div>
-          </li>
-        ))}
-      </ol>
-    }>
+    <AuthLayout>
       {sentTo ? (
         <CheckEmail email={sentTo} isNew resend={() => send(sentTo)} back={() => { setSentTo(''); setProblems({}); }} />
       ) : (
