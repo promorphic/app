@@ -26,6 +26,10 @@ const TERMS: Section[] = [
     'You sign in with a link sent to your email address or with Google. Give accurate details when you sign up, keep access to your email and Google account secure, and tell us promptly if you think someone else has used your account. You are responsible for what is done through it.',
     'You must be at least 18 years old and legally able to enter into these terms.',
   ] },
+  { title: 'Who may use Promorphic', body: [
+    'Promorphic is offered only to people and organizations outside the United States. You may not use it if you are a US person, if you are located in the United States or its territories, or if you are in, or resident in, a country under comprehensive sanctions. By creating an account you confirm that none of these applies to you, and you agree to stop using the service if that changes.',
+    'We check the country your connection comes from and refuse access from countries where the service is not offered. We also check wallet addresses and the names given at sign-up against sanctions lists published by the United Nations, the European Union, the United Kingdom and the United States, and we may refuse or hold an account or a wallet on that basis.',
+  ] },
   { title: 'Eligibility and restricted assets', body: [
     'Some assets may only be offered to certain people or in certain countries. Their issuers set those rules, and you are responsible for following the rules that apply to you.',
     'Before a trade in a restricted asset, the service may check the country you are connecting from and ask you to confirm statements about yourself. You must answer truthfully and tell us if an answer stops being true. You must not use a VPN or any other means to get around a restriction. We may refuse a quote or a trade where a check is not met.',
@@ -76,6 +80,7 @@ const PRIVACY: Section[] = [
     'Sign-in records: a record of each sign-in link we send and of each session. We store only a scrambled form (a hash) of links and session tokens, not the tokens themselves.',
     'Wallet addresses you connect or enter, and the public blockchain balances and transactions for them. A wallet address is public, but together with your account it can identify you.',
     'Eligibility declarations: where an asset requires one, the wallet address, the version of the statements you confirmed, the time, and the country you connected from.',
+    'Sanctions screening: we compare wallet addresses you link or trade from, and the name and organization you give at sign-up, with public sanctions lists. Nothing is kept when there is no match. When there is one, the address or name and the list it matched are recorded so a person can review it.',
     'Technical records: our hosting provider logs each request to the API, including the address it came from, for security and for fixing faults. We use that address to work out your country for eligibility checks. We do not store it with your account or your declaration.',
   ] },
   { title: 'What we do not collect', body: [

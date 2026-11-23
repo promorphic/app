@@ -1,5 +1,6 @@
 import { useEffect, type ReactElement } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router';
+import { Route, Routes, useLocation, useNavigate, Outlet } from 'react-router';
+import { RegionGate } from './access/RegionGate';
 import { RequireAuth, SignedOutOnly } from './auth/RequireAuth';
 import { AppShell } from './layout/AppShell';
 import { notYet, Toast } from './lib/toast';
@@ -67,15 +68,17 @@ export function App() {
   return (
     <>
       <Routes>
-        <Route element={<RequireAuth />}>
-          <Route element={<AppShell page={screen?.id ?? ''} />}>
-            {APP.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+        <Route element={<RegionGate><Outlet /></RegionGate>}>
+          <Route element={<RequireAuth />}>
+            <Route element={<AppShell page={screen?.id ?? ''} />}>
+              {APP.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+            </Route>
           </Route>
+          <Route element={<SignedOutOnly />}>
+            {AUTH.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+          </Route>
+          <Route path={VERIFY.path} element={VERIFY.element} />
         </Route>
-        <Route element={<SignedOutOnly />}>
-          {AUTH.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
-        </Route>
-        <Route path={VERIFY.path} element={VERIFY.element} />
         {OPEN.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
         <Route path="*" element={<NotFound />} />
       </Routes>

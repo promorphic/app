@@ -42,7 +42,7 @@ export default function Signup() {
   // What both ways of signing up need before anything is sent.
   const shared = (): Problems => ({
     organization: isOrg && !organization.trim() ? 'Enter the legal name of your organization.' : undefined,
-    agreed: agreed ? undefined : 'Agree to the Terms and Privacy Policy to continue.',
+    agreed: agreed ? undefined : 'Agree to the Terms and Privacy Policy, and confirm you are not a US person, to continue.',
   });
   const any = (p: Problems) => Object.values(p).some(Boolean);
   const fail = (e: unknown) => {
@@ -128,7 +128,7 @@ export default function Signup() {
                   {'I agree to the '}
                   <a href="/terms/" target="_blank" rel="noopener" style={inkLink}>Terms</a>
                   {' and '}
-                  <a href="/privacy/" target="_blank" rel="noopener" style={inkLink}>Privacy Policy</a>.
+                  <a href="/privacy/" target="_blank" rel="noopener" style={inkLink}>Privacy Policy</a>, and I confirm that I am not a US person and am not located in the United States.
                 </span>
               </label>
               <Problem id="su-agree-problem">{problems.agreed}</Problem>
