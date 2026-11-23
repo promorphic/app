@@ -1,7 +1,8 @@
-// The Promorphic API. On localhost it is the backend running beside the app.
-export const API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+// The Promorphic API. On localhost it is the backend running beside the app; VITE_API_URL points a
+// local run at another instance (for example one on a different port).
+export const API = import.meta.env.VITE_API_URL || (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)
   ? 'http://localhost:8787'
-  : 'https://promorphic-api-1017392197056.europe-west1.run.app';
+  : 'https://promorphic-api-1017392197056.europe-west1.run.app');
 
 // A refusal from the API: its status, the code the API gave it, and a sentence a person can read.
 export class ApiError extends Error {

@@ -1,61 +1,75 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Dialog } from '../../components/Dialog';
-import { isAddress, setWallet, useWallet } from './wallet';
-import { useViaWalletConnect, wcConfigured, wcDisconnect } from './walletconnect';
+import { useLinkWallet, useToken, type Via } from '../../lib/account';
+import { currentWallet, isAddress, setWallet, useWallet } from './wallet';
+import { wcConfigured } from './walletconnect';
 import { WalletConnectPairing } from './WalletConnectPairing';
 
 type Ethereum = { request: (args: { method: string }) => Promise<string[]> };
 
-export function WalletDialog({ onClose }: { onClose: () => void }) {
-  const wallet = useWallet();
-  const [value, setValue] = useState(wallet || '');
+// Links a wallet to the account (and, with no account, keeps it in this browser as before).
+// Reading needs no signature; the wallet is only asked to sign when a trade is made from it.
+export function WalletDialog({ onClose, edit }: { onClose: () => void; edit?: { address: string; label: string } }) {
+  const token = useToken();
+  const active = useWallet();
+  const link = useLinkWallet();
+  const [label, setLabel] = useState(edit?.label || '');
+  const [value, setValue] = useState(edit?.address || '');
   const [error, setError] = useState('');
   const [pairing, setPairing] = useState(false);
-  const paired = useViaWalletConnect();
-  const fromBrowser = useRef(false); // the address was taken from the browser wallet, so that is what signs
+  const fromBrowser = useRef(false); // the address came from the browser wallet, so that wallet can sign for it
   const ethereum = (window as { ethereum?: Ethereum }).ethereum;
 
+  const finish = async (address: string, via: Via) => {
+    if (token) await link.mutateAsync({ address, chain: 'robinhood', label: label.trim(), via });
+    // The first wallet, or one that can sign from this browser, becomes the one trades are made from.
+    if (!active || via !== 'pasted') setWallet(address, via === 'walletconnect' ? 'walletconnect' : null);
+    onClose();
+  };
   const save = (e: FormEvent) => {
     e.preventDefault();
     const v = value.trim();
     if (!isAddress(v)) { setError('Enter a full address: 0x followed by 40 characters.'); return; }
-    // The same address keeps its WalletConnect session; a different one ends it.
-    const same = paired && !fromBrowser.current && wallet?.toLowerCase() === v.toLowerCase();
-    if (paired && !same) void wcDisconnect();
-    setWallet(v, same ? 'walletconnect' : null);
-    onClose();
-  };
-  const remove = () => {
-    if (paired) void wcDisconnect();
-    setWallet(null);
-    onClose();
+    setError('');
+    finish(v, fromBrowser.current ? 'browser' : 'pasted').catch((err: Error) => setError(err.message));
   };
   const useBrowserWallet = () => {
     ethereum!.request({ method: 'eth_requestAccounts' })
       .then((a) => { if (a && a[0]) { setValue(a[0]); fromBrowser.current = true; } })
       .catch(() => setError('The browser wallet did not share an address.'));
   };
+  // Pairing has already made the phone wallet the active one; it is linked to the account here.
+  const paired = () => {
+    const a = currentWallet();
+    if (a) finish(a, 'walletconnect').catch((err: Error) => { setPairing(false); setError(err.message); });
+    else onClose();
+  };
 
   if (pairing) {
-    return <Dialog onClose={onClose}><WalletConnectPairing onBack={() => setPairing(false)} onDone={onClose} /></Dialog>;
+    return <Dialog onClose={onClose}><WalletConnectPairing onBack={() => setPairing(false)} onDone={paired} /></Dialog>;
   }
   return (
     <Dialog onClose={onClose}>
       <form method="dialog" onSubmit={save}>
-        <h2>Robinhood Chain wallet</h2>
-        <p>Paste a wallet address to see its live holdings on Robinhood Chain. Setting it is read-only: Promorphic reads balances and nothing is signed. A trade asks your wallet to confirm each step.</p>
-        {paired && <p className="live-note">This wallet is connected with WalletConnect and can sign trades from your phone.</p>}
+        <h2>{edit ? 'Rename wallet' : 'Link a wallet'}</h2>
+        <p>
+          {token ? 'A linked wallet shows its holdings on every device you sign in on. ' : ''}
+          Linking is read-only: Promorphic reads balances and nothing is signed. A trade asks the wallet holding the address to confirm each step.
+        </p>
         <label>
-          Wallet address
-          <input className="live-input" type="text" placeholder="0x…" autoComplete="off" spellCheck={false} autoFocus value={value} onChange={(e) => setValue(e.target.value)} />
+          Label
+          <input className="live-input" type="text" placeholder="Treasury main" maxLength={40} autoComplete="off" value={label} onChange={(e) => setLabel(e.target.value)} />
+        </label>
+        <label>
+          Wallet address on Robinhood Chain
+          <input className="live-input" type="text" placeholder="0x…" autoComplete="off" spellCheck={false} autoFocus={!edit} readOnly={!!edit} value={value} onChange={(e) => setValue(e.target.value)} />
         </label>
         {error && <p className="live-error">{error}</p>}
         <div className="live-foot">
-          {ethereum?.request && <button className="live-btn" type="button" onClick={useBrowserWallet}>Use browser wallet</button>}
-          {wcConfigured && <button className="live-btn" type="button" onClick={() => setPairing(true)}>{paired ? 'Reconnect with WalletConnect' : 'WalletConnect'}</button>}
-          {wallet && <button className="live-btn" type="button" onClick={remove}>{paired ? 'Disconnect' : 'Remove'}</button>}
+          {!edit && ethereum?.request && <button className="live-btn" type="button" onClick={useBrowserWallet}>Use browser wallet</button>}
+          {!edit && wcConfigured && <button className="live-btn" type="button" onClick={() => setPairing(true)}>WalletConnect</button>}
           <button className="live-btn" type="button" onClick={onClose}>Cancel</button>
-          <button className="live-btn solid" type="submit">Save</button>
+          <button className="live-btn solid" type="submit" disabled={link.isPending}>{link.isPending ? 'Saving…' : 'Save'}</button>
         </div>
       </form>
     </Dialog>

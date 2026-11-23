@@ -1,6 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
+import { useSession } from '../../auth/session';
+import { linkWallet, placeOrder, updateOrder, useWallets, type OrderStatus } from '../../lib/account';
 import { getApi } from '../../lib/api';
 import { useEligibility } from './Eligibility';
 import { allowance, approve, balanceOf, canSign, confirmed, connect, send, txUrl, walletMessage } from './evm';
@@ -14,7 +16,7 @@ interface FirmVenue {
   spender: string | null; transaction: { to: string; data: string; value?: string | null } | null;
 }
 interface FirmQuote {
-  tradable: boolean; reasons?: string[]; best: string | null; quotes: FirmVenue[];
+  tradable: boolean; reasons?: string[]; best: string | null; quotes: FirmVenue[]; contract?: string;
   sell: { symbol: string; address: string; amount: string; amountRaw: string };
   buy: { symbol: string };
 }
@@ -36,6 +38,8 @@ export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: 
   const wallet = useWallet();
   const paired = useViaWalletConnect();
   const eligibility = useEligibility(wallet);
+  const token = useSession()?.token;
+  const linked = useWallets();
   const client = useQueryClient();
   const [step, setStep] = useState<Step>({ at: 'idle' });
   const run = useRef(0); // a later action, or closing the dialog, abandons an earlier one's updates
@@ -79,16 +83,38 @@ export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: 
       .catch((e) => { if (live()) setStep({ at: 'failed', text: walletMessage(e) }); });
   };
 
+  // The account's record of the trade (Orders screen). Recording never blocks the trade: when it fails,
+  // the trade goes on and the failure is only logged. The API reads the outcome from the chain itself.
+  const orderBody = (r: Review) => ({
+    chain: 'robinhood', wallet, side, symbol, contract: r.quote.contract,
+    sell: { symbol: r.quote.sell.symbol, amount: r.quote.sell.amount },
+    buy: { symbol: r.quote.buy.symbol, expected: r.venue.buyAmount, min: r.venue.minBuyAmount },
+    pricePerToken: r.venue.pricePerToken, venue: r.venue.venue, route: r.venue.route,
+  });
+  const refreshAccount = () => client.invalidateQueries({ queryKey: ['account'] });
+
   const confirm = (reviewed: Review) => {
-    let hashSeen: string | undefined;
+    let hashSeen: string | undefined, tradeHash: string | undefined, orderId: string | null = null;
+    const note = (body: { status: OrderStatus; approvalTxHash?: string; txHash?: string; reason?: string }) => {
+      if (token && orderId) updateOrder(token, orderId, body).catch((e) => console.warn('order not updated:', e)).finally(refreshAccount);
+    };
     const mine = ++run.current, live = () => run.current === mine;
     (async () => {
       let r = reviewed;
       const provider = await connect(wallet);
+      if (token) {
+        try {
+          // A wallet that trades is linked to the account, so the order has a home.
+          if (!linked.data?.some((w) => w.address.toLowerCase() === wallet.toLowerCase())) await linkWallet(token, { address: wallet, chain: 'robinhood', via: paired ? 'walletconnect' : 'browser' });
+          orderId = (await placeOrder(token, orderBody(r))).order.id;
+          void refreshAccount();
+        } catch (e) { console.warn('order not recorded:', e); }
+      }
       const floor = BigInt(reviewed.venue.minBuyAmountRaw) * MAX_SLIP / 1000n;
       if (r.needsApproval) {
         setStep({ at: 'working', text: `Step 1 of 2. Confirm in your wallet: allow ${venueName(r.venue.venue)} to spend exactly ${qty(r.quote.sell.amount)} ${r.quote.sell.symbol}.`, sign: true });
         hashSeen = await approve(provider, wallet, r.quote.sell.address, r.venue.spender!, BigInt(r.quote.sell.amountRaw));
+        note({ status: 'approving', approvalTxHash: hashSeen });
         if (!live()) return;
         setStep({ at: 'working', text: 'Step 1 of 2. Waiting for the approval to confirm…', hash: hashSeen });
         await confirmed(provider, hashSeen);
@@ -101,19 +127,27 @@ export function Trade({ symbol, side, amount, onBusy }: { symbol: string; side: 
         r = await firm();
         if (r.needsApproval) throw new Error('The approval did not cover the best venue any more. Review the trade again.');
         if (BigInt(r.venue.minBuyAmountRaw) < floor) {
+          note({ status: 'cancelled', reason: 'The price moved while confirming; a new quote was shown.' });
           if (live()) setStep({ at: 'review', review: { ...r, note: 'The price moved while you were confirming. This is the new quote.' } });
           return;
         }
       }
-      if (!live()) return;
+      if (!live()) { note({ status: 'cancelled', reason: 'The trade was abandoned before sending.' }); return; }
       const n = reviewed.needsApproval ? 'Step 2 of 2. ' : '';
       setStep({ at: 'working', text: `${n}Confirm the ${side} in your wallet.`, sign: true });
-      hashSeen = await send(provider, { from: wallet, ...r.venue.transaction! });
+      hashSeen = tradeHash = await send(provider, { from: wallet, ...r.venue.transaction! });
+      note({ status: 'sent', txHash: tradeHash });
       if (live()) setStep({ at: 'working', text: `${n}Waiting for the trade to confirm…`, hash: hashSeen });
       await confirmed(provider, hashSeen);
+      note({ status: 'settled', txHash: tradeHash }); // the API checks the receipt itself
       client.invalidateQueries({ queryKey: ['robinhood', 'positions'] });
       if (live()) setStep({ at: 'done', review: r, hash: hashSeen });
-    })().catch((e) => { if (live()) setStep({ at: 'failed', text: walletMessage(e), hash: hashSeen }); });
+    })().catch((e) => {
+      // A sent trade is settled or failed by the chain, whatever happened here; anything earlier was never sent.
+      if (tradeHash) note({ status: 'failed', txHash: tradeHash, reason: walletMessage(e) });
+      else note({ status: 'cancelled', reason: walletMessage(e) });
+      if (live()) setStep({ at: 'failed', text: walletMessage(e), hash: hashSeen });
+    });
   };
 
   const link = (hash?: string) => hash && <a href={txUrl(hash)} target="_blank" rel="noopener">View the transaction</a>;

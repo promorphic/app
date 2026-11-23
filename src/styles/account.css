@@ -1,0 +1,36 @@
+/* The account screens: Wallets, Orders, Activity, Portfolio. Tables share live-table from live.css. */
+.acct-pill { display: inline-flex; align-items: center; gap: 6px; font-family: 'Geist Mono', 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); background: transparent; border: 1px solid var(--hairline); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.acct-pill.solid { background: var(--ink); color: var(--surface-0); border-color: var(--ink); }
+.acct-pill.dot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+.acct-pill.quiet { color: var(--ink-muted); }
+.acct-cell-main { font-size: 15px; color: var(--ink); }
+.acct-cell-sub { display: block; font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+.acct-link { color: var(--ink); text-underline-offset: 3px; }
+.acct-table-note { padding: 14px 16px; border-top: 1px solid var(--hairline); font-size: 13px; color: var(--ink-muted); display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.acct-more { margin-left: auto; }
+
+.acct-log { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: 2px; overflow: hidden; display: flex; flex-direction: column; }
+.acct-day { padding: 12px 24px; background: var(--surface-2); border-top: 1px solid var(--hairline); font-family: 'Geist Mono', 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted); }
+.acct-log > :first-child { border-top: 0; }
+.acct-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; min-height: 56px; padding: 8px 24px; border-top: 1px solid var(--hairline); }
+.acct-row .time { font-family: 'Geist Mono', 'SF Mono', Menlo, Consolas, monospace; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-muted); width: 48px; }
+.acct-row .who { width: 84px; }
+.acct-row .what { flex: 1 1 320px; font-size: 15px; line-height: 1.45; color: var(--ink); overflow-wrap: anywhere; }
+.acct-row .ref { margin-left: auto; font-family: 'Geist Mono', 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; white-space: nowrap; }
+
+.acct-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.acct-panel { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: 2px; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.acct-panel h2 { margin: 0; font-size: 18px; line-height: 1.3; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
+.acct-bar { display: flex; height: 8px; border-radius: 2px; overflow: hidden; background: var(--surface-2); }
+.acct-bar span { display: block; height: 100%; }
+.acct-legend { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.acct-legend > div { display: flex; align-items: center; gap: 10px; }
+.acct-legend .swatch { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+.acct-legend .name { flex: 1 1 auto; color: var(--ink); }
+.acct-legend .val, .acct-legend .pct { font-family: 'Geist Mono', 'SF Mono', Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; color: var(--ink); }
+.acct-legend .pct { width: 56px; text-align: right; color: var(--ink-muted); }
+.acct-chart { width: 100%; height: 140px; display: block; }
+.acct-chart .line { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.acct-chart .area { fill: var(--ink); opacity: .07; }
+.acct-chart .dot { fill: var(--brand); }
+.acct-chart-foot { display: flex; justify-content: space-between; font-family: 'Geist Mono', 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; color: var(--ink-muted); }

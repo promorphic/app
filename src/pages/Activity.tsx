@@ -1,157 +1,66 @@
-import { Link } from 'react-router';
-import { Segmented } from '../components/Segmented';
 import { useState } from 'react';
+import { Link } from 'react-router';
+import { Failed, Notice, PageHead, SignedOut } from '../components/PageHead';
+import { Segmented } from '../components/Segmented';
+import { clock, day, shortId, useActivity, useToken, type Actor, type Entry } from '../lib/account';
+
+type Filter = Actor | 'all';
+const ACTOR_LABEL: Record<Actor, string> = { you: 'You', agent: 'Agent', system: 'System' };
+
+function Ref({ e }: { e: Entry }) {
+  if (!e.ref) return null;
+  if (e.ref.kind === 'order') return <Link className="ref acct-link" to="/orders/">{shortId(e.ref.id)}</Link>;
+  return <Link className="ref acct-link" to="/wallets/">Wallet</Link>;
+}
 
 export default function Activity() {
-  const [actor, setActor] = useState('Everyone');
-  const shows = (...actors: string[]) => actor === 'Everyone' || actors.includes(actor);
+  const token = useToken();
+  const [actor, setActor] = useState<Filter>('all');
+  const q = useActivity(actor);
+  const entries = (q.data?.pages || []).flatMap((p) => p.entries);
+
+  let body;
+  if (!token) body = <SignedOut what="the activity on your account" />;
+  else if (q.isPending) body = <Notice>Loading your activity…</Notice>;
+  else if (q.isError) body = <Failed error={q.error} what="Your activity" />;
+  else if (!entries.length) body = <Notice>{actor === 'all' ? 'Nothing recorded yet. Signing in, linking a wallet, confirming eligibility and trading all appear here.' : actor === 'agent' ? 'Your agent has not acted on this account.' : 'Nothing recorded for this filter.'}</Notice>;
+  else {
+    let lastDay = '';
+    body = (
+      <>
+        {entries.map((e) => {
+          const d = day(e.at);
+          const head = d !== lastDay ? <div className="acct-day">{d}</div> : null;
+          lastDay = d;
+          return (
+            <div key={e.id} style={{ display: 'contents' }}>
+              {head}
+              <div className="acct-row">
+                <span className="time">{clock(e.at)}</span>
+                <span className="who"><span className={e.actor === 'you' ? 'acct-pill' : e.actor === 'agent' ? 'acct-pill solid' : 'acct-pill quiet'}>{ACTOR_LABEL[e.actor]}</span></span>
+                <span className="what">{e.text}</span>
+                <Ref e={e} />
+              </div>
+            </div>
+          );
+        })}
+        <div className="acct-table-note">
+          <span>{entries.length} shown, newest first. This record is append-only.</span>
+          {q.hasNextPage && <button className="live-btn acct-more" type="button" disabled={q.isFetchingNextPage} onClick={() => q.fetchNextPage()}>{q.isFetchingNextPage ? 'Loading…' : 'Load more'}</button>}
+        </div>
+      </>
+    );
+  }
+
   return (
-    <main className="app-main" style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "24px" }}>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: "16px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Activity</div>
-          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "300", letterSpacing: "-0.025em", color: "var(--ink)" }}>Activity</h1>
-          <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.5", color: "var(--ink-muted)", maxWidth: "640px" }}>A record of everything on this account: what you did, what your agent did, and what settled.</p>
+    <main className="app-main" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <PageHead title="Activity" lead="A record of everything on this account: what you did, what your agent did, and what settled." />
+      {token && (
+        <div role="group" aria-label="Filters" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+          <Segmented<Filter> label="Actor" value={actor} onChange={setActor} options={[{ value: 'all', label: 'Everyone' }, { value: 'you', label: 'You' }, { value: 'agent', label: 'Agent' }, { value: 'system', label: 'System' }]} />
         </div>
-        <div style={{ marginLeft: "auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
-          <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Export</button>
-        </div>
-      </div>
-      <div role="group" aria-label="Filters" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px" }}>
-        <Segmented label="Actor" options={["Everyone", "You", "Agent", "System"]} value={actor} onChange={setActor} />
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
-          {"Type"}
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-            <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
-          </svg>
-        </button>
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
-          {"Asset"}
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-            <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
-          </svg>
-        </button>
-        <button className="btn btn-filter" data-soon="" type="button" aria-haspopup="listbox" style={{ display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", padding: "0 14px", background: "var(--surface-1)", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "2px", fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", cursor: "pointer" }}>
-          {"Date: last 7 days"}
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-            <path d="M2.5 4.5l3.5 3.5 3.5-3.5" style={{ stroke: "var(--ink)" }} strokeWidth="1.5" fill="none" />
-          </svg>
-        </button>
-      </div>
-      <section aria-label="Activity" style={{ background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-        <div style={{ marginTop: "-1px" }}>
-          <div style={{ padding: "12px 24px", background: "var(--surface-2)", borderTop: "1px solid var(--hairline)" }} hidden={!shows("Agent", "You")}>
-            <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Fri 20 Nov 2026</div>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("Agent")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>12:41</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "var(--ink)", color: "var(--surface-0)", border: "1px solid var(--ink)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>Agent</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Proposed PM-1042: buy $25,000.00 of WTSYX on Base. Passed all 3 mandate checks.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1042</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("You")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>09:15</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>You</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Placed PM-1041: sell $10,000.00 of SPXUX on Ethereum.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1041</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("You")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>09:02</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>You</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Signed in with Google.</span>
-          </div>
-          <div style={{ padding: "12px 24px", background: "var(--surface-2)", borderTop: "1px solid var(--hairline)" }} hidden={!shows("Agent", "System", "You")}>
-            <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Thu 19 Nov 2026</div>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("System")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>16:05</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink-muted)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>System</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>PM-1038 settled: $50,000.00 of WTGXX on Ethereum.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1038</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("You")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>11:30</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>You</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Approved PM-1038, proposed by your agent.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1038</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("Agent")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>11:22</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "var(--ink)", color: "var(--surface-0)", border: "1px solid var(--ink)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>Agent</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Proposed PM-1038: buy $50,000.00 of WTGXX on Ethereum. Passed all 3 mandate checks.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1038</Link>
-          </div>
-          <div style={{ padding: "12px 24px", background: "var(--surface-2)", borderTop: "1px solid var(--hairline)" }} hidden={!shows("System", "You")}>
-            <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Wed 18 Nov 2026</div>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("System")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>16:10</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink-muted)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>System</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>PM-1035 settled: $100,000.00 of FLTTX on Arbitrum.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1035</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("You")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>10:05</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>You</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Placed PM-1035: buy $100,000.00 of FLTTX on Arbitrum.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1035</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("You")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>09:40</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>You</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Changed mandate Treasury reserve: max per order raised from $25,000.00 to $50,000.00.</span>
-            <Link to="/mandates/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>Mandate</Link>
-          </div>
-          <div style={{ padding: "12px 24px", background: "var(--surface-2)", borderTop: "1px solid var(--hairline)" }} hidden={!shows("Agent", "You")}>
-            <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Tue 17 Nov 2026</div>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("Agent")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>15:02</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "var(--ink)", color: "var(--surface-0)", border: "1px solid var(--ink)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>Agent</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Saved to memory: keep private credit under 5% of the portfolio.</span>
-            <Link to="/agent/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>Memory</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("You")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>15:01</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>You</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Declined PM-1031, proposed by your agent.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1031</Link>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", minHeight: "56px", padding: "8px 24px", borderTop: "1px solid var(--hairline)" }} hidden={!shows("Agent")}>
-            <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "48px" }}>14:30</span>
-            <span style={{ width: "76px" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "var(--ink)", color: "var(--surface-0)", border: "1px solid var(--ink)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>Agent</span>
-            </span>
-            <span style={{ flex: "1 1 320px", fontSize: "15px", lineHeight: "1.45", color: "var(--ink)" }}>Proposed PM-1031: buy $25,000.00 of CRDYX on Avalanche.</span>
-            <Link to="/orders/" style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", whiteSpace: "nowrap", textUnderlineOffset: "3px" }}>PM-1031</Link>
-          </div>
-        </div>
-        <div style={{ borderTop: "1px solid var(--hairline)", display: "flex", justifyContent: "center", padding: "8px" }}>
-          <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap", borderColor: "transparent" }}>Show more</button>
-        </div>
-      </section>
+      )}
+      <section aria-label="Activity" className="acct-log">{body}</section>
     </main>
   );
 }

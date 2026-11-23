@@ -1,253 +1,150 @@
-import { LiveHoldings } from '../chains/robinhood/LiveHoldings';
-export default function Portfolio() {
+import { Link } from 'react-router';
+import { qty, short, time, usd } from '../chains/robinhood/wallet';
+import { Failed, Notice, PageHead, SignedOut, Stat, Stats } from '../components/PageHead';
+import { CHAIN_NAMES, useHistory, usePortfolio, useToken, type Holding, type Snapshot } from '../lib/account';
+
+const SWATCHES = ['var(--ink)', 'var(--brand)', 'var(--ink-muted)', 'var(--ink-faint)', 'var(--hairline)'];
+const DUST = 0.01; // holdings below this are counted but not listed
+
+// Value by day, as a line. Needs at least two days to draw anything.
+function ValueChart({ points }: { points: Snapshot[] }) {
+  if (points.length < 2) {
+    return <p className="live-meta" style={{ margin: 0 }}>{points.length ? 'One day recorded so far. ' : ''}A value is recorded each day you open the app; the line appears once there are two.</p>;
+  }
+  const W = 600, H = 140, pad = 6;
+  const vals = points.map((p) => Number(p.totalUsd));
+  const lo = Math.min(...vals), hi = Math.max(...vals), span = hi - lo || 1;
+  const x = (i: number) => pad + (i / (points.length - 1)) * (W - 2 * pad);
+  const y = (v: number) => H - pad - ((v - lo) / span) * (H - 2 * pad);
+  const line = vals.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const last = vals.length - 1;
   return (
-    <main className="app-main" style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "24px" }}>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: "16px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Portfolio</div>
-          <h1 style={{ margin: "0", fontSize: "36px", lineHeight: "1.1", fontWeight: "300", letterSpacing: "-0.025em", color: "var(--ink)" }}>Portfolio</h1>
-          <p style={{ margin: "0", fontSize: "16px", lineHeight: "1.5", color: "var(--ink-muted)", maxWidth: "640px" }}>Everything you hold, across issuers and chains, in one place.</p>
-        </div>
-        <div style={{ marginLeft: "auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
-          <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Export</button>
-        </div>
+    <>
+      <svg className="acct-chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={`Portfolio value from ${usd(vals[0])} on ${points[0].date} to ${usd(vals[last])} on ${points[last].date}`}>
+        <path className="area" d={`${line} L${x(last).toFixed(1)},${H} L${x(0).toFixed(1)},${H} Z`} />
+        <path className="line" d={line} vectorEffect="non-scaling-stroke" />
+        <circle className="dot" cx={x(last)} cy={y(vals[last])} r="3" />
+      </svg>
+      <div className="acct-chart-foot"><span>{points[0].date} · {usd(vals[0])}</span><span>{points[last].date} · {usd(vals[last])}</span></div>
+    </>
+  );
+}
+
+function Allocation({ holdings, cash, total }: { holdings: Holding[]; cash: number; total: number }) {
+  const top = holdings.slice(0, 4);
+  const other = holdings.slice(4).reduce((s, h) => s + Number(h.valueUsd), 0);
+  const parts = [...top.map((h) => ({ name: h.symbol, value: Number(h.valueUsd) })), ...(other > 0 ? [{ name: 'Other Stock Tokens', value: other }] : []), ...(cash > 0 ? [{ name: 'Cash (USDG)', value: cash }] : [])];
+  if (!total) return <p className="live-meta" style={{ margin: 0 }}>Nothing held yet.</p>;
+  return (
+    <>
+      <div className="acct-bar" role="img" aria-label="Allocation by holding">
+        {parts.map((p, i) => <span key={p.name} style={{ width: `${(p.value / total) * 100}%`, background: SWATCHES[i % SWATCHES.length] }} />)}
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
-        <div style={{ flex: "1 1 200px", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "20px 24px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "28px", fontWeight: "500", letterSpacing: "-0.02em", color: "var(--ink)", fontVariantNumeric: "tabular-nums" }}>$650,000.00</div>
-          <div style={{ fontSize: "13px", lineHeight: "1.45", color: "var(--ink-muted)" }}>Total value</div>
-        </div>
-        <div style={{ flex: "1 1 200px", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "20px 24px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "28px", fontWeight: "500", letterSpacing: "-0.02em", color: "var(--ink)", fontVariantNumeric: "tabular-nums" }}>$600,000.00</div>
-          <div style={{ fontSize: "13px", lineHeight: "1.45", color: "var(--ink-muted)" }}>Invested, in 5 assets</div>
-        </div>
-        <div style={{ flex: "1 1 200px", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "20px 24px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "28px", fontWeight: "500", letterSpacing: "-0.02em", color: "var(--ink)", fontVariantNumeric: "tabular-nums" }}>4.13%</div>
-          <div style={{ fontSize: "13px", lineHeight: "1.45", color: "var(--ink-muted)" }}>30d yield, weighted by value</div>
-        </div>
-        <div style={{ flex: "1 1 200px", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "20px 24px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "28px", fontWeight: "500", letterSpacing: "-0.02em", color: "var(--ink)", fontVariantNumeric: "tabular-nums" }}>$50,000.00</div>
-          <div style={{ fontSize: "13px", lineHeight: "1.45", color: "var(--ink-muted)" }}>Cash, in USDC</div>
-        </div>
+      <div className="acct-legend">
+        {parts.map((p, i) => (
+          <div key={p.name}>
+            <span className="swatch" style={{ background: SWATCHES[i % SWATCHES.length] }} aria-hidden="true" />
+            <span className="name">{p.name}</span>
+            <span className="val">{usd(p.value)}</span>
+            <span className="pct">{((p.value / total) * 100).toFixed(1)}%</span>
+          </div>
+        ))}
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: "16px" }}>
-        <section aria-label="Allocation" style={{ flex: "1.3 1 420px", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "20px 24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <h2 style={{ margin: "0", fontSize: "18px", lineHeight: "1.3", fontWeight: "500", letterSpacing: "-0.01em", color: "var(--ink)" }}>Allocation</h2>
-          <div role="img" aria-label="Allocation by asset class" style={{ display: "flex", gap: "2px" }}>
-            <span style={{ display: "block", flex: "275000 1 0", height: "12px", background: "var(--ink)", opacity: "1" }} />
-            <span style={{ display: "block", flex: "250000 1 0", height: "12px", background: "var(--ink)", opacity: "0.6" }} />
-            <span style={{ display: "block", flex: "75000 1 0", height: "12px", background: "var(--ink)", opacity: "0.35" }} />
-            <span style={{ display: "block", flex: "50000 1 0", height: "12px", background: "var(--ink)", opacity: "0.16" }} />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", minHeight: "28px" }}>
-              <span aria-hidden="true" style={{ display: "block", width: "10px", height: "10px", background: "var(--ink)", opacity: "1" }} />
-              <span style={{ fontSize: "14px", color: "var(--ink)" }}>Fixed income</span>
-              <span style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>$275,000.00</span>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "56px", textAlign: "right" }}>42.3%</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", minHeight: "28px" }}>
-              <span aria-hidden="true" style={{ display: "block", width: "10px", height: "10px", background: "var(--ink)", opacity: "0.6" }} />
-              <span style={{ fontSize: "14px", color: "var(--ink)" }}>Money market</span>
-              <span style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>$250,000.00</span>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "56px", textAlign: "right" }}>38.5%</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", minHeight: "28px" }}>
-              <span aria-hidden="true" style={{ display: "block", width: "10px", height: "10px", background: "var(--ink)", opacity: "0.35" }} />
-              <span style={{ fontSize: "14px", color: "var(--ink)" }}>Equities</span>
-              <span style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>$75,000.00</span>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "56px", textAlign: "right" }}>11.5%</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", minHeight: "28px" }}>
-              <span aria-hidden="true" style={{ display: "block", width: "10px", height: "10px", background: "var(--ink)", opacity: "0.16" }} />
-              <span style={{ fontSize: "14px", color: "var(--ink)" }}>Cash</span>
-              <span style={{ marginLeft: "auto", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>$50,000.00</span>
-              <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", color: "var(--ink-muted)", width: "56px", textAlign: "right" }}>7.7%</span>
-            </div>
-          </div>
-        </section>
-        <section aria-label="Your agent" style={{ flex: "1 1 340px", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "20px 24px 8px", display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <h2 style={{ margin: "0", fontSize: "18px", lineHeight: "1.3", fontWeight: "500", letterSpacing: "-0.01em", color: "var(--ink)" }}>From your agent</h2>
-            <span style={{ marginLeft: "auto" }}>
-              <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.08em", textTransform: "uppercase", background: "transparent", color: "var(--ink-muted)", border: "1px solid var(--hairline)", borderRadius: "999px", padding: "4px 10px", whiteSpace: "nowrap" }}>Copilot</span>
-            </span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ borderTop: "1px solid var(--hairline)", padding: "14px 0", display: "flex", flexDirection: "column", gap: "6px" }}>
-              <div style={{ fontSize: "15px", fontWeight: "500", color: "var(--ink)" }}>Cash is $25,000.00 above your minimum.</div>
-              <div style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--ink-muted)" }}>Proposed: buy $25,000.00 of WTSYX on Base. It passed all 3 mandate checks.</div>
-              <div style={{ paddingTop: "6px" }}>
-                <button className="btn btn-solid" data-go="/orders/" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--surface-0)", background: "var(--ink)", border: "1px solid var(--ink)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Review proposal</button>
-              </div>
-            </div>
-            <div style={{ borderTop: "1px solid var(--hairline)", padding: "14px 0", display: "flex", flexDirection: "column", gap: "6px" }}>
-              <div style={{ fontSize: "15px", fontWeight: "500", color: "var(--ink)" }}>WTGXX is 38.5% of the portfolio.</div>
-              <div style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--ink-muted)" }}>Your mandate caps one asset at 50%. Nothing to do.</div>
-            </div>
-          </div>
-        </section>
-      </div>
-      <LiveHoldings />
-      <section aria-label="Holdings" style={{ minWidth: "0", display: "flex", flexDirection: "column", gap: "14px" }}>
-        <h2 style={{ margin: "0", fontSize: "18px", lineHeight: "1.3", fontWeight: "500", letterSpacing: "-0.01em", color: "var(--ink)" }}>Holdings</h2>
-        <div style={{ overflowX: "auto", background: "var(--surface-1)", border: "1px solid var(--hairline)", borderRadius: "2px" }}>
-          <table style={{ width: "100%", minWidth: "860px", borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                <th scope="col" style={{ padding: "0 16px", height: "44px", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)", whiteSpace: "nowrap", textAlign: "left" }}>Asset</th>
-                <th scope="col" style={{ padding: "0 16px", height: "44px", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)", whiteSpace: "nowrap", textAlign: "left" }}>Class</th>
-                <th scope="col" style={{ padding: "0 16px", height: "44px", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)", whiteSpace: "nowrap", textAlign: "left" }}>Chain</th>
-                <th scope="col" style={{ padding: "0 16px", height: "44px", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)", whiteSpace: "nowrap", textAlign: "right" }}>Value</th>
-                <th scope="col" style={{ padding: "0 16px", height: "44px", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)", whiteSpace: "nowrap", textAlign: "right" }}>Share</th>
-                <th scope="col" style={{ padding: "0 16px", height: "44px", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)", whiteSpace: "nowrap", textAlign: "center" }}>30d yield</th>
-                <th scope="col" style={{ padding: "0 16px", height: "44px", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "11px", fontWeight: "500", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-muted)", whiteSpace: "nowrap", textAlign: "right" }}>
-                  <span style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0 0 0 0)" }}>Action</span>
-                </th>
+    </>
+  );
+}
+
+export default function Portfolio() {
+  const token = useToken();
+  const q = usePortfolio();
+  const history = useHistory(90);
+  const p = q.data;
+  const listed = p ? p.holdings.filter((h) => Number(h.valueUsd) >= DUST) : [];
+  const dust = p ? p.holdings.length - listed.length : 0;
+  const failed = p ? p.wallets.filter((w) => w.error) : [];
+
+  let table;
+  if (!token) table = <SignedOut what="your portfolio" />;
+  else if (q.isPending) table = <Notice>Reading your wallets…</Notice>;
+  else if (q.isError) table = <Failed error={q.error} what="Your portfolio" />;
+  else if (!p!.wallets.length) table = <Notice>No wallet linked yet. <Link to="/wallets/">Link one on the Wallets screen</Link> to see what it holds.</Notice>;
+  else if (!listed.length && !Number(p!.totals.cashUsd)) table = <Notice>Your linked wallets hold no Stock Tokens or USDG on Robinhood Chain.</Notice>;
+  else {
+    table = (
+      <>
+        <table className="live-table" style={{ minWidth: '900px' }}>
+          <thead>
+            <tr>
+              <th scope="col">Asset</th>
+              <th scope="col">Chain</th>
+              <th scope="col" className="num">Tokens</th>
+              <th scope="col" className="num">Shares</th>
+              <th scope="col" className="num">Price</th>
+              <th scope="col" className="num">Value</th>
+              <th scope="col" className="num">Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            {listed.map((h) => (
+              <tr key={h.symbol}>
+                <td><div className="live-asset"><span className="live-ticker">{h.symbol}</span><span className="live-name">{h.name.replace(/\s*•\s*Robinhood Token$/, '')}</span></div></td>
+                <td style={{ whiteSpace: 'nowrap' }}>{CHAIN_NAMES[h.chain]}{h.wallets.length > 1 && <span className="acct-cell-sub">{h.wallets.length} wallets</span>}</td>
+                <td className="num">{qty(h.tokens)}</td>
+                <td className="num">{qty(h.shares)}</td>
+                <td className="num">{h.halted ? 'Halted' : usd(h.tokenMid)}</td>
+                <td className="num">{usd(h.valueUsd)}</td>
+                <td className="num">{h.share.toFixed(1)}%</td>
               </tr>
-            </thead>
-            <tbody>
+            ))}
+            {Number(p!.totals.cashUsd) > 0 && (
               <tr>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                    <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", fontWeight: "500", letterSpacing: "0.02em", color: "var(--ink)", background: "var(--surface-2)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "6px 8px", minWidth: "52px", textAlign: "center" }}>WTGXX</span>
-                    <span style={{ fontSize: "15px", color: "var(--ink)" }}>WisdomTree Treasury Money Market Digital Fund</span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Money market</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Ethereum</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$250,000.00</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-end" }}>
-                    <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>38.5%</span>
-                    <span aria-hidden="true" style={{ display: "block", width: "72px", height: "6px", background: "var(--surface-2)", borderRadius: "0" }}>
-                      <span style={{ display: "block", width: "38.5%", height: "6px", background: "var(--ink)" }} />
-                    </span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "center" }}>3.67%</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
-                </td>
+                <td><div className="live-asset"><span className="live-ticker">USDG</span><span className="live-name">Settlement balance</span></div></td>
+                <td>{CHAIN_NAMES.robinhood}</td>
+                <td className="num">{qty(p!.totals.cashUsd, 2)}</td>
+                <td className="num">—</td>
+                <td className="num">$1.00</td>
+                <td className="num">{usd(p!.totals.cashUsd)}</td>
+                <td className="num">{Number(p!.totals.usd) ? ((Number(p!.totals.cashUsd) / Number(p!.totals.usd)) * 100).toFixed(1) : '0.0'}%</td>
               </tr>
-              <tr>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                    <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", fontWeight: "500", letterSpacing: "0.02em", color: "var(--ink)", background: "var(--surface-2)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "6px 8px", minWidth: "52px", textAlign: "center" }}>WTSYX</span>
-                    <span style={{ fontSize: "15px", color: "var(--ink)" }}>WisdomTree Short-Term Treasury Digital Fund</span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Fixed income</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Base</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$150,000.00</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-end" }}>
-                    <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>23.1%</span>
-                    <span aria-hidden="true" style={{ display: "block", width: "72px", height: "6px", background: "var(--surface-2)", borderRadius: "0" }}>
-                      <span style={{ display: "block", width: "23.1%", height: "6px", background: "var(--ink)" }} />
-                    </span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "center" }}>4.65%</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                    <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", fontWeight: "500", letterSpacing: "0.02em", color: "var(--ink)", background: "var(--surface-2)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "6px 8px", minWidth: "52px", textAlign: "center" }}>FLTTX</span>
-                    <span style={{ fontSize: "15px", color: "var(--ink)" }}>WisdomTree Floating Rate Treasury Digital Fund</span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Fixed income</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Arbitrum</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$100,000.00</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-end" }}>
-                    <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>15.4%</span>
-                    <span aria-hidden="true" style={{ display: "block", width: "72px", height: "6px", background: "var(--surface-2)", borderRadius: "0" }}>
-                      <span style={{ display: "block", width: "15.4%", height: "6px", background: "var(--ink)" }} />
-                    </span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "center" }}>4.04%</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                    <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", fontWeight: "500", letterSpacing: "0.02em", color: "var(--ink)", background: "var(--surface-2)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "6px 8px", minWidth: "52px", textAlign: "center" }}>SPXUX</span>
-                    <span style={{ fontSize: "15px", color: "var(--ink)" }}>WisdomTree 500 Digital Fund</span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Equities</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Ethereum</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$75,000.00</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-end" }}>
-                    <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>11.5%</span>
-                    <span aria-hidden="true" style={{ display: "block", width: "72px", height: "6px", background: "var(--surface-2)", borderRadius: "0" }}>
-                      <span style={{ display: "block", width: "11.5%", height: "6px", background: "var(--ink)" }} />
-                    </span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "center" }}>1.05%</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                    <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", fontWeight: "500", letterSpacing: "0.02em", color: "var(--ink)", background: "var(--surface-2)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "6px 8px", minWidth: "52px", textAlign: "center" }}>CRDYX</span>
-                    <span style={{ fontSize: "15px", color: "var(--ink)" }}>WisdomTree Private Credit and Alternative Income Digital Fund</span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Fixed income</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Avalanche</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$25,000.00</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-end" }}>
-                    <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>3.8%</span>
-                    <span aria-hidden="true" style={{ display: "block", width: "72px", height: "6px", background: "var(--surface-2)", borderRadius: "0" }}>
-                      <span style={{ display: "block", width: "3.8%", height: "6px", background: "var(--ink)" }} />
-                    </span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "center" }}>15.11%</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                    <span style={{ display: "inline-block", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "13px", fontWeight: "500", letterSpacing: "0.02em", color: "var(--ink)", background: "var(--surface-2)", border: "1px solid var(--hairline)", borderRadius: "2px", padding: "6px 8px", minWidth: "52px", textAlign: "center" }}>USDC</span>
-                    <span style={{ fontSize: "15px", color: "var(--ink)" }}>Settlement balance</span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Cash</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontSize: "14px", color: "var(--ink-muted)", whiteSpace: "nowrap" }}>Ethereum</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "right" }}>$50,000.00</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "flex-end" }}>
-                    <span style={{ fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>7.7%</span>
-                    <span aria-hidden="true" style={{ display: "block", width: "72px", height: "6px", background: "var(--surface-2)", borderRadius: "0" }}>
-                      <span style={{ display: "block", width: "7.7%", height: "6px", background: "var(--ink)" }} />
-                    </span>
-                  </div>
-                </td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", fontFamily: "'Geist Mono','SF Mono',Menlo,Consolas,monospace", fontSize: "14px", color: "var(--ink)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", textAlign: "center" }}>—</td>
-                <td style={{ padding: "0 16px", height: "64px", borderTop: "1px solid var(--hairline)", verticalAlign: "middle", textAlign: "right" }}>
-                  <button className="btn btn-ghost" data-soon="" type="button" style={{ fontFamily: "'Geist','Helvetica Neue',Arial,sans-serif", fontSize: "14px", fontWeight: "500", color: "var(--ink)", background: "transparent", border: "1px solid var(--hairline)", borderRadius: "2px", minHeight: "44px", padding: "0 16px", cursor: "pointer", whiteSpace: "nowrap" }}>Actions</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            )}
+            <tr className="live-total">
+              <td colSpan={5}>Total across {p!.wallets.length === 1 ? 'one wallet' : `${p!.wallets.length} wallets`}</td>
+              <td className="num">{usd(p!.totals.usd)}</td>
+              <td className="num">100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="acct-table-note">
+          <span>Read from the chain for the wallets linked to your account · updated {time(p!.asOf)}. Prices are indicative.{dust > 0 && ` ${dust} holding${dust === 1 ? '' : 's'} below $0.01 not listed.`}</span>
         </div>
+      </>
+    );
+  }
+
+  return (
+    <main className="app-main" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <PageHead title="Portfolio" lead="Everything you hold across your linked wallets, in one place." />
+      <Stats>
+        <Stat value={p ? usd(p.totals.usd) : '—'} label={p && !p.complete ? 'Total value, some balances unavailable' : 'Total value, indicative'} />
+        <Stat value={p ? usd(p.totals.stockTokensUsd) : '—'} label={p ? `In ${listed.length} Stock Token${listed.length === 1 ? '' : 's'}` : 'In Stock Tokens'} />
+        <Stat value={p ? usd(p.totals.cashUsd) : '—'} label="Cash, in USDG" />
+        <Stat value={p ? p.wallets.length : '—'} label={p?.wallets.length === 1 ? 'Wallet linked' : 'Wallets linked'} />
+      </Stats>
+      {failed.map((w) => <Notice key={w.id}>Balances for {w.label || short(w.address)} could not be read: {w.error}</Notice>)}
+      {token && (
+        <div className="acct-panels">
+          <section className="acct-panel" aria-label="Value over time">
+            <h2>Value over time</h2>
+            {history.isError ? <p className="live-meta" style={{ margin: 0 }}>History could not be loaded.</p> : <ValueChart points={history.data || []} />}
+          </section>
+          <section className="acct-panel" aria-label="Allocation">
+            <h2>Allocation</h2>
+            {p ? <Allocation holdings={p.holdings} cash={Number(p.totals.cashUsd)} total={Number(p.totals.usd)} /> : <p className="live-meta" style={{ margin: 0 }}>{q.isError ? 'Unavailable.' : 'Reading…'}</p>}
+          </section>
+        </div>
+      )}
+      <section aria-label="Holdings" style={{ minWidth: 0 }}>
+        <div className="live-box">{table}</div>
       </section>
     </main>
   );

@@ -1,8 +1,10 @@
-// The wallet whose Robinhood Chain balances the app reads: an address, kept in this browser.
-// Reading needs no signature. Trading (Trade.tsx) asks the wallet holding it to sign: the browser's
-// own wallet, or one on a phone paired through WalletConnect.
-import { useQuery } from '@tanstack/react-query';
-import { getApi } from '../../lib/api';
+// The wallet trades are made from on Robinhood Chain: an address, kept in this browser, because
+// which wallet can sign is a property of the device. Trading (Trade.tsx) asks the wallet holding it
+// to sign: the browser's own wallet, or one on a phone paired through WalletConnect.
+// The wallets linked to the account live on the API (lib/account.ts); useWalletSync picks the first
+// of them when this browser has none, so a wallet linked on one device is ready on another.
+import { useEffect } from 'react';
+import { useWallets } from '../../lib/account';
 import { createStore } from '../../lib/store';
 
 const KEY = 'pm-rh-wallet';
@@ -37,23 +39,13 @@ export function setWallet(address: string | null, by: Via = null) {
   changed.set(changed.get() + 1);
 }
 
-export interface Positions {
-  address: string;
-  asOf: string;
-  stockTokens: { symbol: string; name: string; tokens: string; shares: string; multiplier: string; halted?: boolean; tokenMid?: string; valueUsd?: string }[];
-  cash: { usdg: string; eth: string };
-  totals: { withUsdgUsd: string; stockTokensUsd: string };
-}
-
-// Shared by the Wallets and Portfolio screens, so moving between them does not read the chain again.
-export function usePositions(wallet: string | null) {
-  return useQuery({
-    queryKey: ['robinhood', 'positions', wallet],
-    queryFn: () => getApi<Positions>('/v1/robinhood/positions/' + wallet),
-    enabled: !!wallet,
-    staleTime: 30_000,
-    refetchInterval: 30_000,
-  });
+// Once the account's wallets are known, a browser with no trading wallet takes the first one.
+export function useWalletSync() {
+  const { data } = useWallets();
+  useEffect(() => {
+    const mine = (data || []).filter((w) => w.chain === 'robinhood');
+    if (!store.get() && mine[0]) setWallet(mine[0].address, null);
+  }, [data]);
 }
 
 export const short = (a: string) => a.slice(0, 6) + '…' + a.slice(-4);

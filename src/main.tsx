@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App } from './App';
 import './styles/app.css';
 import './chains/robinhood/live.css';
+import './styles/account.css';
 
 // Live figures are refetched on their own timers, only while the tab is in view, and again when it
 // comes back into view. What was last read stays on screen while moving between screens.
