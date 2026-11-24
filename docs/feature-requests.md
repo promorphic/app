@@ -64,7 +64,7 @@ Showing a fund as eligible for someone who is not eligible is a regulatory probl
 
    `allowedCountries: null` means anywhere not excluded. Every entry needs a source and a check date, because offering terms change.
 
-   Start with the issuers we list most: WisdomTree, Franklin (BENJI), Securitize-issued funds (BUIDL and others), Spiko, Etherfuse, Centrifuge pools, and the Robinhood Stock Tokens. Their rules are one entry, since the API already enforces them.
+   Start with the issuers we list most: WisdomTree, Spiko, Etherfuse, Centrifuge, Franklin Templeton (BENJI), BlackRock (BUIDL) and the Securitize funds, and the Robinhood Stock Tokens. Their rules are one entry, since the API already enforces them.
 2. **The investor's side.** Ask at sign-up, or later in account settings, for the country of incorporation or residence and the investor type. Sign-up already records whether the account is an organization or an individual. Store both on the account in the API.
 3. **The filter.** On the Assets screen, add an "Available to you" filter that compares the account's country and type with each asset's `offering`. It should show three states: available, not available, and unknown where there is no data. Never hide "unknown" assets silently.
 4. **Review.** Counsel reviews the data and the wording before the filter goes live.
