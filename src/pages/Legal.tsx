@@ -6,7 +6,7 @@ import { eyebrow, MONO, SANS } from '../layout/styles';
 
 // Terms of Use and Privacy Policy. Interim text, written for what the app does today and waiting on
 // counsel's own draft. When either changes, change UPDATED here and TERMS_VERSION in the API.
-const UPDATED = '23 November 2026';
+const UPDATED = '24 November 2026';
 const CONTACT = 'founders@promorphic.xyz';
 
 type Section = { title: string; body: ReactNode[] };
@@ -79,31 +79,34 @@ const PRIVACY: Section[] = [
     'Account details: your email address, your name, whether the account is for an organization or an individual, the organization\'s name, and when you agreed to the terms. If you sign in with Google, we receive your name and email address from Google and nothing else.',
     'Sign-in records: a record of each sign-in link we send and of each session. We store only a scrambled form (a hash) of links and session tokens, not the tokens themselves.',
     'Wallet addresses you connect or enter, and the public blockchain balances and transactions for them. A wallet address is public, but together with your account it can identify you.',
+    'Promorphic wallet: if you create one, the identifiers Turnkey gives it, its address on each chain, and a record of each transaction you prepare from it: what it sends and to whom, whether you signed it, and its result on the network.',
     'Eligibility declarations: where an asset requires one, the wallet address, the version of the statements you confirmed, the time, and the country you connected from.',
     'Sanctions screening: we compare wallet addresses you link or trade from, and the name and organization you give at sign-up, with public sanctions lists. Nothing is kept when there is no match. When there is one, the address or name and the list it matched are recorded so a person can review it.',
     'Technical records: our hosting provider logs each request to the API, including the address it came from, for security and for fixing faults. We use that address to work out your country for eligibility checks. We do not store it with your account or your declaration.',
   ] },
   { title: 'What we do not collect', body: [
-    'We never see or store your private keys or recovery phrases. We do not use advertising or analytics trackers, and we do not sell personal information.',
+    'We never see or store your private keys or recovery phrases. That includes the Promorphic wallet: Turnkey creates its keys and holds them in its own secure hardware, and they can be used only when you sign, after confirming a code Turnkey emails to you.',
+    'We do not use advertising or analytics trackers, and we do not sell personal information.',
   ] },
   { title: 'What is kept in your browser', body: [
     'The app keeps a few things in your browser\'s storage so it works: your session, your light or dark setting, a wallet address you saved, and where to return you after signing in. These stay on your device and you can clear them at any time. Signing in with Google or connecting a wallet loads code from those providers, which may set storage of their own.',
+    'When you sign from a Promorphic wallet, Turnkey\'s code keeps a signing session in your browser: a session record, and a key the browser will not let anyone copy out. The session ends after 15 minutes.',
   ] },
   { title: 'Why we use it', body: [
     'To create your account and sign you in, to show your holdings and prepare quotes, to meet the restrictions issuers place on their assets, to keep the service secure and working, and to contact you about your account.',
   ] },
   { title: 'Who else handles it', body: [
-    'Google Cloud hosts the API and its database. Google provides sign-in with Google. Resend sends sign-in emails. Reown relays connections to mobile wallets. Blockchain data providers and trading venues receive the wallet addresses and trade details needed to return balances and quotes. Each handles information under its own terms, only as needed to provide its part.',
+    'Google Cloud hosts the API and its database. Google provides sign-in with Google. Resend sends sign-in emails. Reown relays connections to mobile wallets. Turnkey creates and holds the keys of Promorphic wallets: when you create one we send Turnkey your email address and an identifier for your account, and when you sign, your browser sends Turnkey the code from its email and the transaction to sign. On test networks, the Stellar Development Foundation receives your Stellar address when you ask for test funds. Blockchain data providers and trading venues receive the wallet addresses and trade details needed to return balances and quotes. Each handles information under its own terms, only as needed to provide its part.',
     'We may also disclose information where the law requires it, or to protect the service and the people who use it.',
   ] },
   { title: 'Where it is kept, and for how long', body: [
-    'Account and declaration records are stored in the European Union; some providers process information in other countries. We keep account details while the account is open, sign-in links for 15 minutes, sessions for up to 30 days, and eligibility declarations for as long as the law or the issuer\'s rules require. Information written to a public blockchain cannot be changed or deleted by anyone.',
+    'Account and declaration records are stored in the European Union; some providers process information in other countries. We keep account details and Promorphic wallet records while the account is open, sign-in links for 15 minutes, sessions for up to 30 days, and eligibility declarations for as long as the law or the issuer\'s rules require. Information written to a public blockchain cannot be changed or deleted by anyone.',
   ] },
   { title: 'Your choices', body: [
     <>You can ask for a copy of the information we hold about you, ask us to correct it, or ask us to delete your account, by writing to {mail}. Depending on where you live you may have further rights, including to object to how we use your information or to complain to your data protection authority.</>,
   ] },
   { title: 'Security', body: [
-    'Sign-in uses one-time links or Google, so we hold no passwords. Tokens are stored only as hashes, and connections to the service are encrypted. No system is perfectly secure, so keep your email account and wallet protected.',
+    'Sign-in uses one-time links or Google, so we hold no passwords. Tokens are stored only as hashes, and connections to the service are encrypted. Promorphic wallet transactions are signed in your browser through Turnkey; our own access to Turnkey can create your wallet and read its addresses, but it cannot sign with it. No system is perfectly secure, so keep your email account and wallet protected.',
   ] },
   { title: 'Children', body: [
     'The service is for adults. We do not knowingly collect information from anyone under 18.',
