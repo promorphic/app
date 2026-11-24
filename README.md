@@ -10,6 +10,7 @@ The app is behind sign-in, and its Assets, Portfolio, Orders, Activity and Walle
 - [docs/features.md](docs/features.md): what each screen does, and what is live or sample.
 - [docs/architecture.md](docs/architecture.md): how the app is built, talks to the API and signs.
 - [docs/decisions.md](docs/decisions.md): why it is built that way.
+- [docs/feature-requests.md](docs/feature-requests.md): what has been asked for and is not built, and what is in the way.
 
 Keep them current when a screen, a dependency or a decision changes.
 

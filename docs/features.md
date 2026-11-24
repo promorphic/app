@@ -81,3 +81,4 @@ If a live source fails, the list falls back to the snapshot in `data/assets.json
 - Trading on any chain but Robinhood Chain.
 - Turnkey's captcha on its code emails and sign-up. See [decisions.md](decisions.md), "Turnkey captcha off for now".
 - Mainnet for the Promorphic wallet. It runs on test networks only.
+- Filtering assets by the investor's jurisdiction. The data does not exist yet; see [feature-requests.md](feature-requests.md).
