@@ -78,7 +78,10 @@ const PRIVACY: Section[] = [
   { title: 'What we collect', body: [
     'Account details: your email address, your name, whether the account is for an organization or an individual, the organization\'s name, and when you agreed to the terms. If you sign in with Google, we receive your name and email address from Google and nothing else.',
     'Sign-in records: a record of each sign-in link we send and of each session. We store only a scrambled form (a hash) of links and session tokens, not the tokens themselves.',
-    'Wallet addresses you connect or enter, and the public blockchain balances and transactions for them. A wallet address is public, but together with your account it can identify you.',
+    'Linked wallets: each wallet address you link, its chain, the name you gave it, how it was added (entered, from a browser wallet, or through WalletConnect) and when, and the public blockchain balances and transactions for it. A wallet address is public, but together with your account it can identify you.',
+    'Orders: each quote you accept and each trade you send from the app: the asset, whether you bought or sold, the amounts, the price, the venue, the chain and wallet, the transaction hashes, the outcome on the network, and the reason when an order failed or was cancelled.',
+    'Activity: a dated record of what happens on your account, which we add to but do not edit: each sign-in and how you signed in, wallets linked and removed, eligibility declarations, the steps of each order, and what you do with a Promorphic wallet.',
+    'Portfolio history: the total value of your linked wallets\' holdings, recorded once a day on the days you open the Portfolio or Wallets screen.',
     'Promorphic wallet: if you create one, the identifiers Turnkey gives it, its address on each chain, and a record of each transaction you prepare from it: what it sends and to whom, whether you signed it, and its result on the network.',
     'Eligibility declarations: where an asset requires one, the wallet address, the version of the statements you confirmed, the time, and the country you connected from.',
     'Sanctions screening: we compare wallet addresses you link or trade from, and the name and organization you give at sign-up, with public sanctions lists. Nothing is kept when there is no match. When there is one, the address or name and the list it matched are recorded so a person can review it.',
@@ -93,14 +96,14 @@ const PRIVACY: Section[] = [
     'When you sign from a Promorphic wallet, Turnkey\'s code keeps a signing session in your browser: a session record, and a key the browser will not let anyone copy out. The session ends after 15 minutes.',
   ] },
   { title: 'Why we use it', body: [
-    'To create your account and sign you in, to show your holdings and prepare quotes, to meet the restrictions issuers place on their assets, to keep the service secure and working, and to contact you about your account.',
+    'To create your account and sign you in, to show your holdings, orders and history on every device you use, to prepare quotes, to meet the restrictions issuers place on their assets, to keep the service secure and working, and to contact you about your account.',
   ] },
   { title: 'Who else handles it', body: [
     'Google Cloud hosts the API and its database. Google provides sign-in with Google. Resend sends sign-in emails. Reown relays connections to mobile wallets. Turnkey creates and holds the keys of Promorphic wallets: when you create one we send Turnkey your email address and an identifier for your account, and when you sign, your browser sends Turnkey the code from its email and the transaction to sign. On test networks, the Stellar Development Foundation receives your Stellar address when you ask for test funds. Blockchain data providers and trading venues receive the wallet addresses and trade details needed to return balances and quotes. Each handles information under its own terms, only as needed to provide its part.',
     'We may also disclose information where the law requires it, or to protect the service and the people who use it.',
   ] },
   { title: 'Where it is kept, and for how long', body: [
-    'Account and declaration records are stored in the European Union; some providers process information in other countries. We keep account details and Promorphic wallet records while the account is open, sign-in links for 15 minutes, sessions for up to 30 days, and eligibility declarations for as long as the law or the issuer\'s rules require. Information written to a public blockchain cannot be changed or deleted by anyone.',
+    'Account and declaration records are stored in the European Union; some providers process information in other countries. We keep account details, linked wallets, orders, activity, portfolio history and Promorphic wallet records while the account is open, sign-in links for 15 minutes, sessions for up to 30 days, and eligibility declarations for as long as the law or the issuer\'s rules require. Information written to a public blockchain cannot be changed or deleted by anyone.',
   ] },
   { title: 'Your choices', body: [
     <>You can ask for a copy of the information we hold about you, ask us to correct it, or ask us to delete your account, by writing to {mail}. Depending on where you live you may have further rights, including to object to how we use your information or to complain to your data protection authority.</>,
