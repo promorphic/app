@@ -4,7 +4,14 @@ The web app at [app.promorphic.xyz](https://app.promorphic.xyz): a single-page R
 
 It is the "Promorphic Design (Frontend)" canvas turned into pages. Each screen was designed twice, dark and light, with the same markup and different colours; here every colour is a CSS variable from the Promorphic design system, and one switch in the header changes the theme (the visitor's choice is remembered, and a first visit follows the system setting).
 
-**Most of what is shown is placeholder data.** There is no sign-in and no wallet connection yet. Buttons that have nothing behind them say so.
+The app is behind sign-in, and its Assets, Portfolio, Orders, Activity and Wallets screens are live. Your agent and Mandates are still the designed sample screens, and their buttons say "not yet".
+
+**Documentation:**
+- [docs/features.md](docs/features.md): what each screen does, and what is live or sample.
+- [docs/architecture.md](docs/architecture.md): how the app is built, talks to the API and signs.
+- [docs/decisions.md](docs/decisions.md): why it is built that way.
+
+Keep them current when a screen, a dependency or a decision changes.
 
 **What is live:** on the Assets page, the Robinhood Stock Tokens and their prices come from the Promorphic API (`api/` in the private `promorphic/backend` repo), which refreshes the list every 5 minutes and prices every 15 seconds. Prices are indicative. The Stellar assets come from the API too, each verified against its issuer's domain and refreshed every 10 minutes, with price and 30-day yield refreshed every minute: the issuer's net asset value where it publishes one (Spiko, Etherfuse, Centrifuge), else the mid of the Stellar exchange's USDC order book; issuers with no feed show a dash. If the API cannot be reached, the page shows the snapshot in `data/assets.json` and a dash for each price. The API address is the `API` constant in `src/lib/api.ts`; on `localhost` it points to `http://localhost:8787`.
 
@@ -24,6 +31,8 @@ It is the "Promorphic Design (Frontend)" canvas turned into pages. Each screen w
 | `/mandates/` | Mandates |
 | `/wallets/` | Wallets |
 | `/login/`, `/signup/` | Sign in, sign up |
+| `/auth/verify` | Where the sign-in email's link lands |
+| `/terms/`, `/privacy/` | Terms of Use, Privacy Policy (open to everyone) |
 
 Moving between screens never reloads the page: the sidebar and header stay where they are and only the content changes. Every screen still has its own address, so a link to `/orders/` opens Orders directly, and Back and Forward work.
 
@@ -35,7 +44,10 @@ React 19 and TypeScript, bundled by Vite. React Router swaps the screens; TanSta
 | --- | --- |
 | `src/App.tsx` | The routes, one per screen |
 | `src/layout/` | The frame every screen shares: sidebar, header, theme switch |
-| `src/pages/` | One component per screen. Apart from Assets they are the designed screens with sample data |
+| `src/pages/` | One component per screen. Your agent and Mandates still show the designed sample data |
+| `src/auth/`, `src/access/` | The sign-in gate and session; the region gate |
+| `src/wallet/` | The Promorphic wallet card, its send and sign dialogs, and Turnkey signing |
+| `docs/` | Features, architecture and decisions |
 | `src/assets/` | The Assets list: the snapshot, the filters, the opening order, the chain marks |
 | `src/chains/<chain>/` | Each chain's own code: what it reads, how its rows merge into the list, how it prices them. `src/assets/useAssets.ts` is the one place the chains meet |
 | `src/lib/` | The API address, the theme, the search box, the status line |
@@ -95,12 +107,12 @@ To try it locally, start `promorphic-api-auth` and `promorphic-app-auth` from `.
 
 The Wallets screen has a card for the account's own Promorphic wallet: one self-custody wallet, held in Turnkey, with an address on Robinhood Chain, Avalanche, Stellar and Canton. The code is in `src/wallet/`, and the API it uses is described in the backend's `api/README.md` under "Promorphic wallets". From the card a person creates the wallet, copies each address, sends each chain's own coin, funds Stellar from the testnet faucet and registers on Canton. Every send is prepared by the API, shown in full, and signed by the person before anything moves.
 
-The card only appears where the API serves `/v1/embedded-wallet` and has wallets switched on (or the account already has one).
+The card only appears where the API serves `/v1/embedded-wallet` and has wallets switched on (or the account already has one). The live API has them on, for test networks.
 
 Signing happens in one of two ways:
 
 - **Locally, with the API's dev signer.** Run the API with `WALLET_PROVIDER=dev` (the `promorphic-api-auth` entry in `../.claude/launch.json` does). The API signs with a development key in place of Turnkey, so the whole flow can be used without a Turnkey account. It refuses to run in production.
-- **In the browser, with Turnkey.** Set `VITE_TURNKEY_ORGANIZATION_ID` (Promorphic's parent organization) and `VITE_TURNKEY_AUTH_PROXY_CONFIG_ID` (the Auth Proxy configuration that emails sign-in codes); the deployed build reads both from repository variables. Turnkey emails a code to the account's address, the person enters it, and Turnkey's SDK signs in this browser. Turnkey's SDK is only bundled when both are set, and only loaded when a signature is needed. This path has not been tried against Turnkey yet: there is no Turnkey account.
+- **In the browser, with Turnkey.** Set `VITE_TURNKEY_ORGANIZATION_ID` (Promorphic's parent organization) and `VITE_TURNKEY_AUTH_PROXY_CONFIG_ID` (the Auth Proxy configuration that emails sign-in codes); the deployed build reads both from repository variables. Turnkey emails a code to the account's address, the person enters it, and Turnkey's SDK signs in this browser. Turnkey's SDK is only bundled when both are set, and only loaded when a signature is needed. Both are set for the live build. On 24 November 2026 a wallet was created live and a Stellar testnet send was signed through Turnkey and confirmed. Sends from Robinhood Chain and Avalanche have not been tried live yet.
 
 ## Deploying
 

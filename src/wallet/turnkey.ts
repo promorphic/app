@@ -8,7 +8,8 @@
 // Without them the app cannot sign with Turnkey and says so. Turnkey's SDK is loaded only when a
 // signature is actually needed, so it adds nothing to the app's first load.
 //
-// Not verified against Turnkey yet: there is no Turnkey account. Written to @turnkey/core 2.15's types.
+// Verified live on 24 November 2026: email code, sign-in and an ed25519 signature for a Stellar testnet send.
+// EVM (secp256k1) signing has not been through a live send yet. Written to @turnkey/core 2.15.
 import type { TurnkeyClient } from '@turnkey/core';
 import type { SignParams } from './api';
 
