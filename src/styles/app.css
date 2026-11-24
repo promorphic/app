@@ -36,7 +36,7 @@ input:hover, textarea:hover { border-color: var(--ink-faint) !important; }
 input[type="checkbox"] { flex: none; }
 .btn, .seg, .nav-link, .agent-card { transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease; }
 .btn-primary:hover { background: var(--brand-strong) !important; }
-.btn-ghost:hover, .btn-quiet:hover, .btn-chip:hover { background: var(--surface-2) !important; }
+.btn-ghost:hover, .btn-quiet:hover { background: var(--surface-2) !important; }
 .btn-ghost:hover { border-color: var(--ink-faint) !important; }
 .btn-solid:hover { opacity: .86; }
 .btn:disabled { opacity: .6; cursor: default !important; }

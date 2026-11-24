@@ -23,7 +23,6 @@
 .live-card { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 20px 24px; background: var(--surface-1); border: 1px solid var(--hairline); border-radius: 2px; }
 .live-card .grow { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .live-card .addr { font-size: 15px; color: var(--ink); overflow-wrap: anywhere; }
-.live-card .figs { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .live-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
 .live-btn { font-family: 'Geist', 'Helvetica Neue', Arial, sans-serif; font-size: 14px; font-weight: 500; color: var(--ink); background: transparent; border: 1px solid var(--hairline); border-radius: 2px; min-height: 44px; padding: 0 16px; cursor: pointer; white-space: nowrap; transition: background-color 120ms ease, border-color 120ms ease, opacity 120ms ease; }

@@ -32,8 +32,6 @@ export interface SigningRequest {
   result: { txHash?: string; explorer?: string; block?: number; ledger?: number; partyId?: string; updateId?: string } | null;
   error: string | null;
 }
-export const isOpen = (s: RequestStatus) => s === 'awaiting_signature' || s === 'submitting' || s === 'submitted';
-
 const WALLET = ['account', 'embedded-wallet'];
 
 // The wallet, or null. `available` is false where the API has no Promorphic wallets at all
@@ -93,16 +91,5 @@ export const cancelRequest = (token: string, id: string) =>
 // Local runs only (WALLET_PROVIDER=dev): the API signs with its dev key, standing in for Turnkey.
 export const devSign = (token: string, id: string) =>
   getApi<{ request: SigningRequest }>(`/v1/embedded-wallet/requests/${id}/dev-sign`, {}, token).then((r) => r.request);
-
-// Polls an open request until the network has settled it; a closed one is left alone.
-export function useRequest(initial: SigningRequest | null) {
-  const token = useToken();
-  return useQuery({
-    queryKey: [...WALLET, 'request', initial?.id, token], enabled: !!token && !!initial,
-    initialData: initial || undefined, staleTime: 0,
-    refetchInterval: (q) => (q.state.data && (q.state.data.status === 'submitted' || q.state.data.status === 'submitting') ? 2000 : false),
-    queryFn: () => getRequest(token!, initial!.id),
-  });
-}
 
 export const WALLET_KEY = WALLET;
