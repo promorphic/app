@@ -31,6 +31,9 @@ jobs:
           VITE_AUTH: ${{ vars.VITE_AUTH }}
           # The Reown (WalletConnect) project ID. Public by design, it ships in the page. Empty hides WalletConnect.
           VITE_WALLETCONNECT_PROJECT_ID: ${{ vars.VITE_WALLETCONNECT_PROJECT_ID }}
+          # Signing Promorphic wallets in the browser with Turnkey. Both empty: the app cannot sign with Turnkey and says so.
+          VITE_TURNKEY_ORGANIZATION_ID: ${{ vars.VITE_TURNKEY_ORGANIZATION_ID }}
+          VITE_TURNKEY_AUTH_PROXY_CONFIG_ID: ${{ vars.VITE_TURNKEY_AUTH_PROXY_CONFIG_ID }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

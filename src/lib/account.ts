@@ -7,8 +7,8 @@ import { getApi } from './api';
 
 export type Chain = 'robinhood';
 export const CHAIN_NAMES: Record<Chain, string> = { robinhood: 'Robinhood Chain' };
-export type Via = 'pasted' | 'browser' | 'walletconnect';
-export const VIA_NAMES: Record<Via, string> = { pasted: 'Address only', browser: 'Browser wallet', walletconnect: 'WalletConnect' };
+export type Via = 'pasted' | 'browser' | 'walletconnect' | 'promorphic';
+export const VIA_NAMES: Record<Via, string> = { pasted: 'Address only', browser: 'Browser wallet', walletconnect: 'WalletConnect', promorphic: 'Promorphic wallet' };
 
 export interface LinkedWallet { id: string; address: string; chain: Chain; chainId: number; label: string; via: Via; verified: boolean; addedAt: string }
 

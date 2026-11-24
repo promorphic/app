@@ -1,0 +1,31 @@
+/* The Promorphic wallet card on Wallets, and its send and sign dialogs. */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wallet-addr { display: inline-flex; align-items: center; gap: 4px 10px; flex-wrap: wrap; }
+.wallet-addr .live-mono { font-size: 13px; margin-right: 4px; }
+.live-btn.quiet { display: inline-flex; align-items: center; min-height: 32px; padding: 0 10px; font-size: 13px; color: var(--ink-muted); text-decoration: none; }
+.live-btn.quiet:hover { color: var(--ink); }
+.wallet-actions { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.wallet-table td { height: 68px; }
+
+.wallet-details { margin: 0; display: flex; flex-direction: column; border: 1px solid var(--hairline); border-radius: 2px; }
+.wallet-details > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 10px 14px; font-size: 13px; }
+.wallet-details > div + div { border-top: 1px solid var(--hairline); }
+.wallet-details dt { color: var(--ink-muted); }
+.wallet-details dd { margin: 0; color: var(--ink); text-align: right; overflow-wrap: anywhere; min-width: 0; }
+.wallet-code { display: flex; flex-direction: column; gap: 18px; padding: 0 !important; }
+.live-dialog .body a { color: var(--ink); }
+
+/* Phones: each chain is a small block (name and balance, then the address, then its actions) instead of a wide row. */
+@media (max-width: 700px) {
+  .wallet-table { min-width: 0 !important; }
+  .wallet-table thead { display: none; }
+  .wallet-table tbody tr { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 14px 16px; }
+  .live-table.wallet-table tbody tr + tr { border-top: 1px solid var(--hairline); }
+  .live-table.wallet-table td { display: block; height: auto; padding: 0; border: 0; }
+  .wallet-table td:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .wallet-table td:nth-child(3) { grid-column: 2; grid-row: 1; }
+  .wallet-table td:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .wallet-table td:nth-child(4) { grid-column: 1 / -1; grid-row: 3; text-align: left; }
+  .wallet-table td:nth-child(4):not(:has(button, span span)) { display: none; }
+  .wallet-actions { justify-content: flex-start; }
+}

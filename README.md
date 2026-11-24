@@ -91,6 +91,17 @@ The gate is a build setting. With `VITE_AUTH=on` every screen but the sign-in on
 
 To try it locally, start `promorphic-api-auth` and `promorphic-app-auth` from `../.claude/launch.json` (or run the API with `AUTH_DEV_LINKS=1` and the app with `VITE_AUTH=on`). The API then prints each sign-in link to its console instead of emailing it.
 
+## Promorphic wallets
+
+The Wallets screen has a card for the account's own Promorphic wallet: one self-custody wallet, held in Turnkey, with an address on Robinhood Chain, Avalanche, Stellar and Canton. The code is in `src/wallet/`, and the API it uses is described in the backend's `api/README.md` under "Promorphic wallets". From the card a person creates the wallet, copies each address, sends each chain's own coin, funds Stellar from the testnet faucet and registers on Canton. Every send is prepared by the API, shown in full, and signed by the person before anything moves.
+
+The card only appears where the API serves `/v1/embedded-wallet` and has wallets switched on (or the account already has one).
+
+Signing happens in one of two ways:
+
+- **Locally, with the API's dev signer.** Run the API with `WALLET_PROVIDER=dev` (the `promorphic-api-auth` entry in `../.claude/launch.json` does). The API signs with a development key in place of Turnkey, so the whole flow can be used without a Turnkey account. It refuses to run in production.
+- **In the browser, with Turnkey.** Set `VITE_TURNKEY_ORGANIZATION_ID` (Promorphic's parent organization) and `VITE_TURNKEY_AUTH_PROXY_CONFIG_ID` (the Auth Proxy configuration that emails sign-in codes); the deployed build reads both from repository variables. Turnkey emails a code to the account's address, the person enters it, and Turnkey's SDK signs in this browser. Turnkey's SDK is only bundled when both are set, and only loaded when a signature is needed. This path has not been tried against Turnkey yet: there is no Turnkey account.
+
 ## Deploying
 
 Push to `main`. The workflow in `.github/workflows/deploy.yml` builds the app and publishes `dist/` to GitHub Pages. Nothing built is committed.
