@@ -37,8 +37,8 @@ export default function TestLogin() {
         <button className="btn btn-primary" type="submit" style={primary} disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
         <p style={note}>This account is shared. It holds test instruments only, and anyone using it can reset it.</p>
         <p style={foot}>
-          This sandbox is for reviewers. For the Promorphic platform, visit{' '}
-          <a href="https://promorphic.xyz" target="_blank" rel="noopener" style={inkLink}>promorphic.xyz</a>.
+          This sandbox is for reviewers. The Promorphic platform is at{' '}
+          <a href="https://app.promorphic.xyz" target="_blank" rel="noopener" style={inkLink}>app.promorphic.xyz</a>.
         </p>
       </form>
     </AuthLayout>
