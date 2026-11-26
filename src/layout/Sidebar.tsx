@@ -65,7 +65,7 @@ export function Sidebar() {
             <>
               <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)' }}>abhi@promorphic.xyz</div>
               <div style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-faint)' }}>
-                Sandbox account · <Link to="/login/" style={{ textUnderlineOffset: '3px' }}>Sign out</Link>
+                Test account · <Link to="/login/" style={{ textUnderlineOffset: '3px' }}>Sign out</Link>
               </div>
             </>
           )}

@@ -9,7 +9,7 @@ export function toast(message: string) {
   clearTimeout(timer);
   timer = setTimeout(() => store.set(null), 2600);
 }
-export const notYet = () => toast('Not available in the sandbox yet.');
+export const notYet = () => toast('Not available yet.');
 
 export function Toast() {
   const message = store.use();
