@@ -77,7 +77,7 @@ If a live source fails, the list falls back to the snapshot in `data/assets.json
 
 ## The test account (live on Canton MainNet)
 
-One shared account, for people reviewing Promorphic. It signs in at `/sandbox/` with `test@promorphic.xyz` and a password, from any country, and every screen shows test assets only. The app calls it the sandbox. Each action is a real transaction on Canton MainNet through Promorphic's validator; the instruments have no value. Code: `src/chains/canton/`. First run on MainNet: 26 November 2026.
+One shared account, for people reviewing Promorphic. It signs in at `/sandbox/` with `test@promorphic.xyz` and a password, from the United States as well as wherever the app opens, though not from a sanctioned country, and every screen shows test assets only. The app calls it the sandbox. Each action is a real transaction on Canton MainNet through Promorphic's validator; the instruments have no value. Code: `src/chains/canton/`. First run on MainNet: 26 November 2026.
 
 | Screen | What the test account sees |
 | --- | --- |

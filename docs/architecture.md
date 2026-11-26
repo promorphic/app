@@ -68,7 +68,7 @@ RegionGate (asks /v1/access)
 
 ### The test account
 
-`/sandbox/` is a route outside `RegionGate`, so it opens from any country. The app calls this account the sandbox; the code and the API paths call it the test account. Once signed in, `session.user.test` is true and `src/App.tsx` swaps five screens for the ones in `src/chains/canton/` (Assets, Portfolio, Your agent, Mandates, Wallets). Orders and Activity are the ordinary screens. `RegionGate` sends the session token with `/v1/access`, and the API answers "allowed" for the test account's session wherever it is.
+`/sandbox/` is a route outside `RegionGate`, so the page opens anywhere; the API accepts its sign-in from the United States but still refuses it from a sanctioned country. The app calls this account the sandbox; the code and the API paths call it the test account. Once signed in, `session.user.test` is true and `src/App.tsx` swaps five screens for the ones in `src/chains/canton/` (Assets, Portfolio, Your agent, Mandates, Wallets). Orders and Activity are the ordinary screens. `RegionGate` sends the session token with `/v1/access`, and the API answers "allowed" for the test account's session wherever it is.
 
 The Assets screen lists test instruments on every chain the app lists and opens with Canton chosen in the Chain filter; only the Canton ones trade. The test screens read `GET /v1/test/assets` and `GET /v1/test/account` and write through `POST /v1/test/mandate`, `/v1/test/agent` and `/v1/test/reset` (`src/chains/canton/test.ts`). Each write returns the account as it now stands, which replaces the cached copy. The account hooks in `src/lib/account.ts` for wallets and portfolio are off for this account, since the API would refuse them.
 

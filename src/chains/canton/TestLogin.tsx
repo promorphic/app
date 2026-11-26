@@ -5,8 +5,8 @@ import { signedIn, useSession, type SignedIn } from '../../auth/session';
 import { getApi } from '../../lib/api';
 
 // Sign-in for the sandbox account, at /sandbox/. It is the one account with a password, because the people
-// testing with it cannot read its inbox, and the one screen outside the country check, because they
-// may be anywhere. It opens test assets and nothing else.
+// testing with it cannot read its inbox, and the one screen outside the region gate, because they
+// are in the United States. The API still refuses it from a sanctioned country. It opens test assets and nothing else.
 export default function TestLogin() {
   const navigate = useNavigate();
   const session = useSession();
@@ -28,7 +28,7 @@ export default function TestLogin() {
 
   return (
     <AuthLayout>
-      <Heading title="Sandbox">Sign in to try Promorphic with test assets. Trades settle on Canton MainNet, and nothing in this account has any value.</Heading>
+      <Heading title="Promorphic Sandbox" bold>Sign in to try Promorphic with test assets. Nothing in this account has any value.</Heading>
       <form noValidate onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Field id="test-email" label="Email" type="email" name="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Field id="test-password" label="Password" type="password" name="password" autoComplete="current-password" value={password}

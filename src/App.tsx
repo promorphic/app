@@ -45,7 +45,7 @@ const OPEN: Screen[] = [
   { path: '/privacy', id: 'privacy', title: 'Privacy Policy', element: <Privacy /> },
 ];
 const VERIFY: Screen = { path: '/auth/verify', id: 'verify', title: 'Signing in', element: <Verify /> };
-// The sandbox account (src/chains/canton/): its own sign-in, outside the country check, and its own
+// The sandbox account (src/chains/canton/): its own sign-in, which the API also takes from the United States, and its own
 // version of each screen that would otherwise show real assets. Orders and Activity are shared.
 const TEST_LOGIN: Screen = { path: '/sandbox', id: 'test', title: 'Sandbox', element: <TestLogin /> };
 const TEST: Record<string, ReactElement> = { assets: <TestAssets />, portfolio: <TestPortfolio />, agent: <TestAgent />, mandates: <TestMandates />, wallets: <TestWallets /> };

@@ -39,10 +39,10 @@ export const note: CSSProperties = { margin: 0, fontSize: '13px', lineHeight: 1.
 export const foot: CSSProperties = { margin: 0, paddingTop: '12px', borderTop: '1px solid var(--hairline)', fontSize: '14px', color: 'var(--ink-muted)' };
 export const inkLink: CSSProperties = { color: 'var(--ink)', textUnderlineOffset: '3px' };
 
-export function Heading({ title, children }: { title: string; children: ReactNode }) {
+export function Heading({ title, bold, children }: { title: string; bold?: boolean; children: ReactNode }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <h1 style={{ margin: 0, fontSize: '32px', lineHeight: 1.1, fontWeight: 300, letterSpacing: '-0.02em', color: 'var(--ink)' }}>{title}</h1>
+      <h1 style={{ margin: 0, fontSize: '32px', lineHeight: 1.1, fontWeight: bold ? 600 : 300, letterSpacing: '-0.02em', color: 'var(--ink)' }}>{title}</h1>
       <p style={{ margin: 0, fontSize: '15px', lineHeight: 1.5, color: 'var(--ink-muted)' }}>{children}</p>
     </div>
   );

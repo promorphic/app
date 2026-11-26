@@ -6,7 +6,7 @@ It is the "Promorphic Design (Frontend)" canvas turned into pages. Each screen w
 
 The app is behind sign-in, and its Assets, Portfolio, Orders, Activity and Wallets screens are live. Your agent and Mandates are still the designed sample screens, and their buttons say "not yet", except for the test account, where they act on Canton.
 
-**The sandbox:** one shared account signs in at `/sandbox/` with a password, from any country, and sees test assets only; its trades settle on Canton MainNet (`src/chains/canton/`). In the code it is the test account. It exists so reviewers can try a mandate and a settlement end to end; see [docs/features.md](docs/features.md#the-test-account-live-on-canton-mainnet).
+**The sandbox:** one shared account signs in at `/sandbox/` with a password, from the United States as well as wherever the app opens, though not from a sanctioned country, and sees test assets only; its trades settle on Canton MainNet (`src/chains/canton/`). In the code it is the test account. It exists so reviewers can try a mandate and a settlement end to end; see [docs/features.md](docs/features.md#the-test-account-live-on-canton-mainnet).
 
 **Documentation:**
 - [docs/features.md](docs/features.md): what each screen does, and what is live or sample.
