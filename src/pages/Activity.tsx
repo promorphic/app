@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { Failed, Notice, PageHead, SignedOut } from '../components/PageHead';
 import { Segmented } from '../components/Segmented';
+import { useTo } from '../chains/canton/sandbox';
 import { clock, day, shortId, useActivity, useToken, type Actor, type Entry } from '../lib/account';
 
 type Filter = Actor | 'all';
 const ACTOR_LABEL: Record<Actor, string> = { you: 'You', agent: 'Agent', system: 'System' };
 
 function Ref({ e }: { e: Entry }) {
+  const to = useTo();
   if (!e.ref) return null;
-  if (e.ref.kind === 'order') return <Link className="ref acct-link" to="/orders/">{shortId(e.ref.id)}</Link>;
-  return <Link className="ref acct-link" to="/wallets/">Wallet</Link>;
+  if (e.ref.kind === 'order') return <Link className="ref acct-link" to={to('/orders/')}>{shortId(e.ref.id)}</Link>;
+  return <Link className="ref acct-link" to={to('/wallets/')}>Wallet</Link>;
 }
 
 export default function Activity() {

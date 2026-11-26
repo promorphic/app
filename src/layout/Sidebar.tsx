@@ -1,6 +1,7 @@
 import { useState, type MouseEvent } from 'react';
 import { Link, NavLink } from 'react-router';
 import { AUTH_ON, signOut, useSession } from '../auth/session';
+import { useTo } from '../chains/canton/sandbox';
 import { useTestAccount } from '../chains/canton/test';
 import { Logo } from './Logo';
 import { MONO, eyebrow } from './styles';
@@ -13,6 +14,7 @@ const GROUPS = [
 export function Sidebar() {
   const [open, setOpen] = useState(false);
   const session = useSession();
+  const at = useTo();
   // For the sandbox account the card says what its agent can do right now, from the mandate on the ledger.
   const mandate = useTestAccount().data?.mandate;
   const agentLine = !session?.user.test ? 'Running · Copilot' : mandate === undefined ? 'Sandbox agent' : !mandate ? 'No mandate signed' : mandate.paused ? 'Mandate paused' : 'Ready · under mandate';
@@ -33,7 +35,7 @@ export function Sidebar() {
         <div key={group.label} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
           <div style={{ padding: '0 12px 8px' }}><div style={eyebrow}>{group.label}</div></div>
           {group.links.map(([to, label]) => (
-            <NavLink key={to} to={to} end={to === '/'} className="nav-link"
+            <NavLink key={to} to={at(to)} end={to === '/'} className="nav-link"
               style={({ isActive }) => ({
                 display: 'flex', alignItems: 'center', minHeight: '44px', padding: '0 12px', borderRadius: '2px', fontSize: '15px', textDecoration: 'none',
                 fontWeight: isActive ? 500 : 400, color: isActive ? 'var(--ink)' : 'var(--ink-muted)', background: isActive ? 'var(--surface-2)' : 'transparent',
@@ -44,7 +46,7 @@ export function Sidebar() {
         </div>
       ))}
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <Link to="/agent/" className="agent-card" style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '12px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '2px', textDecoration: 'none' }}>
+        <Link to={at('/agent/')} className="agent-card" style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '12px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '2px', textDecoration: 'none' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 500, color: 'var(--ink)' }}>
             <span aria-hidden="true" style={{ width: '8px', height: '8px', borderRadius: '999px', background: 'var(--ink)' }} />
             Your agent

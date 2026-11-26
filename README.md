@@ -34,7 +34,7 @@ Keep them current when a screen, a dependency or a decision changes.
 | `/mandates/` | Mandates |
 | `/wallets/` | Wallets |
 | `/login/`, `/signup/` | Sign in, sign up |
-| `/sandbox/` | Sign-in for the sandbox account. `/test/`, its first address, redirects here |
+| `/sandbox/` | The sandbox: its sign-in, then its Assets list. Its other screens are `/sandbox/portfolio/`, `/sandbox/orders/`, `/sandbox/activity/`, `/sandbox/agent/`, `/sandbox/mandates/` and `/sandbox/wallets/`. `/test/`, its first address, redirects here |
 | `/auth/verify` | Where the sign-in email's link lands |
 | `/terms/`, `/privacy/` | Terms of Use, Privacy Policy (open to everyone) |
 

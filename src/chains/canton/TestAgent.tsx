@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
+import { sandboxPath } from './sandbox';
 import { Failed, Notice, PageHead, Stat, Stats } from '../../components/PageHead';
 import { amount, shortUpdate, useAsk, useTestAccount, type AskResult, type Step } from './test';
 
@@ -65,7 +66,7 @@ export default function TestAgent() {
         <Stat value={m ? `${amount(Math.max(0, m.maxPerDay - m.usedToday), 2)}` : '—'} label={m ? `Left today, of ${amount(m.maxPerDay)} ${a!.cash}` : 'Left today'} />
         <Stat value={results.length} label={`Asked this visit: ${results.filter((r) => r.outcome === 'settled').length} settled, ${results.filter((r) => r.outcome === 'refused').length} refused`} />
       </Stats>
-      {!m && <Notice>There is no mandate yet, so the ledger will refuse anything the agent tries. <Link to="/mandates/">Sign the mandate</Link>, or ask first to see the refusal.</Notice>}
+      {!m && <Notice>There is no mandate yet, so the ledger will refuse anything the agent tries. <Link to={sandboxPath('/mandates/')}>Sign the mandate</Link>, or ask first to see the refusal.</Notice>}
 
       <div className="acct-panels">
         <section className="acct-panel" aria-label="Ask">
@@ -99,7 +100,7 @@ export default function TestAgent() {
         {ask.isPending && <p className="live-meta" role="status" style={{ margin: 0 }}>The agent is working on "{ask.variables}"…</p>}
         {results.length
           ? <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>{results.map((r, i) => <Result key={results.length - i} r={r} cash={a!.cash} />)}</ul>
-          : !ask.isPending && <p className="live-meta" style={{ margin: 0 }}>Nothing asked yet. Each answer shows the ledger transactions behind it; the full record is on the <Link className="acct-link" to="/orders/">Orders</Link> and <Link className="acct-link" to="/activity/">Activity</Link> screens.</p>}
+          : !ask.isPending && <p className="live-meta" style={{ margin: 0 }}>Nothing asked yet. Each answer shows the ledger transactions behind it; the full record is on the <Link className="acct-link" to={sandboxPath('/orders/')}>Orders</Link> and <Link className="acct-link" to={sandboxPath('/activity/')}>Activity</Link> screens.</p>}
       </section>
     </main>
   );

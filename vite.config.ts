@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 
 // Every screen has an address of its own. GitHub Pages serves files, not routes, so the built page is
 // copied to each address; anything else gets the same page as 404.html and the app shows "not found".
-export const ROUTES = ['portfolio', 'orders', 'activity', 'agent', 'mandates', 'wallets', 'login', 'signup', 'sandbox', 'test', 'auth/verify', 'terms', 'privacy'];
+export const ROUTES = ['portfolio', 'orders', 'activity', 'agent', 'mandates', 'wallets', 'login', 'signup', 'sandbox', 'sandbox/portfolio', 'sandbox/orders', 'sandbox/activity', 'sandbox/agent', 'sandbox/mandates', 'sandbox/wallets', 'test', 'auth/verify', 'terms', 'privacy'];
 
 // data/ and static/chains/ stay where the chain listers write them, outside public/.
 // This serves them as they are while developing and copies them into the build.

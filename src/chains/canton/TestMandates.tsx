@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { sandboxPath } from './sandbox';
 import { Failed, Notice, PageHead } from '../../components/PageHead';
 import { amount, shortUpdate, useMandateAction, useTestAccount, type MandateAction, type TestAccount } from './test';
 
@@ -61,12 +62,12 @@ export default function TestMandates() {
             <span>
               {m
                 ? <>These limits are in a contract on {a!.network}, signed by your party. The ledger checks every one each time the agent allocates. Contract <span className="live-mono" title={m.contractId}>{shortUpdate(m.contractId)}</span>.</>
-                : <>Signing creates this mandate as a contract on {a!.network}, signed by your party's own key. Until then the agent can do nothing with your assets. <Link className="acct-link" to="/agent/">Try it</Link> before and after.</>}
+                : <>Signing creates this mandate as a contract on {a!.network}, signed by your party's own key. Until then the agent can do nothing with your assets. <Link className="acct-link" to={sandboxPath('/agent/')}>Try it</Link> before and after.</>}
             </span>
           </div>
         </div>
         {act.isError && <p className="live-error" role="alert" style={{ margin: 0 }}>{(act.error as Error).message}</p>}
-        {last && <p className="live-meta" role="status" style={{ margin: 0 }}>{SAID[last.action]} in ledger update <span className="live-mono" title={last.updateId}>{shortUpdate(last.updateId)}</span>.{last.action === 'create' && <> Now <Link className="acct-link" to="/agent/">ask the agent to trade</Link>.</>}</p>}
+        {last && <p className="live-meta" role="status" style={{ margin: 0 }}>{SAID[last.action]} in ledger update <span className="live-mono" title={last.updateId}>{shortUpdate(last.updateId)}</span>.{last.action === 'create' && <> Now <Link className="acct-link" to={sandboxPath('/agent/')}>ask the agent to trade</Link>.</>}</p>}
       </section>
     );
   }

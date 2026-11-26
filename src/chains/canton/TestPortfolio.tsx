@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { sandboxPath } from './sandbox';
 import { Failed, Notice, PageHead, Stat, Stats } from '../../components/PageHead';
 import { amount, useTestAccount } from './test';
 
@@ -12,7 +13,7 @@ export default function TestPortfolio() {
   let table;
   if (q.isPending) table = <Notice>Reading the ledger…</Notice>;
   else if (q.isError) table = <Failed error={q.error} what="The sandbox account's holdings" />;
-  else if (!a!.holdings.length) table = <Notice>The party holds nothing. <Link to="/wallets/">Reset the sandbox account</Link> to start again with 10,000 {a!.cash}.</Notice>;
+  else if (!a!.holdings.length) table = <Notice>The party holds nothing. <Link to={sandboxPath('/wallets/')}>Reset the sandbox account</Link> to start again with 10,000 {a!.cash}.</Notice>;
   else {
     table = (
       <>

@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
+import { sandboxPath } from './sandbox';
 import type { Asset } from '../../assets/types';
 import { useChains } from '../../assets/useAssets';
 import { toast } from '../../lib/toast';
@@ -25,7 +26,7 @@ export default function TestAssets() {
       variant={{
         chain: 'canton',
         lead: 'Test instruments across the chains Promorphic lists. They have no value. Sandbox trades settle on Canton, so the list opens on Canton.',
-        onAction: (a) => (a.chains.includes('canton') ? navigate('/agent/') : toast(`${a.ticker} is a listing only. Sandbox trades settle on Canton.`)),
+        onAction: (a) => (a.chains.includes('canton') ? navigate(sandboxPath('/agent/')) : toast(`${a.ticker} is a listing only. Sandbox trades settle on Canton.`)),
       }}
     />
   );

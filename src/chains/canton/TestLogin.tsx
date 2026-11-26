@@ -1,28 +1,24 @@
 import { useState, type FormEvent } from 'react';
-import { Navigate, useNavigate } from 'react-router';
 import { AuthLayout, Field, foot, Heading, inkLink, note, primary, Problem } from '../../auth/AuthLayout';
-import { signedIn, useSession, type SignedIn } from '../../auth/session';
+import { signedIn, type SignedIn } from '../../auth/session';
 import { getApi } from '../../lib/api';
 
 // Sign-in for the sandbox account, at /sandbox/. It is the one account with a password, because the people
 // testing with it cannot read its inbox, and the one screen outside the region gate, because they
 // are in the United States. The API still refuses it from a sanctioned country. It opens test assets and nothing else.
 export default function TestLogin() {
-  const navigate = useNavigate();
-  const session = useSession();
   const [email, setEmail] = useState('test@promorphic.xyz');
   const [password, setPassword] = useState('');
   const [problem, setProblem] = useState('');
   const [busy, setBusy] = useState(false);
-  if (session) return <Navigate to="/" replace />;
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!password) return setProblem('Enter the sandbox account\'s password.');
     setBusy(true); setProblem('');
     try {
+      // Once signed in, this same address shows the sandbox's Assets list (SandboxOnly in App.tsx).
       signedIn(await getApi<SignedIn>('/v1/auth/test', { email: email.trim(), password }));
-      navigate('/', { replace: true });
     } catch (err) { setProblem((err as Error).message); } finally { setBusy(false); }
   };
 
