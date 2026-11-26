@@ -26,8 +26,9 @@ export interface Balance {
 export type RequestStatus = 'awaiting_signature' | 'submitting' | 'submitted' | 'confirmed' | 'failed' | 'expired' | 'cancelled';
 export interface SignParams { activityType: string; organizationId: string; signWith: string; payload: string; encoding: string; hashFunction: string }
 export interface SigningRequest {
-  id: string; chain: WalletChain; kind: 'transfer' | 'canton_register' | 'canton_command'; status: RequestStatus; summary: string;
-  details: Record<string, string | number | boolean | null> | null; createdAt: string; expiresAt: string; updatedAt: string | null;
+  id: string; chain: WalletChain; kind: 'transfer' | 'canton_register' | 'canton_command' | 'stellar_activate' | 'stellar_trade'; status: RequestStatus; summary: string;
+  // What the request does, for the person to check. A Stellar trade's holds its two sides as objects.
+  details: Record<string, unknown> | null; createdAt: string; expiresAt: string; updatedAt: string | null;
   sign: SignParams | null;
   result: { txHash?: string; explorer?: string; block?: number; ledger?: number; partyId?: string; updateId?: string } | null;
   error: string | null;

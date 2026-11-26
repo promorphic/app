@@ -2,16 +2,21 @@ import { useState } from 'react';
 import { useTest } from '../chains/canton/test';
 import { txUrl } from '../chains/robinhood/evm';
 import { qty, short, usd } from '../chains/robinhood/wallet';
+import { explorerTx } from '../chains/stellar/trade';
 import { Failed, Notice, PageHead, SignedOut } from '../components/PageHead';
 import { Segmented } from '../components/Segmented';
 import { CHAIN_NAMES, STATUS_NAMES, shortId, useOrders, useToken, when, type Order, type OrderFilter } from '../lib/account';
 
-const venueName = (v: string) => (v === 'lifi' ? 'LiFi' : v === '0x' ? '0x' : v);
+const venueName = (v: string) => (v === 'lifi' ? 'LiFi' : v === '0x' ? '0x' : v === 'stellar-dex' ? 'Stellar exchange' : v);
 // A Canton order (the sandbox account's) is counted in its settlement instrument, not in dollars, and
-// an order the ledger would not let the agent make is refused, not failed.
+// an order the ledger would not let the agent make is refused, not failed. A Stellar order is counted
+// in the cash asset it was traded against, and once settled shows what the ledger delivered.
 const onCanton = (o: Order) => o.chain === 'canton';
+const onStellar = (o: Order) => o.chain === 'stellar';
 const cash = (o: Order) => (o.side === 'buy' ? o.sell.symbol : o.buy.symbol);
-const money = (o: Order, v: string | null) => (onCanton(o) ? (v == null ? '—' : `${qty(v)} ${cash(o)}`) : usd(v));
+const money = (o: Order, v: string | null) => (onCanton(o) || onStellar(o) ? (v == null ? '—' : `${qty(v)} ${cash(o)}`) : usd(v));
+const received = (o: Order) => (onStellar(o) && o.buy.filled ? o.buy.filled : null);
+const txLink = (o: Order) => (onStellar(o) ? explorerTx(o.details?.network, o.txHash!) : txUrl(o.txHash!));
 const shortParty = (id: string) => { const [hint, key = ''] = id.split('::'); return `${hint}::${key.slice(0, 6)}…`; };
 
 function StatusPill({ o }: { o: Order }) {
@@ -69,8 +74,8 @@ export default function Orders() {
                   {o.assetName && <span className="acct-cell-sub">{o.assetName}</span>}
                 </td>
                 <td className="num" title={o.side === 'buy' ? `${qty(o.sell.amount)} ${o.sell.symbol} for about ${qty(o.buy.expected)} ${o.buy.symbol}` : `${qty(o.sell.amount)} ${o.sell.symbol} for about ${qty(o.buy.expected)} ${o.buy.symbol}`}>
-                  {money(o, o.valueUsd)}
-                  <span className="acct-cell-sub">{o.side === 'buy' ? `≈ ${qty(o.buy.expected)} ${o.symbol}` : `${qty(o.sell.amount)} ${o.symbol}`}</span>
+                  {money(o, o.side === 'sell' && received(o) ? received(o) : o.valueUsd)}
+                  <span className="acct-cell-sub">{o.side === 'buy' ? (received(o) ? `${qty(received(o)!)} ${o.symbol}` : `≈ ${qty(o.buy.expected)} ${o.symbol}`) : `${qty(o.sell.amount)} ${o.symbol}`}</span>
                 </td>
                 <td className="num">{money(o, o.pricePerToken)}</td>
                 {linked && <td style={{ whiteSpace: 'nowrap' }}>{venueName(o.venue)}{o.route ? <span className="acct-cell-sub">{o.route}</span> : null}</td>}
@@ -83,7 +88,7 @@ export default function Orders() {
                   {onCanton(o) && o.reason && <span className="acct-cell-sub" style={{ maxWidth: linked ? '260px' : '220px', whiteSpace: 'normal' }}>{o.reason}</span>}
                   {onCanton(o) && !o.reason && o.txHash && <span className="acct-cell-sub" style={{ whiteSpace: 'nowrap' }} title={`Ledger update ${o.txHash}`}>Update <span className="live-mono">{o.txHash.slice(0, 10)}…</span></span>}
                 </td>
-                {linked && <td style={{ whiteSpace: 'nowrap' }}>{o.txHash && !onCanton(o) ? <a className="acct-link" href={txUrl(o.txHash)} target="_blank" rel="noopener">View</a> : null}</td>}
+                {linked && <td style={{ whiteSpace: 'nowrap' }}>{o.txHash && !onCanton(o) ? <a className="acct-link" href={txLink(o)} target="_blank" rel="noopener">View</a> : null}</td>}
               </tr>
             ))}
           </tbody>

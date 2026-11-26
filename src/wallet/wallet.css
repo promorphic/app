@@ -28,4 +28,7 @@
   .wallet-table td:nth-child(4) { grid-column: 1 / -1; grid-row: 3; text-align: left; }
   .wallet-table td:nth-child(4):not(:has(button, span span)) { display: none; }
   .wallet-actions { justify-content: flex-start; }
+  /* The Stellar trading table (chains/stellar/StellarTrading.tsx) has long fund names: they wrap beside the balance. */
+  .wallet-table.wraps tbody tr { grid-template-columns: minmax(0, 1fr) auto; }
+  .wallet-table.wraps td:first-child > div > .live-name { min-width: 0; }
 }

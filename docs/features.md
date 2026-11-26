@@ -36,7 +36,7 @@ What the app at [app.promorphic.xyz](https://app.promorphic.xyz) does today, scr
 | Activity | `/activity/` | Live | Everything that happened on the account, filterable by who did it (you, the agent, the system), 50 at a time. |
 | Your agent | `/agent/` | Sample | The designed agent screen: a Copilot or Autopilot mode switch and an ask box. Nothing behind it yet. |
 | Mandates | `/mandates/` | Sample | The designed mandates screen. Nothing behind it yet. |
-| Wallets | `/wallets/` | Live | The Promorphic wallet card, then the wallets linked to the account. |
+| Wallets | `/wallets/` | Live | The Promorphic wallet card, Stellar trading from it, then the wallets linked to the account. |
 | Terms of Use, Privacy Policy | `/terms/`, `/privacy/` | Live | Interim texts written for what the app does today, waiting for counsel's version. Open to everyone, even from blocked countries. |
 | Not found | any other path | | A plain "not found" screen. |
 
@@ -74,6 +74,21 @@ If a live source fails, the list falls back to the snapshot in `data/assets.json
 - **Tested live on 24 November 2026:** wallet creation, Friendbot funding, and a 2 XLM Stellar testnet send signed through Turnkey and confirmed.
 - **Not tested live:** sends from Robinhood Chain and Avalanche (no test coins yet), and Canton, because the live API has no Canton ledger and the card shows "Not available here".
 - The card hides itself where the API has no Promorphic wallets.
+
+### Trade on Stellar (live on testnet)
+
+Under the Promorphic wallet card, for an account that has the wallet. Code: `src/chains/stellar/` (`trade.ts`, `StellarTrading.tsx`, `TradeDialog.tsx`). The API's side is in the backend's `api/README.md` under "Stellar trading".
+
+- **Activation:** the wallet's Stellar account is activated once, by signing. With the API's sponsor on, Promorphic pays the reserve and the fee, so the person needs no XLM.
+- **Cash:** trades are paid in the network's cash asset, the test dollar TUSD on testnet. A button there gets 1,000 test TUSD.
+- **Assets:** the API's list for the wallet's network, on testnet four test funds. Each has Buy, and Sell once it is held. A fund that needs its issuer's approval shows that instead.
+- **A trade:** a quote, asked for only when the button is pressed (the API allows 30 a minute), with the API's checks. A failed check shows the API's reason and no way to sign. Otherwise the API prepares the trade, the dialog shows the amounts it was prepared with, and the person signs as for a send.
+- **One request at a time:** two prepared together cannot both settle, so a request that failed or ran out of time offers "Try again", which starts from a new quote.
+- **Orders:** a Stellar order is counted in the cash asset, shows what the ledger delivered once settled, and links to the transaction on stellar.expert.
+- **Assets screen:** a Stellar row's Actions button opens the same dialog when the API lists that asset, matched by code and issuer. On testnet none match, because the test funds are not in the Assets list.
+- **Tested on 26 November 2026,** in a local run on Stellar testnet signed by the development key: activation, the faucet, a buy, a sell, a refused trade and a failed request.
+- **Not tested:** signing an activation or a trade through Turnkey in a browser, and the Assets screen's button, which first applies on mainnet.
+- Stellar holdings are not in the Portfolio screen.
 
 ## The test account (live on Canton MainNet)
 

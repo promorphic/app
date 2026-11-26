@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from '../auth/session';
 import { useToken } from '../lib/account';
@@ -26,6 +26,16 @@ function Details({ r }: { r: SigningRequest }) {
   );
 }
 
+// What a screen may say in its own words about the request it prepared. Without these the panel
+// speaks of a send, and lists the request's details by the labels above.
+export interface Wording {
+  done: string;      // the heading once the network has confirmed it, e.g. "Bought"
+  notDone: string;   // the heading when it failed, expired or was cancelled
+  rows?: (r: SigningRequest) => [label: string, value: ReactNode, mono?: boolean][]; // in place of the details
+  failed?: (error: string | null) => string; // the network's refusal, in plain words
+  after?: ReactNode; // a line under a confirmed request
+}
+
 function useCountdown(until: string, on: boolean) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => { if (!on) return; const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, [on]);
@@ -43,7 +53,8 @@ const OUTCOME: Record<string, string> = {
 // Shows a signing request, has the person sign it, and follows it until the network settles it.
 // Locally (provider "dev") the API signs with its dev key; otherwise Turnkey signs in this browser,
 // after a code emailed by Turnkey when there is no session yet.
-export function SignPanel({ initial, provider, title, onClose }: { initial: SigningRequest; provider: Provider; title: string; onClose: () => void }) {
+// `onRetry` adds a way to prepare the same thing again after a request that failed or ran out of time.
+export function SignPanel({ initial, provider, title, wording, onRetry, onClose }: { initial: SigningRequest; provider: Provider; title: string; wording?: Wording; onRetry?: () => void; onClose: () => void }) {
   const token = useToken()!;
   const email = useSession()?.user.email || '';
   const client = useQueryClient();
@@ -58,6 +69,8 @@ export function SignPanel({ initial, provider, title, onClose }: { initial: Sign
   const done = !waiting && !moving;
   const clock = useCountdown(r.expiresAt, waiting);
   const canSign = provider === 'dev' || (provider === 'turnkey' && turnkeyConfigured);
+  const rows = wording?.rows?.(r);
+  const retry = !!onRetry && (r.status === 'failed' || r.status === 'expired');
 
   // An EVM transfer is followed from its receipt until it is confirmed or fails.
   const poll = useQuery({
@@ -94,9 +107,13 @@ export function SignPanel({ initial, provider, title, onClose }: { initial: Sign
 
   return (
     <div className="body">
-      <h2>{done ? (r.kind === 'canton_register' ? (r.status === 'confirmed' ? 'Registered' : 'Not registered') : r.status === 'confirmed' ? 'Sent' : 'Not sent') : title}</h2>
+      <h2>{done ? (wording ? (r.status === 'confirmed' ? wording.done : wording.notDone) : r.kind === 'canton_register' ? (r.status === 'confirmed' ? 'Registered' : 'Not registered') : r.status === 'confirmed' ? 'Sent' : 'Not sent') : title}</h2>
       <p className="live-note">{r.summary}</p>
-      <Details r={r} />
+      {rows ? (
+        <dl className="wallet-details">
+          {rows.map(([label, value, mono]) => <div key={label}><dt>{label}</dt><dd className={mono ? 'live-mono' : undefined}>{value}</dd></div>)}
+        </dl>
+      ) : <Details r={r} />}
 
       {waiting && !sent && (
         <>
@@ -120,7 +137,8 @@ export function SignPanel({ initial, provider, title, onClose }: { initial: Sign
         </form>
       )}
       {moving && <p role="status">Sent to the network. Waiting for it to be confirmed…</p>}
-      {done && <p role="status" className={r.status === 'confirmed' ? undefined : 'live-error'}>{OUTCOME[r.status]}{r.error ? ` ${r.error}` : ''}</p>}
+      {done && <p role="status" className={r.status === 'confirmed' ? undefined : 'live-error'}>{r.status === 'failed' && wording?.failed ? wording.failed(r.error) : `${OUTCOME[r.status]}${r.error ? ` ${r.error}` : ''}`}</p>}
+      {r.status === 'confirmed' && wording?.after && <p>{wording.after}</p>}
       {r.result?.explorer && <p><a href={r.result.explorer} target="_blank" rel="noopener noreferrer">View the transaction</a></p>}
       {r.result?.partyId && r.kind === 'canton_register' && <p>Your party: <span className="live-mono" style={{ color: 'var(--ink)', overflowWrap: 'anywhere' }}>{r.result.partyId}</span></p>}
       {error && <p className="live-error">{error}</p>}
@@ -133,6 +151,11 @@ export function SignPanel({ initial, provider, title, onClose }: { initial: Sign
               <button className="live-btn solid" type="button" disabled={!canSign || !!busy || clock.left === 0} onClick={signNow}>
                 {busy === 'sign' ? 'Signing…' : provider === 'dev' ? 'Sign with the dev key' : 'Sign'}
               </button>
+            </>
+          ) : retry ? (
+            <>
+              <button className="live-btn" type="button" onClick={onClose}>Close</button>
+              <button className="live-btn solid" type="button" onClick={onRetry}>Try again</button>
             </>
           ) : <button className="live-btn solid" type="button" onClick={onClose}>{moving ? 'Close, it keeps going' : 'Close'}</button>}
         </div>

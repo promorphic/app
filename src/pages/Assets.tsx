@@ -6,6 +6,8 @@ import type { Asset } from '../assets/types';
 import { useAssets } from '../assets/useAssets';
 import { isStockToken } from '../chains/robinhood/prices';
 import { QuoteDialog } from '../chains/robinhood/QuoteDialog';
+import { TradeDialog } from '../chains/stellar/TradeDialog';
+import { useTradeAssets, type TradeAsset } from '../chains/stellar/trade';
 import { MONO, SANS, eyebrow, visuallyHidden } from '../layout/styles';
 import { setSearch, useSearch } from '../lib/search';
 import { notYet } from '../lib/toast';
@@ -31,6 +33,20 @@ export function AssetsScreen({ source, variant }: { source: ReturnType<typeof us
   const [sel, setSel] = useState<Selection>(() => (variant ? { ...NO_SELECTION, chain: [variant.chain] } : NO_SELECTION));
   const [shown, setShown] = useState(PAGE_SIZE);
   const [quoting, setQuoting] = useState<Asset | null>(null);
+  // A Stellar asset the API trades on the wallet's network, found by its id (code and issuer), never
+  // by its ticker. On the test network the tradable assets are test funds, which this list does not show.
+  const market = useTradeAssets().data;
+  const [trading, setTrading] = useState<TradeAsset | null>(null);
+  const onStellar = (a: Asset) => {
+    const id = a.source === 'stellar:list-assets' ? a.id : a.stellar?.id;
+    return typeof id === 'string' ? market?.assets.find((x) => x.id === id && x.tradable) : undefined;
+  };
+  const act = (a: Asset) => {
+    if (variant) return variant.onAction(a);
+    if (isStockToken(a)) return setQuoting(a);
+    const s = onStellar(a);
+    return s ? setTrading(s) : notYet();
+  };
 
   const filtering = !!q || FILTERS.some((f) => sel[f.id].length > 0);
   useEffect(() => setShown(PAGE_SIZE), [q, sel]); // a new search or filter starts from the first rows
@@ -110,8 +126,8 @@ export function AssetsScreen({ source, variant }: { source: ReturnType<typeof us
                       <ChainMarks ids={a.chains || []} chains={chains} />
                     </td>
                     <td style={{ ...td, textAlign: 'right' }}>
-                      {/* A Stock Token has a live quote behind its button; nothing else does yet. */}
-                      <button className="btn btn-ghost" type="button" onClick={() => (variant ? variant.onAction(a) : isStockToken(a) ? setQuoting(a) : notYet())}
+                      {/* A Stock Token has a live quote behind its button, and a Stellar asset the API trades has its trade; nothing else does yet. */}
+                      <button className="btn btn-ghost" type="button" onClick={() => act(a)}
                         style={{ fontFamily: SANS, fontSize: '14px', fontWeight: 500, color: 'var(--ink)', background: 'transparent', border: '1px solid var(--hairline)', borderRadius: '2px', minHeight: '44px', padding: '0 16px', cursor: 'pointer' }}>Actions</button>
                     </td>
                   </tr>
@@ -140,6 +156,7 @@ export function AssetsScreen({ source, variant }: { source: ReturnType<typeof us
         </div>
       </section>
       {quoting && <QuoteDialog asset={quoting} onClose={() => setQuoting(null)} />}
+      {trading && <TradeDialog asset={trading} onClose={() => setTrading(null)} />}
     </main>
   );
 }

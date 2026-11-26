@@ -5,8 +5,8 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { useSession } from '../auth/session';
 import { getApi } from './api';
 
-export type Chain = 'robinhood' | 'canton';
-export const CHAIN_NAMES: Record<Chain, string> = { robinhood: 'Robinhood Chain', canton: 'Canton' };
+export type Chain = 'robinhood' | 'canton' | 'stellar';
+export const CHAIN_NAMES: Record<Chain, string> = { robinhood: 'Robinhood Chain', canton: 'Canton', stellar: 'Stellar' };
 export type Via = 'pasted' | 'browser' | 'walletconnect' | 'promorphic';
 export const VIA_NAMES: Record<Via, string> = { pasted: 'Address only', browser: 'Browser wallet', walletconnect: 'WalletConnect', promorphic: 'Promorphic wallet' };
 
@@ -17,7 +17,9 @@ export const STATUS_NAMES: Record<OrderStatus, string> = { accepted: 'Awaiting y
 export interface Order {
   id: string; createdAt: string; updatedAt: string; chain: Chain; chainId: number; wallet: string;
   side: 'buy' | 'sell'; symbol: string; assetName: string | null; contract: string | null;
-  sell: { symbol: string; amount: string }; buy: { symbol: string; expected: string; min: string };
+  // buy.filled is what the ledger delivered, once settled; details is what was true when a Stellar trade was prepared.
+  sell: { symbol: string; amount: string }; buy: { symbol: string; expected: string; min: string; filled?: string | null };
+  details?: { network?: string } | null;
   pricePerToken: string | null; valueUsd: string; venue: string; route: string | null;
   approvalTxHash: string | null; txHash: string | null; status: OrderStatus; reason: string | null; placedBy: 'you' | 'agent'; settledAt: string | null;
 }

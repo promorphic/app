@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { WalletDialog } from '../chains/robinhood/WalletDialog';
 import { setWallet, short, usd, useWallet } from '../chains/robinhood/wallet';
 import { useViaWalletConnect, wcDisconnect } from '../chains/robinhood/walletconnect';
+import { StellarTrading } from '../chains/stellar/StellarTrading';
 import { Failed, Notice, PageHead, SignedOut, Stat, Stats } from '../components/PageHead';
 import { PromorphicWallet } from '../wallet/PromorphicWallet';
 import { CHAIN_NAMES, VIA_NAMES, usePortfolio, useRemoveWallet, useToken, useWallets, type LinkedWallet } from '../lib/account';
@@ -92,6 +93,7 @@ export default function Wallets() {
         </Notice>
       )}
       <PromorphicWallet />
+      <StellarTrading />
       <section className="live-section" aria-label="Linked wallets" style={{ minWidth: 0 }}>
         <div className="live-head">
           <h2>Linked wallets</h2>

@@ -41,7 +41,7 @@ The app is static files: a single-page React app with no server of its own. Ever
 | `src/pages/` | One component per screen |
 | `src/components/` | Small shared pieces: dialog, page head and states, segmented control |
 | `src/assets/` | The Assets list: types, snapshot loading, filters, chain marks |
-| `src/chains/<chain>/` | Everything chain-specific: `robinhood/` (prices, wallet, eligibility, quote, trade, WalletConnect), `stellar/` (registry and prices, address check), `avalanche/` (NAV feeds) |
+| `src/chains/<chain>/` | Everything chain-specific: `robinhood/` (prices, wallet, eligibility, quote, trade, WalletConnect), `stellar/` (registry and prices, address check, trading from the Promorphic wallet), `avalanche/` (NAV feeds) |
 | `src/lib/` | API client, account data (`account.ts`), theme, search, store, toast |
 | `src/wallet/` | The Promorphic wallet: API calls, Turnkey signing, the card, send and sign dialogs |
 | `src/styles/` | Design tokens for both themes, states, narrow-screen layout; account screens' styles |
@@ -83,7 +83,7 @@ GitHub Pages serves files, not routes. The Vite plugin in `vite.config.ts` copie
 - **Client.** `src/lib/api.ts` exports `API` and `getApi(path, body?, token?)`: a GET without a body, a POST with one, `Authorization: Bearer <token>` when a session is given. A refusal becomes `ApiError(status, code, message)`, and screens show the message.
 - **Address.** `https://promorphic-api-1017392197056.europe-west1.run.app` in production. On localhost it is `http://localhost:8787`, or `VITE_API_URL` if set.
 - **Account data.** `src/lib/account.ts` holds the account's ledger: `/v1/wallets`, `/v1/orders`, `/v1/activity`, `/v1/portfolio`, `/v1/portfolio/history`. Each call carries the session token, and nothing is asked for without one.
-- **Chain data.** Each chain folder calls its own endpoints, for example `/v1/robinhood/assets`, `/v1/robinhood/prices`, `/v1/robinhood/quote`, `/v1/robinhood/eligibility`, `/v1/stellar/assets` and `/v1/stellar/prices`.
+- **Chain data.** Each chain folder calls its own endpoints, for example `/v1/robinhood/assets`, `/v1/robinhood/prices`, `/v1/robinhood/quote`, `/v1/robinhood/eligibility`, `/v1/stellar/assets`, `/v1/stellar/prices` and `/v1/stellar/trade/*`.
 - **Wallet data.** `src/wallet/api.ts` calls `/v1/embedded-wallet/*`. The contract is in the backend's `api/README.md` under "Promorphic wallets".
 
 ### Refresh timers
