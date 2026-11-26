@@ -9,7 +9,7 @@ import TestLogin from './chains/canton/TestLogin';
 import TestMandates from './chains/canton/TestMandates';
 import TestPortfolio from './chains/canton/TestPortfolio';
 import TestWallets from './chains/canton/TestWallets';
-import { inSandbox, SANDBOX, sandboxPath } from './chains/canton/sandbox';
+import { inSandbox, SANDBOX } from './chains/canton/sandbox';
 import { useTest } from './chains/canton/test';
 import { AppShell } from './layout/AppShell';
 import { notYet, Toast } from './lib/toast';
@@ -53,24 +53,16 @@ const VERIFY: Screen = { path: '/auth/verify', id: 'verify', title: 'Signing in'
 const TEST: Record<string, ReactElement> = { assets: <TestAssets />, portfolio: <TestPortfolio />, agent: <TestAgent />, mandates: <TestMandates />, wallets: <TestWallets /> };
 const SANDBOX_APP: Screen[] = APP.map((s) => ({ ...s, path: s.path === '/' ? SANDBOX : SANDBOX + s.path, element: TEST[s.id] ?? s.element }));
 const clean = (path: string) => path.replace(/\/+$/, '') || '/';
-const withSlash = (path: string) => (path.endsWith('/') ? path : path + '/');
 
-// The app's own screens are not for the sandbox account: it is sent to the same screen in the sandbox.
-function LiveOnly() {
-  const { test } = useTest();
-  const { pathname } = useLocation();
-  return test ? <Navigate to={withSlash(sandboxPath(clean(pathname) === '/' ? '' : clean(pathname)))} replace /> : <Outlet />;
-}
-
-// The sandbox's screens are for the sandbox account only. Signed out, /sandbox/ is the sign-in and the
-// rest lead to it; any other account is sent back to the app. The sign-in sits outside the region
-// gate, because the API takes it from the United States; the screens ask the gate with the session.
+// The sandbox's screens are for the sandbox's own session (auth/session.ts), which is separate from
+// the app's: being signed in to the app does not sign anyone in here. Without it, /sandbox/ is the
+// sign-in and the rest lead to it. The sign-in sits outside the region gate, because the API takes
+// it from the United States; the screens ask the gate with the session.
 function SandboxOnly() {
   const session = useSession();
   const { pathname } = useLocation();
   useSessionCheck();
   if (!session) return clean(pathname) === SANDBOX ? <TestLogin /> : <Navigate to={SANDBOX + '/'} replace />;
-  if (!session.user.test) return <Navigate to="/" replace />;
   return <RegionGate><Outlet /></RegionGate>;
 }
 
@@ -108,10 +100,8 @@ export function App() {
       <Routes>
         <Route element={<RegionGate><Outlet /></RegionGate>}>
           <Route element={<RequireAuth />}>
-            <Route element={<LiveOnly />}>
-              <Route element={<AppShell page={screen?.id ?? ''} />}>
-                {APP.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
-              </Route>
+            <Route element={<AppShell page={screen?.id ?? ''} />}>
+              {APP.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
             </Route>
           </Route>
           <Route element={<SignedOutOnly />}>
