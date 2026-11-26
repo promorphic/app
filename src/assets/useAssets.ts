@@ -7,6 +7,7 @@ import { mergeStellar, stellarPrice, useStellar } from '../chains/stellar';
 import type { Asset, ChainInfo, Price, Snapshot } from './types';
 
 const NONE: Asset[] = [];
+const NO_CHAINS: Record<string, ChainInfo> = {};
 
 // The snapshot in /data, read once. It is what the list shows when no live source answers.
 function useSnapshot() {
@@ -21,6 +22,11 @@ function useSnapshot() {
     },
     staleTime: Infinity,
   });
+}
+
+// The chains the app knows, with their names, short codes and logos, for a screen that lists assets of its own.
+export function useChains() {
+  return useSnapshot().data?.chains ?? NO_CHAINS;
 }
 
 // The Assets list: the snapshot, with each chain's live registry laid over it, and a price for each row.

@@ -36,6 +36,11 @@
       "code": "HOOD",
       "name": "Robinhood Chain",
       "logo": "robinhood"
+    },
+    "canton": {
+      "code": "CC",
+      "name": "Canton",
+      "logo": "canton"
     }
   },
   "assets": [

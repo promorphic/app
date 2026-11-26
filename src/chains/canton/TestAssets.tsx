@@ -1,6 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import type { Asset } from '../../assets/types';
+import { useChains } from '../../assets/useAssets';
 import { AssetsScreen } from '../../pages/Assets';
 import { testPrice, useTestAssets } from './test';
 
@@ -13,9 +14,12 @@ export default function TestAssets() {
   const navigate = useNavigate();
   const cash = q.data?.cash ?? 'CC-TEST';
   const price = useCallback((a: Asset) => testPrice(a, cash), [cash]);
+  // the API names the chain; the app's own list adds its short code and logo
+  const known = useChains();
+  const chains = useMemo(() => ({ ...q.data?.chains, ...known }), [q.data?.chains, known]);
   return (
     <AssetsScreen
-      source={{ loading: q.isPending, failed: q.isError, chains: q.data?.chains ?? {}, featured: {}, assets: q.data?.assets ?? NONE, price }}
+      source={{ loading: q.isPending, failed: q.isError, chains, featured: {}, assets: q.data?.assets ?? NONE, price }}
       variant={{ chain: 'canton', lead: 'Test instruments on Canton. They have no value: they are here so a mandate and a settlement can be tried end to end.', onAction: () => navigate('/agent/') }}
     />
   );
