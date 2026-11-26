@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router';
 import { useTo } from '../chains/canton/sandbox';
 import { useTest, useTestAccount } from '../chains/canton/test';
 import { setSearch, useSearch } from '../lib/search';
-import { notYet } from '../lib/toast';
 import { MONO, SANS, visuallyHidden } from './styles';
 import { ThemeSwitch } from './ThemeSwitch';
 
@@ -11,7 +10,7 @@ export function Header() {
   const navigate = useNavigate();
   const to = useTo();
   const onAssets = useLocation().pathname === to('/');
-  // The sandbox account trades through its agent, and says where its test assets live.
+  // The sandbox account says where its test assets live.
   const { test } = useTest();
   const network = useTestAccount().data?.network;
   return (
@@ -23,9 +22,8 @@ export function Header() {
         onKeyDown={(e) => { if (e.key === 'Enter' && !onAssets && q.trim()) navigate(to('/')); }}
         style={{ flex: '1 1 280px', maxWidth: '480px', height: '44px', boxSizing: 'border-box', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '2px', color: 'var(--ink)', fontFamily: SANS, fontSize: '15px', padding: '0 14px' }} />
       {/* Only the sandbox is labelled; the app's own screens carry no such mark. */}
-      {test && <span style={{ marginLeft: 'auto', fontFamily: MONO, fontSize: '12px', letterSpacing: '0.02em', color: 'var(--ink-muted)', border: '1px solid var(--hairline)', borderRadius: '999px', padding: '6px 12px' }}>{`Sandbox · ${network || 'Canton'}`}</span>}
+      {test && <span className="sandbox-mark" style={{ marginLeft: 'auto', fontFamily: MONO, fontSize: '12px', letterSpacing: '0.02em', color: 'var(--ink-muted)', border: '1px solid var(--hairline)', borderRadius: '999px', padding: '6px 12px' }}>{`Sandbox · ${network || 'Canton'}`}</span>}
       <span style={{ marginLeft: test ? 0 : 'auto', display: 'flex' }}><ThemeSwitch /></span>
-      <button className="btn btn-primary" type="button" onClick={test ? () => navigate(to('/agent/')) : notYet} style={{ fontFamily: SANS, fontSize: '15px', fontWeight: 500, color: 'var(--on-brand)', background: 'var(--brand)', border: 0, borderRadius: '2px', height: '44px', padding: '0 18px', cursor: 'pointer' }}>New order</button>
     </header>
   );
 }

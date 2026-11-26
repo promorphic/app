@@ -98,7 +98,9 @@ input[type="checkbox"] { flex: none; }
 }
 @media (max-width: 699px) {
   .app-header { padding: 12px 16px !important; gap: 12px !important; }
-  .app-header .search { flex-basis: 100% !important; max-width: none !important; }
+  /* the search and the theme switch share one row; the sandbox's label takes a second row with the switch */
+  .app-header .search { flex-basis: 0 !important; min-width: 0; max-width: none !important; }
+  .app-header:has(.sandbox-mark) .search { flex-basis: 100% !important; }
   .app-main { padding: 24px 16px 40px !important; }
   .app-main h1 { font-size: 30px !important; }
 }
