@@ -29,6 +29,10 @@ export default function Orders() {
   const counts = pages[0]?.counts;
   const rows = pages.flatMap((p) => p.orders);
   const label = (name: string, n?: number) => (n == null ? name : `${name} ${n}`);
+  // A list of Canton orders only (the sandbox's) is laid out to fit the screen without scrolling
+  // sideways: the ledger update sits under the status, the settlement under the chain and who placed
+  // the order under its id, so the Venue, Placed by and transaction-link columns are not needed.
+  const linked = rows.some((o) => !onCanton(o));
 
   let body;
   if (!token) body = <SignedOut what="your orders" />;
@@ -38,7 +42,7 @@ export default function Orders() {
   else {
     body = (
       <>
-        <table className="live-table" style={{ minWidth: '1040px' }}>
+        <table className="live-table" style={{ minWidth: linked ? '1040px' : '760px' }}>
           <thead>
             <tr>
               <th scope="col">Order</th>
@@ -47,17 +51,17 @@ export default function Orders() {
               <th scope="col">Asset</th>
               <th scope="col" className="num">Amount</th>
               <th scope="col" className="num">Price</th>
-              <th scope="col">Venue</th>
+              {linked && <th scope="col">Venue</th>}
               <th scope="col">Chain</th>
-              <th scope="col">Placed by</th>
+              {linked && <th scope="col">Placed by</th>}
               <th scope="col">Status</th>
-              <th scope="col"><span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>Transaction</span></th>
+              {linked && <th scope="col"><span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>Transaction</span></th>}
             </tr>
           </thead>
           <tbody>
             {rows.map((o) => (
               <tr key={o.id}>
-                <td className="live-mono" style={{ color: 'var(--ink)', whiteSpace: 'nowrap' }} title={o.id}>{shortId(o.id)}</td>
+                <td style={{ whiteSpace: 'nowrap' }} title={o.id}><span className="live-mono" style={{ color: 'var(--ink)' }}>{shortId(o.id)}</span>{!linked && <span className="acct-cell-sub">{o.placedBy === 'you' ? 'You' : 'Agent'}</span>}</td>
                 <td style={{ whiteSpace: 'nowrap' }}>{when(o.createdAt)}</td>
                 <td style={{ color: 'var(--ink)' }}>{o.side === 'buy' ? 'Buy' : 'Sell'}</td>
                 <td>
@@ -69,11 +73,17 @@ export default function Orders() {
                   <span className="acct-cell-sub">{o.side === 'buy' ? `≈ ${qty(o.buy.expected)} ${o.symbol}` : `${qty(o.sell.amount)} ${o.symbol}`}</span>
                 </td>
                 <td className="num">{money(o, o.pricePerToken)}</td>
-                <td style={{ whiteSpace: 'nowrap' }}>{venueName(o.venue)}{o.route ? <span className="acct-cell-sub">{o.route}</span> : null}</td>
-                <td style={{ whiteSpace: 'nowrap' }}>{CHAIN_NAMES[o.chain]}<span className="acct-cell-sub live-mono" title={o.wallet}>{onCanton(o) ? shortParty(o.wallet) : short(o.wallet)}</span></td>
-                <td><span className="acct-pill">{o.placedBy === 'you' ? 'You' : 'Agent'}</span></td>
-                <td><StatusPill o={o} />{onCanton(o) && o.reason && <span className="acct-cell-sub" style={{ maxWidth: '260px', whiteSpace: 'normal' }}>{o.reason}</span>}</td>
-                <td style={{ whiteSpace: 'nowrap' }}>{!o.txHash ? null : onCanton(o) ? <span className="live-mono" title={`Ledger update ${o.txHash}`}>{o.txHash.slice(0, 10)}…</span> : <a className="acct-link" href={txUrl(o.txHash)} target="_blank" rel="noopener">View</a>}</td>
+                {linked && <td style={{ whiteSpace: 'nowrap' }}>{venueName(o.venue)}{o.route ? <span className="acct-cell-sub">{o.route}</span> : null}</td>}
+                {linked
+                  ? <td style={{ whiteSpace: 'nowrap' }}>{CHAIN_NAMES[o.chain]}<span className="acct-cell-sub live-mono" title={o.wallet}>{onCanton(o) ? shortParty(o.wallet) : short(o.wallet)}</span></td>
+                  : <td style={{ whiteSpace: 'nowrap' }} title={`${o.route ? o.route + ', party ' : 'Party '}${o.wallet}`}>{CHAIN_NAMES[o.chain]}{o.route ? <span className="acct-cell-sub live-mono">{o.route.replace(/^Settlement /, '')}</span> : null}</td>}
+                {linked && <td><span className="acct-pill">{o.placedBy === 'you' ? 'You' : 'Agent'}</span></td>}
+                <td>
+                  <StatusPill o={o} />
+                  {onCanton(o) && o.reason && <span className="acct-cell-sub" style={{ maxWidth: linked ? '260px' : '220px', whiteSpace: 'normal' }}>{o.reason}</span>}
+                  {onCanton(o) && !o.reason && o.txHash && <span className="acct-cell-sub" style={{ whiteSpace: 'nowrap' }} title={`Ledger update ${o.txHash}`}>Update <span className="live-mono">{o.txHash.slice(0, 10)}…</span></span>}
+                </td>
+                {linked && <td style={{ whiteSpace: 'nowrap' }}>{o.txHash && !onCanton(o) ? <a className="acct-link" href={txUrl(o.txHash)} target="_blank" rel="noopener">View</a> : null}</td>}
               </tr>
             ))}
           </tbody>
