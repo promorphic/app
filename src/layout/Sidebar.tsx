@@ -13,9 +13,9 @@ const GROUPS = [
 export function Sidebar() {
   const [open, setOpen] = useState(false);
   const session = useSession();
-  // For the test account the card says what its agent can do right now, from the mandate on the ledger.
+  // For the sandbox account the card says what its agent can do right now, from the mandate on the ledger.
   const mandate = useTestAccount().data?.mandate;
-  const agentLine = !session?.user.test ? 'Running · Copilot' : mandate === undefined ? 'Test agent' : !mandate ? 'No mandate signed' : mandate.paused ? 'Mandate paused' : 'Ready · under mandate';
+  const agentLine = !session?.user.test ? 'Running · Copilot' : mandate === undefined ? 'Sandbox agent' : !mandate ? 'No mandate signed' : mandate.paused ? 'Mandate paused' : 'Ready · under mandate';
   // On a phone the menu closes once a screen is chosen, the current one included.
   const closeOnLink = (e: MouseEvent) => { if ((e.target as Element).closest('a')) setOpen(false); };
 
@@ -56,14 +56,14 @@ export function Sidebar() {
             <>
               <div title={session.user.email} style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session.user.email}</div>
               <div style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-faint)' }}>
-                {session.user.test ? 'Test account' : session.user.accountType === 'organization' ? 'Organization' : 'Individual'} · <button type="button" className="link-button" onClick={signOut}>Sign out</button>
+                {session.user.test ? 'Sandbox account' : session.user.accountType === 'organization' ? 'Organization' : 'Individual'} · <button type="button" className="link-button" onClick={signOut}>Sign out</button>
               </div>
             </>
           ) : (
             <>
               <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)' }}>abhi@promorphic.xyz</div>
               <div style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-faint)' }}>
-                Test account · <Link to="/login/" style={{ textUnderlineOffset: '3px' }}>Sign out</Link>
+                Sandbox account · <Link to="/login/" style={{ textUnderlineOffset: '3px' }}>Sign out</Link>
               </div>
             </>
           )}

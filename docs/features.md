@@ -77,11 +77,11 @@ If a live source fails, the list falls back to the snapshot in `data/assets.json
 
 ## The test account (live on Canton MainNet)
 
-One shared account, for people reviewing Promorphic. It signs in at `/test/` with `test@promorphic.xyz` and a password, from any country, and every screen shows test assets on Canton only. Each action is a real transaction on Canton MainNet through Promorphic's validator; the instruments have no value. Code: `src/chains/canton/`. First run on MainNet: 26 November 2026.
+One shared account, for people reviewing Promorphic. It signs in at `/sandbox/` with `test@promorphic.xyz` and a password, from any country, and every screen shows test assets only. The app calls it the sandbox. Each action is a real transaction on Canton MainNet through Promorphic's validator; the instruments have no value. Code: `src/chains/canton/`. First run on MainNet: 26 November 2026.
 
 | Screen | What the test account sees |
 | --- | --- |
-| Assets | Six test instruments (CC-TEST, TBILL-TEST, MMF-TEST, BOND-TEST, GOLD-TEST, EQTY-TEST), with Canton already chosen in the Chain filter. Prices are fixed test prices in CC-TEST. |
+| Assets | Eighteen test instruments, each with a 30d yield. Six are on Canton (CC-TEST, TBILL-TEST, MMF-TEST, BOND-TEST, GOLD-TEST, EQTY-TEST), priced in CC-TEST, and the list opens with Canton chosen in the Chain filter. The other twelve are listings on the other chains, so the list looks as it does for a real account; nothing stands behind them and they do not trade. |
 | Portfolio | What its Canton party holds, read from the ledger: available, locked to a settlement, and value in CC-TEST. It starts with 10,000 CC-TEST. |
 | Mandates | One preset mandate. Signing it creates the contract on the ledger, signed by the party's key. Then pause, resume or revoke. The table shows the limits and what has been used today. |
 | Your agent | An ask box and six things to try. A trade inside the limits settles in four ledger transactions; one outside them is refused by the ledger, and so is an attempt by the agent to send assets out. Each answer lists its ledger updates. |

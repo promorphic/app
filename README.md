@@ -6,7 +6,7 @@ It is the "Promorphic Design (Frontend)" canvas turned into pages. Each screen w
 
 The app is behind sign-in, and its Assets, Portfolio, Orders, Activity and Wallets screens are live. Your agent and Mandates are still the designed sample screens, and their buttons say "not yet", except for the test account, where they act on Canton.
 
-**The test account:** one shared account signs in at `/test/` with a password, from any country, and sees test assets on Canton MainNet only (`src/chains/canton/`). It exists so reviewers can try a mandate and a settlement end to end; see [docs/features.md](docs/features.md#the-test-account-live-on-canton-mainnet).
+**The sandbox:** one shared account signs in at `/sandbox/` with a password, from any country, and sees test assets only; its trades settle on Canton MainNet (`src/chains/canton/`). In the code it is the test account. It exists so reviewers can try a mandate and a settlement end to end; see [docs/features.md](docs/features.md#the-test-account-live-on-canton-mainnet).
 
 **Documentation:**
 - [docs/features.md](docs/features.md): what each screen does, and what is live or sample.
@@ -34,7 +34,7 @@ Keep them current when a screen, a dependency or a decision changes.
 | `/mandates/` | Mandates |
 | `/wallets/` | Wallets |
 | `/login/`, `/signup/` | Sign in, sign up |
-| `/test/` | Sign-in for the test account |
+| `/sandbox/` | Sign-in for the sandbox account. `/test/`, its first address, redirects here |
 | `/auth/verify` | Where the sign-in email's link lands |
 | `/terms/`, `/privacy/` | Terms of Use, Privacy Policy (open to everyone) |
 

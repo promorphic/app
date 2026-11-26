@@ -20,7 +20,7 @@ function rules(a: TestAccount) {
   ];
 }
 
-// The Mandates screen for the test account: the one mandate its party signs, on the ledger.
+// The Mandates screen for the sandbox account: the one mandate its party signs, on the ledger.
 export default function TestMandates() {
   const q = useTestAccount();
   const act = useMandateAction();

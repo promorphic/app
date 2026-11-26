@@ -7,7 +7,7 @@ import { createStore } from '../lib/store';
 // as it was before accounts existed, and the sign-in screens only lead into it.
 export const AUTH_ON = import.meta.env.VITE_AUTH === 'on';
 
-// test marks the shared test account (src/chains/canton/): test assets on Canton, nothing real.
+// test marks the shared sandbox account (src/chains/canton/): test assets on Canton, nothing real.
 export type User = { email: string; name: string; accountType: 'organization' | 'individual'; organization: string | null; createdAt: string; test?: boolean };
 export type Session = { token: string; expiresAt: string; user: User };
 export type SignedIn = { session: { token: string; expiresAt: string }; user: User };

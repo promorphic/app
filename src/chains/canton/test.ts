@@ -1,4 +1,4 @@
-// The test account on Canton: one shared sign-in whose screens show test assets and nothing real.
+// The sandbox account on Canton: one shared sign-in whose screens show test assets and nothing real.
 // Every figure here is read from a Canton ledger through the API (/v1/test/*), and every action is
 // a real transaction on it; the instruments have no value. The API refuses this account everything
 // else, so these hooks are all its screens use.
@@ -34,7 +34,7 @@ export interface AskResult {
 }
 export type MandateAction = 'create' | 'pause' | 'resume' | 'revoke';
 
-// Whether the signed-in account is the test account, and its token.
+// Whether the signed-in account is the sandbox account, and its token.
 export function useTest() {
   const session = useSession();
   return { test: !!session?.user.test, token: session?.token };
@@ -70,4 +70,6 @@ export const shortParty = (id: string) => { const [hint, key = ''] = id.split(':
 export const shortUpdate = (id: string) => `${id.slice(0, 10)}…${id.slice(-6)}`;
 // What the Assets list shows in its Price column for a test instrument.
 export const testPrice = (a: Asset, cash: string): Price | null =>
-  a.kind === 'test' && typeof a.price === 'number' ? { text: `${amount(a.price)} ${cash}`, title: 'A fixed test price, signed on the ledger by the price provider. Not a market price.' } : null;
+  a.kind !== 'test' || typeof a.price !== 'number' ? null
+    : a.chains.includes('canton') ? { text: `${amount(a.price)} ${cash}`, title: 'A fixed test price, signed on the ledger by the price provider. Not a market price.' }
+    : { text: `${amount(a.price)} ${a.settles?.[0] ?? ''}`.trim(), title: 'A fixed test price for a listing on another chain. Not a market price.' };

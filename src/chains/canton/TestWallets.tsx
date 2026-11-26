@@ -21,7 +21,7 @@ function Party({ id }: { id: string }) {
   );
 }
 
-// The Wallets screen for the test account: its Canton party, and Promorphic's parties around it.
+// The Wallets screen for the sandbox account: its Canton party, and Promorphic's parties around it.
 export default function TestWallets() {
   const q = useTestAccount();
   const reset = useReset();
@@ -29,13 +29,13 @@ export default function TestWallets() {
   const a = q.data;
 
   const startAgain = () => {
-    if (!confirm('Reset the test account? Its holdings go back to 10,000 CC-TEST, its mandate is revoked and its orders and activity are cleared.')) return;
-    reset.mutate(undefined, { onSuccess: (r) => { setLast(r.updateId); toast('The test account was reset.'); } });
+    if (!confirm('Reset the sandbox account? Its holdings go back to 10,000 CC-TEST, its mandate is revoked and its orders and activity are cleared.')) return;
+    reset.mutate(undefined, { onSuccess: (r) => { setLast(r.updateId); toast('The sandbox account was reset.'); } });
   };
 
   let body;
   if (q.isPending) body = <Notice>Reading the ledger…</Notice>;
-  else if (q.isError) body = <Failed error={q.error} what="The test account's party" />;
+  else if (q.isError) body = <Failed error={q.error} what="The sandbox account's party" />;
   else {
     body = (
       <>
@@ -47,7 +47,7 @@ export default function TestWallets() {
           </p>
           <p className="live-meta" style={{ margin: 0 }}>
             This is an external party: its own key signs everything it does, and the validator that hosts it cannot act for it. A customer's key is in their own wallet.
-            For this shared test account only, Promorphic's API holds the key, so that no signing code has to reach your inbox.
+            For this shared sandbox account only, Promorphic's API holds the key, so that no signing code has to reach your inbox.
           </p>
         </section>
         <section aria-label="Promorphic's parties" style={{ minWidth: 0 }}>
@@ -71,8 +71,8 @@ export default function TestWallets() {
         </section>
         <section className="acct-panel" aria-label="Reset">
           <h2>Start again</h2>
-          <p className="live-meta" style={{ margin: 0 }}>Puts the account back to 10,000 CC-TEST with no mandate and no history. The test account is shared, so do this before a fresh run.</p>
-          <div><button className="live-btn" type="button" disabled={reset.isPending} onClick={startAgain}>{reset.isPending ? 'Resetting…' : 'Reset test account'}</button></div>
+          <p className="live-meta" style={{ margin: 0 }}>Puts the account back to 10,000 CC-TEST with no mandate and no history. The sandbox account is shared, so do this before a fresh run.</p>
+          <div><button className="live-btn" type="button" disabled={reset.isPending} onClick={startAgain}>{reset.isPending ? 'Resetting…' : 'Reset sandbox account'}</button></div>
           {reset.isError && <p className="live-error" role="alert" style={{ margin: 0 }}>{(reset.error as Error).message}</p>}
           {last && <p className="live-meta" style={{ margin: 0 }}>Reset in ledger update <span className="live-mono" title={last}>{shortUpdate(last)}</span>.</p>}
         </section>
@@ -82,7 +82,7 @@ export default function TestWallets() {
 
   return (
     <main className="app-main" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <PageHead title="Wallets" lead="The test account's party on Canton, and the Promorphic parties it deals with." />
+      <PageHead title="Wallets" lead="The sandbox account's party on Canton, and the Promorphic parties it deals with." />
       {body}
     </main>
   );

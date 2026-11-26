@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { Failed, Notice, PageHead, Stat, Stats } from '../../components/PageHead';
 import { amount, useTestAccount } from './test';
 
-// The Portfolio screen for the test account: what its Canton party holds, read from the ledger.
+// The Portfolio screen for the sandbox account: what its Canton party holds, read from the ledger.
 export default function TestPortfolio() {
   const q = useTestAccount();
   const a = q.data;
@@ -11,8 +11,8 @@ export default function TestPortfolio() {
 
   let table;
   if (q.isPending) table = <Notice>Reading the ledger…</Notice>;
-  else if (q.isError) table = <Failed error={q.error} what="The test account's holdings" />;
-  else if (!a!.holdings.length) table = <Notice>The party holds nothing. <Link to="/wallets/">Reset the test account</Link> to start again with 10,000 {a!.cash}.</Notice>;
+  else if (q.isError) table = <Failed error={q.error} what="The sandbox account's holdings" />;
+  else if (!a!.holdings.length) table = <Notice>The party holds nothing. <Link to="/wallets/">Reset the sandbox account</Link> to start again with 10,000 {a!.cash}.</Notice>;
   else {
     table = (
       <>
@@ -48,7 +48,7 @@ export default function TestPortfolio() {
           </tbody>
         </table>
         <div className="acct-table-note">
-          <span>Read from {a!.network} for the test account's party. These are test instruments with fixed test prices: they have no value and cannot be redeemed for anything.</span>
+          <span>Read from {a!.network} for the sandbox account's party. These are test instruments with fixed test prices: they have no value and cannot be redeemed for anything.</span>
         </div>
       </>
     );
@@ -56,7 +56,7 @@ export default function TestPortfolio() {
 
   return (
     <main className="app-main" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <PageHead title="Portfolio" lead="What the test account's Canton party holds, read from the ledger." />
+      <PageHead title="Portfolio" lead="What the sandbox account's Canton party holds, read from the ledger." />
       <Stats>
         <Stat value={a ? amount(a.totalValue, 2) : '—'} label={a ? `Total, in ${a.cash}` : 'Total'} />
         <Stat value={a ? amount(cash?.available ?? 0, 2) : '—'} label={a ? `${a.cash} available to trade` : 'Available to trade'} />

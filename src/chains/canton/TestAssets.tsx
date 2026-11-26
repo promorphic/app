@@ -2,13 +2,15 @@ import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import type { Asset } from '../../assets/types';
 import { useChains } from '../../assets/useAssets';
+import { toast } from '../../lib/toast';
 import { AssetsScreen } from '../../pages/Assets';
 import { testPrice, useTestAssets } from './test';
 
 const NONE: Asset[] = [];
 
-// The Assets screen for the test account: the test instruments on Canton, with Canton already
-// chosen in the Chain filter. A row's Actions button leads to the agent, which is how they trade.
+// The Assets screen for the sandbox account: test instruments on every chain the app lists, with
+// Canton already chosen in the Chain filter, because that is where the sandbox settles. A Canton
+// row's Actions button leads to the agent, which is how they trade; the others are listings only.
 export default function TestAssets() {
   const q = useTestAssets();
   const navigate = useNavigate();
@@ -20,7 +22,11 @@ export default function TestAssets() {
   return (
     <AssetsScreen
       source={{ loading: q.isPending, failed: q.isError, chains, featured: {}, assets: q.data?.assets ?? NONE, price }}
-      variant={{ chain: 'canton', lead: 'Test instruments on Canton. They have no value: they are here so a mandate and a settlement can be tried end to end.', onAction: () => navigate('/agent/') }}
+      variant={{
+        chain: 'canton',
+        lead: 'Test instruments across the chains Promorphic lists. They have no value. Sandbox trades settle on Canton, so the list opens on Canton.',
+        onAction: (a) => (a.chains.includes('canton') ? navigate('/agent/') : toast(`${a.ticker} is a listing only. Sandbox trades settle on Canton.`)),
+      }}
     />
   );
 }

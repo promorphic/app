@@ -35,7 +35,7 @@ export interface Snapshot { date: string; totalUsd: string; stockTokensUsd: stri
 
 // The session token, or undefined when signed out (or while the app runs without accounts).
 export const useToken = () => useSession()?.token;
-// The same, but undefined for the test account, which has no wallets or portfolio of this kind:
+// The same, but undefined for the sandbox account, which has no wallets or portfolio of this kind:
 // its holdings are on Canton and are read in src/chains/canton/.
 const useLiveToken = () => { const s = useSession(); return s && !s.user.test ? s.token : undefined; };
 const ACCOUNT = ['account'];

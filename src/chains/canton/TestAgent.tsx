@@ -36,7 +36,7 @@ function Result({ r, cash }: { r: AskResult; cash: string }) {
   );
 }
 
-// The agent screen for the test account. The agent here follows plain instructions; what matters is
+// The agent screen for the sandbox account. The agent here follows plain instructions; what matters is
 // that it acts on the ledger as its own party, and the ledger decides what it may do.
 export default function TestAgent() {
   const q = useTestAccount();

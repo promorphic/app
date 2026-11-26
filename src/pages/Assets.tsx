@@ -20,7 +20,7 @@ export default function Assets() {
   return <AssetsScreen source={useAssets()} />;
 }
 
-// The same screen over another list. The test account (src/chains/canton/) uses it for its test
+// The same screen over another list. The sandbox account (src/chains/canton/) uses it for its test
 // instruments: `chain` opens the list with that chain already chosen in the Chain filter, and
 // `onAction` is what a row's Actions button does.
 export interface Variant { chain: string; lead: string; onAction: (a: Asset) => void }

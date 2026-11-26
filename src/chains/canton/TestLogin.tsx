@@ -1,12 +1,12 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router';
-import { AuthLayout, Field, Heading, note, primary, Problem } from '../../auth/AuthLayout';
+import { AuthLayout, Field, foot, Heading, inkLink, note, primary, Problem } from '../../auth/AuthLayout';
 import { signedIn, useSession, type SignedIn } from '../../auth/session';
 import { getApi } from '../../lib/api';
 
-// Sign-in for the test account, at /test/. It is the one account with a password, because the people
+// Sign-in for the sandbox account, at /sandbox/. It is the one account with a password, because the people
 // testing with it cannot read its inbox, and the one screen outside the country check, because they
-// may be anywhere. It opens test assets on Canton and nothing else.
+// may be anywhere. It opens test assets and nothing else.
 export default function TestLogin() {
   const navigate = useNavigate();
   const session = useSession();
@@ -18,7 +18,7 @@ export default function TestLogin() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!password) return setProblem('Enter the test account\'s password.');
+    if (!password) return setProblem('Enter the sandbox account\'s password.');
     setBusy(true); setProblem('');
     try {
       signedIn(await getApi<SignedIn>('/v1/auth/test', { email: email.trim(), password }));
@@ -28,7 +28,7 @@ export default function TestLogin() {
 
   return (
     <AuthLayout>
-      <Heading title="Test account">Sign in to try Promorphic on Canton with test assets. Nothing in this account has any value.</Heading>
+      <Heading title="Sandbox">Sign in to try Promorphic with test assets. Trades settle on Canton MainNet, and nothing in this account has any value.</Heading>
       <form noValidate onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Field id="test-email" label="Email" type="email" name="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Field id="test-password" label="Password" type="password" name="password" autoComplete="current-password" value={password}
@@ -36,6 +36,10 @@ export default function TestLogin() {
         <Problem>{problem}</Problem>
         <button className="btn btn-primary" type="submit" style={primary} disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
         <p style={note}>This account is shared. It holds test instruments only, and anyone using it can reset it.</p>
+        <p style={foot}>
+          This sandbox is for reviewers. For the Promorphic platform, visit{' '}
+          <a href="https://promorphic.xyz" target="_blank" rel="noopener" style={inkLink}>promorphic.xyz</a>.
+        </p>
       </form>
     </AuthLayout>
   );

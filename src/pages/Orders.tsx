@@ -7,7 +7,7 @@ import { Segmented } from '../components/Segmented';
 import { CHAIN_NAMES, STATUS_NAMES, shortId, useOrders, useToken, when, type Order, type OrderFilter } from '../lib/account';
 
 const venueName = (v: string) => (v === 'lifi' ? 'LiFi' : v === '0x' ? '0x' : v);
-// A Canton order (the test account's) is counted in its settlement instrument, not in dollars, and
+// A Canton order (the sandbox account's) is counted in its settlement instrument, not in dollars, and
 // an order the ledger would not let the agent make is refused, not failed.
 const onCanton = (o: Order) => o.chain === 'canton';
 const cash = (o: Order) => (o.side === 'buy' ? o.sell.symbol : o.buy.symbol);
@@ -22,7 +22,7 @@ function StatusPill({ o }: { o: Order }) {
 
 export default function Orders() {
   const token = useToken();
-  const { test } = useTest(); // the test account's orders are its agent's, on Canton
+  const { test } = useTest(); // the sandbox account's orders are its agent's, on Canton
   const [filter, setFilter] = useState<OrderFilter>('all');
   const q = useOrders(filter);
   const pages = q.data?.pages || [];
