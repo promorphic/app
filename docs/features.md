@@ -75,9 +75,26 @@ If a live source fails, the list falls back to the snapshot in `data/assets.json
 - **Not tested live:** sends from Robinhood Chain and Avalanche (no test coins yet), and Canton, because the live API has no Canton ledger and the card shows "Not available here".
 - The card hides itself where the API has no Promorphic wallets.
 
+## The test account (live on Canton MainNet)
+
+One shared account, for people reviewing Promorphic. It signs in at `/test/` with `test@promorphic.xyz` and a password, from any country, and every screen shows test assets on Canton only. Each action is a real transaction on Canton MainNet through Promorphic's validator; the instruments have no value. Code: `src/chains/canton/`. First run on MainNet: 26 November 2026.
+
+| Screen | What the test account sees |
+| --- | --- |
+| Assets | Six test instruments (CC-TEST, TBILL-TEST, MMF-TEST, BOND-TEST, GOLD-TEST, EQTY-TEST), with Canton already chosen in the Chain filter. Prices are fixed test prices in CC-TEST. |
+| Portfolio | What its Canton party holds, read from the ledger: available, locked to a settlement, and value in CC-TEST. It starts with 10,000 CC-TEST. |
+| Mandates | One preset mandate. Signing it creates the contract on the ledger, signed by the party's key. Then pause, resume or revoke. The table shows the limits and what has been used today. |
+| Your agent | An ask box and six things to try. A trade inside the limits settles in four ledger transactions; one outside them is refused by the ledger, and so is an attempt by the agent to send assets out. Each answer lists its ledger updates. |
+| Orders, Activity | The same screens as any account, showing the agent's trades: settled with their ledger update, or refused with the ledger's reason. Amounts are in CC-TEST. |
+| Wallets | The party's ID, Promorphic's own parties (agent, venue, price provider, test registry, test counterparty), and a reset that puts the account back to 10,000 CC-TEST with no mandate and no history. |
+
+- **The agent here follows plain instructions** ("buy 100 TBILL-TEST"), read by a small parser in the API. There is no language model behind it.
+- **The key.** The party is an external party, like a customer's, but its key is held by the API, for this account only.
+- **Nothing else is reachable.** The API refuses this session every other endpoint.
+
 ## Not built yet
 
-- The agent and mandates: their screens are sample only.
+- The agent and mandates for ordinary accounts: their screens are sample only. They are live for the test account alone (above).
 - Trading on any chain but Robinhood Chain.
 - Turnkey's captcha on its code emails and sign-up. See [decisions.md](decisions.md), "Turnkey captcha off for now".
 - Mainnet for the Promorphic wallet. It runs on test networks only.

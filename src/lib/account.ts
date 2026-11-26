@@ -5,8 +5,8 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { useSession } from '../auth/session';
 import { getApi } from './api';
 
-export type Chain = 'robinhood';
-export const CHAIN_NAMES: Record<Chain, string> = { robinhood: 'Robinhood Chain' };
+export type Chain = 'robinhood' | 'canton';
+export const CHAIN_NAMES: Record<Chain, string> = { robinhood: 'Robinhood Chain', canton: 'Canton' };
 export type Via = 'pasted' | 'browser' | 'walletconnect' | 'promorphic';
 export const VIA_NAMES: Record<Via, string> = { pasted: 'Address only', browser: 'Browser wallet', walletconnect: 'WalletConnect', promorphic: 'Promorphic wallet' };
 
@@ -35,10 +35,13 @@ export interface Snapshot { date: string; totalUsd: string; stockTokensUsd: stri
 
 // The session token, or undefined when signed out (or while the app runs without accounts).
 export const useToken = () => useSession()?.token;
+// The same, but undefined for the test account, which has no wallets or portfolio of this kind:
+// its holdings are on Canton and are read in src/chains/canton/.
+const useLiveToken = () => { const s = useSession(); return s && !s.user.test ? s.token : undefined; };
 const ACCOUNT = ['account'];
 
 export function useWallets() {
-  const token = useToken();
+  const token = useLiveToken();
   return useQuery({
     queryKey: [...ACCOUNT, 'wallets', token], enabled: !!token, staleTime: 60_000,
     queryFn: () => getApi<{ wallets: LinkedWallet[] }>('/v1/wallets', undefined, token).then((r) => r.wallets),
@@ -89,14 +92,14 @@ export function useActivity(actor: Actor | 'all') {
 }
 
 export function usePortfolio() {
-  const token = useToken();
+  const token = useLiveToken();
   return useQuery({
     queryKey: [...ACCOUNT, 'portfolio', token], enabled: !!token, staleTime: 30_000, refetchInterval: 60_000,
     queryFn: () => getApi<Portfolio>('/v1/portfolio', undefined, token),
   });
 }
 export function useHistory(days = 90) {
-  const token = useToken();
+  const token = useLiveToken();
   return useQuery({
     queryKey: [...ACCOUNT, 'history', days, token], enabled: !!token, staleTime: 5 * 60_000,
     queryFn: () => getApi<{ snapshots: Snapshot[] }>(`/v1/portfolio/history?days=${days}`, undefined, token).then((r) => r.snapshots),

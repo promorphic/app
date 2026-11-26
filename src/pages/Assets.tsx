@@ -13,13 +13,22 @@ import { notYet } from '../lib/toast';
 const th: CSSProperties = { ...eyebrow, padding: '0 16px', height: '44px', textAlign: 'left', whiteSpace: 'nowrap' };
 const td: CSSProperties = { padding: '0 16px', height: '64px', borderTop: '1px solid var(--hairline)', verticalAlign: 'middle' };
 const figure: CSSProperties = { ...td, fontFamily: MONO, fontSize: '14px', color: 'var(--ink)', fontVariantNumeric: 'tabular-nums' };
-const tickerStyle: CSSProperties = { fontFamily: MONO, fontSize: '13px', fontWeight: 500, letterSpacing: '0.02em', color: 'var(--ink)', background: 'var(--surface-2)', border: '1px solid var(--hairline)', borderRadius: '2px', padding: '6px 8px', minWidth: '52px', textAlign: 'center' };
+const tickerStyle: CSSProperties = { fontFamily: MONO, fontSize: '13px', fontWeight: 500, letterSpacing: '0.02em', color: 'var(--ink)', background: 'var(--surface-2)', border: '1px solid var(--hairline)', borderRadius: '2px', padding: '6px 8px', minWidth: '52px', textAlign: 'center', whiteSpace: 'nowrap' };
 const fmtYield = (y: number | null) => (y == null ? '—' : y.toFixed(2) + '%');
 
 export default function Assets() {
-  const { loading, failed, assets, chains, featured, price } = useAssets();
+  return <AssetsScreen source={useAssets()} />;
+}
+
+// The same screen over another list. The test account (src/chains/canton/) uses it for its test
+// instruments: `chain` opens the list with that chain already chosen in the Chain filter, and
+// `onAction` is what a row's Actions button does.
+export interface Variant { chain: string; lead: string; onAction: (a: Asset) => void }
+
+export function AssetsScreen({ source, variant }: { source: ReturnType<typeof useAssets>; variant?: Variant }) {
+  const { loading, failed, assets, chains, featured, price } = source;
   const q = useSearch().trim();
-  const [sel, setSel] = useState<Selection>(NO_SELECTION);
+  const [sel, setSel] = useState<Selection>(() => (variant ? { ...NO_SELECTION, chain: [variant.chain] } : NO_SELECTION));
   const [shown, setShown] = useState(PAGE_SIZE);
   const [quoting, setQuoting] = useState<Asset | null>(null);
 
@@ -44,7 +53,7 @@ export default function Assets() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div style={eyebrow}>Assets</div>
         <h1 style={{ margin: 0, fontSize: '36px', lineHeight: 1.1, fontWeight: 300, letterSpacing: '-0.025em', color: 'var(--ink)' }}>Tokenized assets</h1>
-        <p style={{ margin: 0, fontSize: '16px', lineHeight: 1.5, color: 'var(--ink-muted)', maxWidth: '640px' }}>Every asset on the layer, in one list. Filter by issuer, chain, asset class and yield.</p>
+        <p style={{ margin: 0, fontSize: '16px', lineHeight: 1.5, color: 'var(--ink-muted)', maxWidth: '640px' }}>{variant ? variant.lead : 'Every asset on the layer, in one list. Filter by issuer, chain, asset class and yield.'}</p>
       </div>
 
       <div role="group" aria-label="Filters" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
@@ -102,7 +111,7 @@ export default function Assets() {
                     </td>
                     <td style={{ ...td, textAlign: 'right' }}>
                       {/* A Stock Token has a live quote behind its button; nothing else does yet. */}
-                      <button className="btn btn-ghost" type="button" onClick={() => (isStockToken(a) ? setQuoting(a) : notYet())}
+                      <button className="btn btn-ghost" type="button" onClick={() => (variant ? variant.onAction(a) : isStockToken(a) ? setQuoting(a) : notYet())}
                         style={{ fontFamily: SANS, fontSize: '14px', fontWeight: 500, color: 'var(--ink)', background: 'transparent', border: '1px solid var(--hairline)', borderRadius: '2px', minHeight: '44px', padding: '0 16px', cursor: 'pointer' }}>Actions</button>
                     </td>
                   </tr>

@@ -4,6 +4,20 @@ The choices behind the app, newest first, each with why it was made and what it 
 
 ---
 
+## A shared test account, with a password and no country check
+
+*26 November 2026*
+
+The Canton Foundation's reviewers need to try Promorphic themselves, and they are in the United States, where the app does not open. They also cannot read an inbox of ours, so a sign-in link or a Turnkey signing code would never reach them.
+
+**Decision:** one account, `test@promorphic.xyz`, signs in at `/test/` with a password, from any country, and sees only test assets on Canton.
+
+- **What it can reach.** Its own versions of Assets, Portfolio, Your agent, Mandates and Wallets (`src/chains/canton/`), and its own Orders and Activity. The API refuses that session everything else, so lifting the country check for it opens nothing real: no Stock Tokens, no quotes, no linked wallets, no Promorphic wallet.
+- **Real transactions, test instruments.** Every action is a transaction on Canton MainNet through Promorphic's validator. The instruments (CC-TEST, TBILL-TEST and four more) are issued by a test registry of ours and have no value.
+- **`/test/` sits outside the region gate** in `src/App.tsx`. Everywhere else a visitor from a blocked country still sees "Not available".
+- **The cost:** this account breaks two rules the app otherwise keeps, "no passwords" and "the person holds the key". Its Canton party's key is held by the API, because whoever shares the password cannot receive a signing code. The Wallets screen says so. No other account can be given a password.
+- **It is shared.** Anyone with the password sees the same holdings and can reset them. The password goes to reviewers in a document, not in the application, which is published.
+
 ## Turnkey captcha off for now
 
 *24 November 2026*

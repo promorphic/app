@@ -1,6 +1,7 @@
 import { useState, type MouseEvent } from 'react';
 import { Link, NavLink } from 'react-router';
 import { AUTH_ON, signOut, useSession } from '../auth/session';
+import { useTestAccount } from '../chains/canton/test';
 import { Logo } from './Logo';
 import { MONO, eyebrow } from './styles';
 
@@ -12,6 +13,9 @@ const GROUPS = [
 export function Sidebar() {
   const [open, setOpen] = useState(false);
   const session = useSession();
+  // For the test account the card says what its agent can do right now, from the mandate on the ledger.
+  const mandate = useTestAccount().data?.mandate;
+  const agentLine = !session?.user.test ? 'Running · Copilot' : mandate === undefined ? 'Test agent' : !mandate ? 'No mandate signed' : mandate.paused ? 'Mandate paused' : 'Ready · under mandate';
   // On a phone the menu closes once a screen is chosen, the current one included.
   const closeOnLink = (e: MouseEvent) => { if ((e.target as Element).closest('a')) setOpen(false); };
 
@@ -45,14 +49,14 @@ export function Sidebar() {
             <span aria-hidden="true" style={{ width: '8px', height: '8px', borderRadius: '999px', background: 'var(--ink)' }} />
             Your agent
           </span>
-          <span style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-muted)' }}>Running · Copilot</span>
+          <span style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-muted)' }}>{agentLine}</span>
         </Link>
         <div style={{ borderTop: '1px solid var(--hairline)', padding: '16px 12px 0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {AUTH_ON && session ? (
             <>
               <div title={session.user.email} style={{ fontSize: '14px', fontWeight: 500, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session.user.email}</div>
               <div style={{ fontFamily: MONO, fontSize: '12px', color: 'var(--ink-faint)' }}>
-                {session.user.accountType === 'organization' ? 'Organization' : 'Individual'} · <button type="button" className="link-button" onClick={signOut}>Sign out</button>
+                {session.user.test ? 'Test account' : session.user.accountType === 'organization' ? 'Organization' : 'Individual'} · <button type="button" className="link-button" onClick={signOut}>Sign out</button>
               </div>
             </>
           ) : (

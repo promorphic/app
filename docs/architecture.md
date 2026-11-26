@@ -60,10 +60,17 @@ RegionGate (asks /v1/access)
  ├─ SignedOutOnly → /login, /signup
  └─ /auth/verify
 /terms, /privacy            open to everyone, outside the region gate
+/test                       sign-in for the test account, outside the region gate
 *                           not found
 ```
 
 `RequireAuth` lets everything through while `VITE_AUTH` is off. Adding a screen means a route in `App.tsx` and its path in `ROUTES` in `vite.config.ts`.
+
+### The test account
+
+`/test/` is a route outside `RegionGate`, so it opens from any country. Once signed in, `session.user.test` is true and `src/App.tsx` swaps five screens for the ones in `src/chains/canton/` (Assets, Portfolio, Your agent, Mandates, Wallets). Orders and Activity are the ordinary screens. `RegionGate` sends the session token with `/v1/access`, and the API answers "allowed" for the test account's session wherever it is.
+
+The test screens read `GET /v1/test/assets` and `GET /v1/test/account` and write through `POST /v1/test/mandate`, `/v1/test/agent` and `/v1/test/reset` (`src/chains/canton/test.ts`). Each write returns the account as it now stands, which replaces the cached copy. The account hooks in `src/lib/account.ts` for wallets and portfolio are off for this account, since the API would refuse them.
 
 ## Hosting
 

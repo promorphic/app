@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { Logo } from '../layout/Logo';
 import { eyebrow } from '../layout/styles';
+import { useSession } from '../auth/session';
 import { getApi } from '../lib/api';
 
 type Access = { allowed: boolean; country: string | null; reason: 'region_blocked' | 'region_unknown' | null; message: string | null };
@@ -10,8 +11,11 @@ type Access = { allowed: boolean; country: string | null; reason: 'region_blocke
 // Promorphic is for people outside the United States. The API refuses every request from a blocked
 // country; this asks it first, so such a visitor sees one plain page instead of a broken app.
 // If the question itself cannot be asked, the app carries on: the API still refuses what it must.
+// The question carries the session, because the API lets one account through from anywhere: the
+// test account (src/chains/canton/), which reaches test assets only.
 export function RegionGate({ children }: { children: ReactNode }) {
-  const access = useQuery({ queryKey: ['access'], queryFn: () => getApi<Access>('/v1/access'), staleTime: 10 * 60_000, retry: 1 });
+  const token = useSession()?.token;
+  const access = useQuery({ queryKey: ['access', token], queryFn: () => getApi<Access>('/v1/access', undefined, token), staleTime: 10 * 60_000, retry: 1 });
   if (access.data && !access.data.allowed) return <Blocked access={access.data} />;
   return <>{children}</>;
 }

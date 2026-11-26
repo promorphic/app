@@ -2,6 +2,13 @@ import { useEffect, type ReactElement } from 'react';
 import { Route, Routes, useLocation, useNavigate, Outlet } from 'react-router';
 import { RegionGate } from './access/RegionGate';
 import { RequireAuth, SignedOutOnly } from './auth/RequireAuth';
+import TestAgent from './chains/canton/TestAgent';
+import TestAssets from './chains/canton/TestAssets';
+import TestLogin from './chains/canton/TestLogin';
+import TestMandates from './chains/canton/TestMandates';
+import TestPortfolio from './chains/canton/TestPortfolio';
+import TestWallets from './chains/canton/TestWallets';
+import { useTest } from './chains/canton/test';
 import { AppShell } from './layout/AppShell';
 import { notYet, Toast } from './lib/toast';
 import Activity from './pages/Activity';
@@ -38,12 +45,17 @@ const OPEN: Screen[] = [
   { path: '/privacy', id: 'privacy', title: 'Privacy Policy', element: <Privacy /> },
 ];
 const VERIFY: Screen = { path: '/auth/verify', id: 'verify', title: 'Signing in', element: <Verify /> };
+// The test account (src/chains/canton/): its own sign-in, outside the country check, and its own
+// version of each screen that would otherwise show real assets. Orders and Activity are shared.
+const TEST_LOGIN: Screen = { path: '/test', id: 'test', title: 'Test account', element: <TestLogin /> };
+const TEST: Record<string, ReactElement> = { assets: <TestAssets />, portfolio: <TestPortfolio />, agent: <TestAgent />, mandates: <TestMandates />, wallets: <TestWallets /> };
 const clean = (path: string) => path.replace(/\/+$/, '') || '/';
 
 export function App() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const screen = [...APP, ...AUTH, ...OPEN, VERIFY].find((s) => s.path === clean(pathname));
+  const { test } = useTest();
+  const screen = [...APP, ...AUTH, ...OPEN, VERIFY, TEST_LOGIN].find((s) => s.path === clean(pathname));
 
   // Each screen starts at the top and names itself in the tab.
   useEffect(() => {
@@ -71,7 +83,7 @@ export function App() {
         <Route element={<RegionGate><Outlet /></RegionGate>}>
           <Route element={<RequireAuth />}>
             <Route element={<AppShell page={screen?.id ?? ''} />}>
-              {APP.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+              {APP.map((s) => <Route key={s.id} path={s.path} element={(test && TEST[s.id]) || s.element} />)}
             </Route>
           </Route>
           <Route element={<SignedOutOnly />}>
@@ -80,6 +92,7 @@ export function App() {
           <Route path={VERIFY.path} element={VERIFY.element} />
         </Route>
         {OPEN.map((s) => <Route key={s.id} path={s.path} element={s.element} />)}
+        <Route path={TEST_LOGIN.path} element={TEST_LOGIN.element} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toast />
