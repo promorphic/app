@@ -4,6 +4,7 @@ import { AuthLayout, Field, foot, ghost, Heading, inkLink, note, Or, primary, Pr
 import { CheckEmail } from '../auth/CheckEmail';
 import { googleAccessToken, PopupClosed } from '../auth/google';
 import { AUTH_ON, signedIn, takeReturn, useAuthConfig, type SignedIn } from '../auth/session';
+import { isUnderReview, UnderReview } from '../auth/UnderReview';
 import { ApiError, getApi } from '../lib/api';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -15,11 +16,14 @@ export default function Login() {
   const [problem, setProblem] = useState<{ field?: 'email'; text: string; signup?: boolean } | null>(null);
   const [busy, setBusy] = useState<'' | 'email' | 'google'>('');
   const [sentTo, setSentTo] = useState('');
+  // Set when the API answers that the address is not let in yet: the address, or '' after Google.
+  const [review, setReview] = useState<string | null>(null);
 
   const showGoogle = !AUTH_ON || !!config.data?.google;
   const showEmail = !AUTH_ON || !config.data || config.data.email;
-  const fail = (e: unknown) => {
+  const fail = (e: unknown, tried = '') => {
     if (e instanceof PopupClosed) return;
+    if (isUnderReview(e)) return setReview(tried);
     const noAccount = e instanceof ApiError && e.code === 'no_account';
     setProblem({ text: (e as Error).message, signup: noAccount, field: noAccount || (e instanceof ApiError && e.code === 'bad_email') ? 'email' : undefined });
   };
@@ -31,7 +35,7 @@ export default function Login() {
     const to = email.trim();
     if (!EMAIL.test(to)) return setProblem({ field: 'email', text: 'Enter your work email, like you@company.com.' });
     setBusy('email'); setProblem(null);
-    try { await send(to); setSentTo(to); } catch (err) { fail(err); } finally { setBusy(''); }
+    try { await send(to); setSentTo(to); } catch (err) { fail(err, to); } finally { setBusy(''); }
   };
   const withGoogle = async () => {
     if (!AUTH_ON) return navigate('/');
@@ -51,7 +55,9 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      {sentTo ? (
+      {review !== null ? (
+        <UnderReview email={review} back={() => { setReview(null); setProblem(null); }} />
+      ) : sentTo ? (
         <CheckEmail email={sentTo} isNew={false} resend={() => send(sentTo)} back={() => { setSentTo(''); setProblem(null); }} />
       ) : (
         <>
@@ -84,6 +90,10 @@ export default function Login() {
           <p style={foot}>
             {'New to Promorphic? '}
             <Link to="/signup/" style={inkLink}>Create an account</Link>
+          </p>
+          <p style={{ ...note, fontSize: '14px' }}>
+            {'Want to look around first? '}
+            <Link to="/sandbox/" style={inkLink}>Open the sandbox</Link>
           </p>
           <p style={note}>
             <Link to="/terms/" style={{ textUnderlineOffset: '3px' }}>Terms</Link>

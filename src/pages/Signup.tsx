@@ -6,6 +6,7 @@ import { googleAccessToken, PopupClosed } from '../auth/google';
 import { AUTH_ON, signedIn, takeReturn, useAuthConfig, type SignedIn } from '../auth/session';
 import { Segmented } from '../components/Segmented';
 import { ApiError, getApi } from '../lib/api';
+import { isUnderReview, UnderReview } from '../auth/UnderReview';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 type Problems = { name?: string; email?: string; organization?: string; agreed?: string; form?: string };
@@ -45,8 +46,11 @@ export default function Signup() {
     agreed: agreed ? undefined : 'Agree to the Terms and Privacy Policy, and confirm you are not a US person, to continue.',
   });
   const any = (p: Problems) => Object.values(p).some(Boolean);
-  const fail = (e: unknown) => {
+  // Set when the API answers that the address is not let in yet: the address, or '' when only Google knows it.
+  const [review, setReview] = useState<string | null>(null);
+  const fail = (e: unknown, tried = '') => {
     if (e instanceof PopupClosed) return;
+    if (isUnderReview(e)) return setReview(tried);
     const field = e instanceof ApiError ? FIELD[e.code] : undefined;
     setProblems({ [field || 'form']: (e as Error).message });
   };
@@ -64,7 +68,7 @@ export default function Signup() {
     setProblems(p);
     if (any(p)) return;
     setBusy('email');
-    try { await send(to); setSentTo(to); } catch (err) { fail(err); } finally { setBusy(''); }
+    try { await send(to); setSentTo(to); } catch (err) { fail(err, to); } finally { setBusy(''); }
   };
   const withGoogle = async () => {
     if (!AUTH_ON) return navigate('/');
@@ -80,13 +84,15 @@ export default function Signup() {
     } catch (err) {
       // Google's yes from the sign-in screen has lapsed: back to the ordinary form, where it can be asked again.
       if (googleToken && err instanceof ApiError && err.code === 'google_refused') { setGoogleToken(''); setProblems({ form: 'That took a while, so Google needs to confirm again. Choose Sign up with Google.' }); }
-      else fail(err);
+      else fail(err, googleEmail);
     } finally { setBusy(''); }
   };
 
   return (
     <AuthLayout>
-      {sentTo ? (
+      {review !== null ? (
+        <UnderReview email={review} back={() => { setReview(null); setProblems({}); }} />
+      ) : sentTo ? (
         <CheckEmail email={sentTo} isNew resend={() => send(sentTo)} back={() => { setSentTo(''); setProblems({}); }} />
       ) : (
         <>

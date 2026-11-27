@@ -25,6 +25,7 @@ What the app at [app.promorphic.xyz](https://app.promorphic.xyz) does today, scr
 - **Sessions** last up to 30 days and are checked with the API every 5 minutes. Signing in or out in one tab does the same in the others.
 - **Look:** a colour photograph of the Financial District at dusk fills the page, with the headline "Hold, trade and manage tokenized assets from one place." above a centred card. The photo is by Zoshua Colah, used under the Unsplash licence.
 - The API emails sign-in links through Resend and checks Google tokens with Google (`backend/api/src/auth.js`).
+- **Not open to everyone yet (27 Nov 2026).** The API lets in only allowlisted addresses, today `promorphic.xyz`. Anyone else who signs in or signs up, by email or Google, sees "Your email is being reviewed" in place of the form: we will be in touch within a week, with a button to the sandbox and a way back to try another email (`src/auth/UnderReview.tsx`). The API emails the founders the attempt. The sign-in screen also links to the sandbox.
 
 ## App screens
 
@@ -92,7 +93,7 @@ Under the Promorphic wallet card, for an account that has the wallet. Code: `src
 
 ## The test account (live on Canton MainNet)
 
-One shared account, for people reviewing Promorphic. It signs in at `/sandbox/` with `test@promorphic.xyz` and a password, from the United States as well as wherever the app opens, though not from a sanctioned country, and every screen shows test assets only. The app calls it the sandbox, and all of its screens are under `/sandbox/`. Each action is a real transaction on Canton MainNet through Promorphic's validator; the instruments have no value. Code: `src/chains/canton/`. First run on MainNet: 26 November 2026.
+One shared account, for people reviewing Promorphic. It signs in at `/sandbox/` with `test@promorphic.xyz` and a password, from any country, and every screen shows test assets only. The app calls it the sandbox, and all of its screens are under `/sandbox/`. Each action is a real transaction on Canton MainNet through Promorphic's validator; the instruments have no value. Code: `src/chains/canton/`. First run on MainNet: 26 November 2026.
 
 | Screen | What the test account sees |
 | --- | --- |

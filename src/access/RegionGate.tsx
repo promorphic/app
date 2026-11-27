@@ -11,8 +11,8 @@ type Access = { allowed: boolean; country: string | null; reason: 'region_blocke
 // Promorphic is for people outside the United States. The API refuses every request from a blocked
 // country; this asks it first, so such a visitor sees one plain page instead of a broken app.
 // If the question itself cannot be asked, the app carries on: the API still refuses what it must.
-// The question carries the session, because the API lets one account through from the United States: the
-// sandbox account (src/chains/canton/), which reaches test assets only.
+// The sandbox (src/chains/canton/) is outside this gate: no country is closed to it, and it reaches
+// test assets only.
 export function RegionGate({ children }: { children: ReactNode }) {
   const token = useSession()?.token;
   const access = useQuery({ queryKey: ['access', token], queryFn: () => getApi<Access>('/v1/access', undefined, token), staleTime: 10 * 60_000, retry: 1 });

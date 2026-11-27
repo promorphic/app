@@ -56,14 +56,14 @@ const clean = (path: string) => path.replace(/\/+$/, '') || '/';
 
 // The sandbox's screens are for the sandbox's own session (auth/session.ts), which is separate from
 // the app's: being signed in to the app does not sign anyone in here. Without it, /sandbox/ is the
-// sign-in and the rest lead to it. The sign-in sits outside the region gate, because the API takes
-// it from the United States; the screens ask the gate with the session.
+// sign-in and the rest lead to it. All of it sits outside the region gate: no country is closed to
+// the sandbox, which reaches test assets only.
 function SandboxOnly() {
   const session = useSession();
   const { pathname } = useLocation();
   useSessionCheck();
   if (!session) return clean(pathname) === SANDBOX ? <TestLogin /> : <Navigate to={SANDBOX + '/'} replace />;
-  return <RegionGate><Outlet /></RegionGate>;
+  return <Outlet />;
 }
 
 export function App() {

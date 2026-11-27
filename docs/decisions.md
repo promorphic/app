@@ -10,12 +10,12 @@ The choices behind the app, newest first, each with why it was made and what it 
 
 The Canton Foundation's reviewers need to try Promorphic themselves, and they are in the United States, where the app does not open. They also cannot read an inbox of ours, so a sign-in link or a Turnkey signing code would never reach them.
 
-**Decision:** one account, `test@promorphic.xyz`, signs in at `/sandbox/` with a password, from the United States as well as wherever the app opens, though not from a sanctioned country, and sees only test assets. The app calls it the sandbox; it first opened at `/test/`, which now redirects.
+**Decision:** one account, `test@promorphic.xyz`, signs in at `/sandbox/` with a password, from any country (since 27 Nov 2026; before that, not from a sanctioned country), and sees only test assets. The app calls it the sandbox; it first opened at `/test/`, which now redirects.
 
 - **What it can reach.** Its own versions of Assets, Portfolio, Your agent, Mandates and Wallets (`src/chains/canton/`), and its own Orders and Activity. The API refuses that session everything else, so lifting the United States block for it opens nothing real: no Stock Tokens, no quotes, no linked wallets, no Promorphic wallet.
 - **Real transactions, test instruments.** Every action is a transaction on Canton MainNet through Promorphic's validator. The instruments (CC-TEST, TBILL-TEST and four more) are issued by a test registry of ours and have no value. The Assets screen also lists twelve test instruments on other chains, as listings only, so that it looks as it does for a real account.
 - **The sandbox has its own addresses** (26 Nov 2026). Its screens are under `/sandbox/`, and it keeps a session of its own, so someone signed in to the app still has to sign in to the sandbox and is never carried from one into the other. A reviewer can tell from the address bar that this is not the live app. The tab title says "Promorphic Sandbox".
-- **The sandbox's sign-in sits outside the region gate** in `src/App.tsx`; its screens ask the gate with the session. Everywhere else a visitor from a blocked country still sees "Not available".
+- **The sandbox sits outside the region gate** in `src/App.tsx`, its sign-in and its screens. Everywhere else a visitor from a blocked country still sees "Not available".
 - **The cost:** this account breaks two rules the app otherwise keeps, "no passwords" and "the person holds the key". Its Canton party's key is held by the API, because whoever shares the password cannot receive a signing code. The Wallets screen says so. No other account can be given a password.
 - **It is shared.** Anyone with the password sees the same holdings and can reset them. The password goes to reviewers in a document, not in the application, which is published.
 
