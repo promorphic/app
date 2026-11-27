@@ -13,11 +13,12 @@ export function UnderReview({ email, back }: { email?: string; back?: () => void
   return (
     <div role="status" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <Heading title="Your email is being reviewed">
-        Promorphic is not open to everyone yet.{' '}
+        Thanks for your interest.{' '}
+        <strong style={{ fontWeight: 600, color: 'var(--ink)' }}>Promorphic is not open for everyone yet.</strong>{' '}
         {email ? <strong style={{ fontWeight: 500, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{email}</strong> : 'Your email'} is being reviewed for access, and we will be in touch within a week.
       </Heading>
       <p style={{ margin: 0, fontSize: '15px', lineHeight: 1.5, color: 'var(--ink)' }}>
-        Try out our sandbox instead. It has the same screens, with test assets that have no value.
+        Try out our sandbox instead. It has the same screens, with test assets to play around with.
       </p>
       <Link to="/sandbox/" className="btn btn-primary" style={{ ...primary, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>Open the sandbox</Link>
       <p style={{ ...note, fontFamily: "'Geist Mono', 'SF Mono', Menlo, Consolas, monospace" }}>app.promorphic.xyz/sandbox</p>
